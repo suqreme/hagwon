@@ -27,20 +27,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | null>(null)
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+
     // Safety timeout to prevent infinite loading
     const timeout = setTimeout(() => {
       console.warn('Auth loading timeout - forcing loading to false')
       setLoading(false)
     }, 10000) // 10 seconds max
-
-    // Skip during SSR/build
-    if (typeof window === 'undefined') {
-      setLoading(false)
-      clearTimeout(timeout)
-      return
-    }
 
     // Check for classroom student first
     const classroomStudent = localStorage.getItem('current_classroom_student')
@@ -99,7 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       subscription.unsubscribe()
       clearTimeout(timeout)
     }
-  }, [])
+  }, [mounted])
 
   const fetchUserProfile = async (userId: string) => {
     if (!supabase) return

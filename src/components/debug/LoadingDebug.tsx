@@ -2,12 +2,23 @@
 
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
+import { useEffect, useState } from 'react'
 
 export default function LoadingDebug() {
   const { user, loading } = useAuth()
+  const [mounted, setMounted] = useState(false)
 
-  if (typeof window === 'undefined') {
-    return <div>SSR Mode</div>
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <div className="fixed top-0 left-0 bg-black text-white p-4 z-50 text-xs">
+        <div>Mounting...</div>
+      </div>
+    )
   }
 
   return (

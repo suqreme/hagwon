@@ -4,7 +4,6 @@ import "./globals.css";
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { ThemeInitializer } from '@/components/providers/theme-initializer';
-import LoadingDebug from '@/components/debug/LoadingDebug';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -111,6 +110,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${oxanium.variable} ${sourceCodePro.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         <ThemeProvider
           attribute="class"
@@ -120,7 +120,6 @@ export default function RootLayout({
         >
           <ThemeInitializer />
           <AuthProvider>
-            <LoadingDebug />
             {children}
           </AuthProvider>
         </ThemeProvider>
