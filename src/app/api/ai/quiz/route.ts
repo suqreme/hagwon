@@ -91,12 +91,20 @@ export async function POST(request: NextRequest) {
     const { grade_level, subject, topic, subtopic, learning_objective, lesson_summary } = await request.json()
     
     console.log('Quiz generation request:', { grade_level, subject, topic, subtopic })
+    console.log('OpenAI API key available:', !!process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'placeholder-key')
+    console.log('Environment variables check:', {
+      hasKey: !!process.env.OPENAI_API_KEY,
+      keyLength: process.env.OPENAI_API_KEY?.length || 0,
+      isPlaceholder: process.env.OPENAI_API_KEY === 'placeholder-key'
+    })
     
     // Check if OpenAI API key is available
     if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'placeholder-key') {
       console.log('No OpenAI API key, using fallback quiz')
       return createFallbackQuiz(subject, topic, subtopic, grade_level)
     }
+    
+    console.log('Using OpenAI for quiz generation')
     
     try {
       // Get the quiz generator prompt
