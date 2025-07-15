@@ -64,8 +64,8 @@ export function useProfile() {
   return context
 }
 
-// Helper hook to check if user is authenticated
-export function useAuth() {
+// Helper hook to check if profile is authenticated
+export function useProfileAuth() {
   const { currentProfile } = useProfile()
   
   return {

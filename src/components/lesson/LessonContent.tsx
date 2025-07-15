@@ -323,11 +323,6 @@ export default function LessonContent({ lessonData, onComplete }: LessonContentP
           <div className="space-y-6">
             {/* Current Section */}
             <div className="prose max-w-none">
-              {/* Debug info - remove in production */}
-              <div className="text-xs text-muted-foreground mb-2 bg-muted p-2 rounded">
-                Debug: Section {currentSection + 1} of {sections.length} | 
-                Length: {sections[currentSection]?.length || 0} chars
-              </div>
               <div className="text-lg leading-relaxed text-foreground">
                 {/* Check if content contains markdown headers */}
                 {sections[currentSection]?.includes('#') ? (
