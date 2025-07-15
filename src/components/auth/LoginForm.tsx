@@ -42,22 +42,28 @@ export default function LoginForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('LoginForm: handleSubmit called')
     setLoading(true)
     setError('')
     setSuccess('')
 
     try {
       if (isSignUp) {
+        console.log('LoginForm: Calling signUp...')
         await signUp(email, password, { country })
         setShowConfirmation(true)
         setSuccess('Account created! Please check your email for a confirmation link.')
       } else {
+        console.log('LoginForm: Calling signIn...')
         await signIn(email, password)
+        console.log('LoginForm: signIn completed successfully')
       }
     } catch (error: unknown) {
+      console.log('LoginForm: Error occurred:', error)
       const errorMessage = error instanceof Error ? error.message : 'An error occurred'
       setError(errorMessage)
     } finally {
+      console.log('LoginForm: Setting loading to false')
       setLoading(false)
     }
   }

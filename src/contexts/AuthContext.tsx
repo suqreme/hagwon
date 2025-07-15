@@ -201,6 +201,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signIn = async (email: string, password: string) => {
+    console.log('SignIn called with:', email)
+    
     if (!supabase) {
       // Demo mode - create a fake user
       const demoUser = {
@@ -215,11 +217,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return
     }
     
+    console.log('Calling supabase signInWithPassword...')
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
+    console.log('signInWithPassword completed, error:', error)
     if (error) throw error
+    console.log('signIn method completed successfully')
   }
 
   const signUp = async (email: string, password: string, metadata?: any) => {
