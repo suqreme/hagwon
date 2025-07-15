@@ -23,7 +23,7 @@ import {
 } from 'lucide-react'
 
 export default function OfflinePage() {
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const [showManager, setShowManager] = useState(false)
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null)
@@ -31,8 +31,15 @@ export default function OfflinePage() {
   const [isOnline, setIsOnline] = useState(true)
   const [currentLanguage, setCurrentLanguage] = useState('en')
   const [storageUsage, setStorageUsage] = useState({ used: 0, total: 0, percentage: 0 })
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted || authLoading) return
+    
     if (!user) {
       router.push('/')
       return
@@ -55,7 +62,7 @@ export default function OfflinePage() {
         window.removeEventListener('offline', handleOffline)
       }
     }
-  }, [user, router])
+  }, [user, router, mounted, authLoading])
 
   const loadOfflineData = () => {
     const lessons = offlineService.getDownloadedLessons()
@@ -88,6 +95,17 @@ export default function OfflinePage() {
     groups[key].push(lesson)
     return groups
   }, {})
+
+  if (authLoading || !mounted) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading offline content...</p>
+        </div>
+      </div>
+    )
+  }
 
   if (!user) return null
 

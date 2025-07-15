@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -67,10 +67,15 @@ const plans: SubscriptionPlan[] = [
 ]
 
 export default function SubscriptionPage() {
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
   const [showHardshipForm, setShowHardshipForm] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleSubscribe = async (planId: string) => {
     setLoading(planId)
@@ -95,6 +100,17 @@ export default function SubscriptionPage() {
 
   const handleHardshipRequest = () => {
     setShowHardshipForm(true)
+  }
+
+  if (authLoading || !mounted) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    )
   }
 
   if (!user) {

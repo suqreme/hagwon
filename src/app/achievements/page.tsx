@@ -13,22 +13,29 @@ import { gamificationService } from '@/services/gamificationService'
 import { Trophy, Star, Zap, Target, Award, TrendingUp } from 'lucide-react'
 
 export default function AchievementsPage() {
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const [userLevel, setUserLevel] = useState<any>(null)
   const [badges, setBadges] = useState<any[]>([])
   const [recentAchievements, setRecentAchievements] = useState<any[]>([])
   const [stats, setStats] = useState<any>({})
   const [activeTab, setActiveTab] = useState<'badges' | 'achievements' | 'stats'>('badges')
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted || authLoading) return
+    
     if (!user) {
       router.push('/')
       return
     }
 
     loadGamificationData()
-  }, [user, router])
+  }, [user, router, mounted, authLoading])
 
   const loadGamificationData = () => {
     if (!user) return
@@ -62,6 +69,17 @@ export default function AchievementsPage() {
       case 'legendary': return 'text-orange-600'
       default: return 'text-gray-500'
     }
+  }
+
+  if (authLoading || !mounted) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading achievements...</p>
+        </div>
+      </div>
+    )
   }
 
   if (!user) return null

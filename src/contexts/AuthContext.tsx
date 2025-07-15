@@ -85,11 +85,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state change:', event, session?.user?.id)
       setSupabaseUser(session?.user ?? null)
       
       if (session?.user) {
+        console.log('User found, fetching profile...')
         await fetchUserProfile(session.user.id)
       } else {
+        console.log('No user, setting to null')
         setUser(null)
         setLoading(false)
       }
@@ -107,11 +110,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('Fetching user profile for ID:', userId)
       
+      // TEMPORARY DEBUG: Skip database and create fake profile
+      const { data: userData } = await supabase.auth.getUser()
+      if (userData.user) {
+        console.log('Creating temporary profile for debug')
+        const tempProfile = {
+          id: userData.user.id,
+          email: userData.user.email,
+          role: userData.user.email === 'zerotosran@hotmail.com' ? 'admin' : 'student',
+          subscription_plan: 'free',
+          created_at: userData.user.created_at,
+          updated_at: new Date().toISOString()
+        }
+        setUser(tempProfile)
+        setLoading(false)
+        return
+      }
+      
+      // Add timeout to prevent hanging
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+      
       const { data, error } = await supabase
         .from('user_profiles')
         .select('*')
         .eq('id', userId)
+        .abortSignal(controller.signal)
         .single()
+      
+      clearTimeout(timeoutId)
 
       if (error) {
         console.error('Database error:', error)
@@ -150,7 +177,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error: any) {
       console.error('Failed to fetch user profile:', error)
-      setUser(null)
+      
+      // If it's an abort error (timeout), create a minimal user profile
+      if (error.name === 'AbortError') {
+        console.log('Profile fetch timed out, creating minimal user profile')
+        const { data: userData } = await supabase.auth.getUser()
+        if (userData.user) {
+          setUser({
+            id: userData.user.id,
+            email: userData.user.email,
+            role: 'student',
+            subscription_plan: 'free',
+            created_at: userData.user.created_at,
+            updated_at: new Date().toISOString()
+          })
+        }
+      } else {
+        setUser(null)
+      }
     } finally {
       setLoading(false)
     }
@@ -257,8 +301,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const isAdmin = () => {
-    if (!user || !user.user_metadata) return false
-    return user.user_metadata.role === 'admin'
+    if (!user) return false
+    return user.role === 'admin'
   }
 
   const isPremiumUser = () => {

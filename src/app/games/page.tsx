@@ -67,7 +67,7 @@ const games: Game[] = [
 ]
 
 export default function GamesPage() {
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const router = useRouter()
   const [selectedGame, setSelectedGame] = useState<string | null>(null)
   const [selectedSubject, setSelectedSubject] = useState<string>('math')
@@ -115,6 +115,17 @@ export default function GamesPage() {
       case 'hard': return 'text-red-500'
       default: return 'text-gray-500'
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading games...</p>
+        </div>
+      </div>
+    )
   }
 
   if (!user) {

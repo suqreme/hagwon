@@ -39,7 +39,7 @@ interface QuizData {
 }
 
 function LessonPageContent() {
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
   
@@ -55,8 +55,15 @@ function LessonPageContent() {
   const [error, setError] = useState('')
   const [subtopicInfo, setSubtopicInfo] = useState<any>(null)
   const [lessonStartTime, setLessonStartTime] = useState<Date | null>(null)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted || authLoading) return
+    
     if (!user) {
       router.push('/')
       return
@@ -73,7 +80,7 @@ function LessonPageContent() {
     if (subject && grade && topic && subtopic) {
       loadLessonContent()
     }
-  }, [user, subject, grade, topic, subtopic, router])
+  }, [user, subject, grade, topic, subtopic, router, mounted, authLoading])
 
   const loadLessonContent = async () => {
     setLoading(true)
@@ -223,6 +230,19 @@ function LessonPageContent() {
     // Force dashboard refresh to show updated progress
     router.push('/dashboard')
     router.refresh()
+  }
+
+  if (authLoading || !mounted) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="w-96">
+          <CardContent className="text-center py-8">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading...</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   if (!user) {
