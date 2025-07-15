@@ -12,6 +12,210 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 
+// Subject-specific content generator
+function generateSubjectSpecificContent(subject: string, grade: string, topic: string, subtopic: string): string {
+  const topicName = topic.replace(/_/g, ' ')
+  const subtopicName = subtopic.replace(/_/g, ' ')
+  const gradeLevel = grade.replace('_', ' ')
+  
+  if (subject === 'math') {
+    return `# Welcome to ${subtopicName}!
+
+This is a comprehensive math lesson about **${subtopicName}** for ${gradeLevel} level students.
+
+Mathematics is all around us! Today we're going to explore ${subtopicName} and discover how it helps us solve problems and understand patterns in our world.
+
+## What You'll Learn
+
+In this lesson, we'll explore the fundamental concepts of ${subtopicName} and help you understand this important math topic step by step.
+
+By the end of this lesson, you will be able to:
+- Understand the basic principles of ${subtopicName}
+- Recognize ${subtopicName} in everyday situations
+- Apply what you've learned through practical examples
+- Solve problems using ${subtopicName}
+- Feel confident about moving to the next topic
+
+## Let's Start with the Basics!
+
+Mathematics is like building blocks - each concept builds on the previous one. ${subtopicName} is an important building block that will help you with more advanced math concepts later.
+
+### What is ${subtopicName}?
+
+${subtopicName} is a mathematical concept that helps us understand relationships between numbers and quantities. Let's think about it in simple terms:
+
+- It's a way to work with numbers systematically
+- It helps us solve problems step by step
+- It appears in many real-life situations
+- It's a foundation for more advanced math concepts
+
+### Real-World Examples
+
+Where do you see ${subtopicName} in everyday life?
+
+**Example 1: At Home**
+When you're helping in the kitchen, you might use ${subtopicName} to measure ingredients or divide snacks equally among friends.
+
+**Example 2: At School**
+In the classroom, ${subtopicName} helps you organize your work, count materials, or solve word problems.
+
+**Example 3: Playing Games**
+Many games use ${subtopicName} concepts - from keeping score to figuring out strategies.
+
+## Working Through Problems
+
+Let's practice with some step-by-step examples:
+
+### Step 1: Understand the Problem
+First, we need to read carefully and understand what we're being asked to find.
+
+### Step 2: Identify What We Know
+Next, we look for the information we already have - these are our "givens."
+
+### Step 3: Choose Our Strategy
+Then we decide which approach will work best to solve the problem.
+
+### Step 4: Solve Carefully
+We work through the problem step by step, showing all our work.
+
+### Step 5: Check Our Answer
+Finally, we check if our answer makes sense and is correct.
+
+## Practice Makes Perfect
+
+Remember, learning math is like learning to ride a bike - it takes practice! Don't worry if it seems challenging at first. Every mathematician started exactly where you are now.
+
+### Tips for Success:
+- Take your time and think through each step
+- Ask questions when you're not sure
+- Practice regularly, even just a few minutes each day
+- Connect what you learn to things you already know
+- Celebrate your progress, no matter how small
+
+### What's Next?
+
+After you master ${subtopicName}, you'll be ready to tackle more exciting math concepts. Each topic builds on what you've learned before, so you're building a strong foundation for future success.
+
+Great job taking on this challenge! Remember, every expert was once a beginner. You've got this!`;
+  } else if (subject === 'english') {
+    return `# Welcome to ${subtopicName}!
+
+This is a comprehensive English lesson about **${subtopicName}** for ${gradeLevel} level students.
+
+Language is our superpower! Today we're going to explore ${subtopicName} and discover how it helps us communicate better and understand the world around us.
+
+## What You'll Learn
+
+In this lesson, we'll explore the fundamental concepts of ${subtopicName} and help you understand this important English topic step by step.
+
+By the end of this lesson, you will be able to:
+- Understand the basic principles of ${subtopicName}
+- Recognize ${subtopicName} in books, stories, and conversations
+- Apply what you've learned in your own reading and writing
+- Use ${subtopicName} to communicate more effectively
+- Feel confident about tackling more advanced topics
+
+## Let's Start with the Basics!
+
+English is like a toolbox - each skill gives us new tools to express ourselves and understand others. ${subtopicName} is an important tool that will help you become a better reader, writer, and communicator.
+
+### What is ${subtopicName}?
+
+${subtopicName} is a language concept that helps us understand how words, sentences, and ideas work together. Let's think about it in simple terms:
+
+- It's a way to use language more effectively
+- It helps us express our thoughts clearly
+- It appears in everything we read and write
+- It's a foundation for more advanced language skills
+
+### Real-World Examples
+
+Where do you see ${subtopicName} in everyday life?
+
+**Example 1: Reading Stories**
+When you read books or stories, ${subtopicName} helps you understand characters, plot, and meaning.
+
+**Example 2: Writing and Speaking**
+In your own writing and conversations, ${subtopicName} helps you express your ideas clearly and creatively.
+
+**Example 3: Understanding Others**
+When listening to others speak or reading their writing, ${subtopicName} helps you understand their message.
+
+## Working Through Examples
+
+Let's practice with some step-by-step examples:
+
+### Step 1: Observe and Identify
+First, we look at examples and identify how ${subtopicName} is being used.
+
+### Step 2: Understand the Pattern
+Next, we figure out the rules or patterns that make ${subtopicName} work.
+
+### Step 3: Practice with Guidance
+Then we try using ${subtopicName} ourselves with help and feedback.
+
+### Step 4: Apply Independently
+We practice using ${subtopicName} in our own reading and writing.
+
+### Step 5: Reflect and Improve
+Finally, we think about how we can use ${subtopicName} even better.
+
+## Building Your Skills
+
+Remember, learning English is like building a vocabulary of superpowers - each new skill makes you more powerful as a communicator!
+
+### Tips for Success:
+- Read regularly - books, stories, articles, anything you enjoy
+- Write often - journals, stories, letters, or just for fun
+- Listen carefully to how others use language
+- Ask questions when you encounter new words or ideas
+- Practice using new skills in your daily conversations
+
+### What's Next?
+
+After you master ${subtopicName}, you'll be ready to explore more exciting aspects of English. Each skill builds on what you've learned before, so you're developing strong communication abilities.
+
+Great job taking on this language adventure! Remember, every great writer and speaker started exactly where you are now. You've got this!`;
+  } else {
+    return `# Welcome to ${subtopicName}!
+
+This is a comprehensive lesson about **${subtopicName}** for ${gradeLevel} level students.
+
+Learning is an adventure! Today we're going to explore ${subtopicName} and discover how it connects to the world around us.
+
+## What You'll Learn
+
+In this lesson, we'll explore the fundamental concepts of ${subtopicName} and help you understand this important topic step by step.
+
+By the end of this lesson, you will be able to:
+- Understand the basic principles of ${subtopicName}
+- Apply what you've learned through practical examples
+- Feel confident about the key concepts
+- Be ready to take the quiz and demonstrate your knowledge
+
+## Let's Get Started!
+
+This is an interactive lesson that will guide you through the material at your own pace. We'll start with the basics and gradually build up your understanding.
+
+### Why This Topic Matters
+
+Understanding ${subtopicName} is important because it forms the foundation for more advanced concepts in your studies.
+
+### How This Lesson Works
+
+1. **Read carefully** - Take your time with each section
+2. **Think about examples** - Try to relate concepts to real life
+3. **Ask questions** - Use the AI tutor if you need help
+4. **Take the quiz** - Test your understanding at the end
+
+### Ready to Learn?
+
+Great! Let's dive into the fascinating world of ${subtopicName}. Remember, learning is a journey, and every expert was once a beginner.
+
+Take your time, read carefully, and don't hesitate to ask for help if you need it. You've got this!`;
+  }
+}
+
 interface LessonData {
   lesson: string
   metadata: {
@@ -141,87 +345,7 @@ function LessonPageContent() {
       
       // Create a fallback lesson for demo purposes
       const fallbackLesson = {
-        lesson: `# Welcome to ${subtopic.replace(/_/g, ' ')}!
-
-This is a comprehensive lesson about **${subtopic.replace(/_/g, ' ')}** for ${grade.replace('_', ' ')} level students.
-
-In this lesson, we'll explore the fundamental concepts step by step, with practical examples and clear explanations. This topic is essential for building a strong foundation in ${subject === 'math' ? 'mathematics' : 'English language arts'}.
-
-**What makes this lesson special:**
-- Clear, step-by-step explanations
-- Real-world examples you can relate to
-- Practice opportunities to reinforce learning
-- Interactive elements to keep you engaged
-
-## Understanding the Basics
-
-Let's start with the foundation. ${subtopic.replace(/_/g, ' ')} is a crucial concept that you'll use throughout your studies and even in everyday life.
-
-**Key concepts to remember:**
-- Every topic builds on previous knowledge
-- Practice makes perfect
-- It's okay to take your time
-- Questions are encouraged
-
-**Why this matters:** Understanding ${subtopic.replace(/_/g, ' ')} helps you think more clearly, solve problems more effectively, and prepares you for more advanced topics. Many students find this challenging at first, but with practice, it becomes much easier.
-
-**Real-world connections:** You encounter concepts related to ${subtopic.replace(/_/g, ' ')} in many situations - from everyday problem-solving to more complex tasks. This makes learning it both practical and rewarding.
-
-## Breaking It Down Step by Step
-
-Now let's dive deeper into the specific elements of ${subtopic.replace(/_/g, ' ')}. We'll take this one step at a time.
-
-**Step 1: Foundation**
-The first thing to understand is the basic structure. Think of this like building a house - you need a solid foundation before you can build the walls and roof.
-
-**Step 2: Building Up**
-Once you have the foundation, we add the next layer of understanding. This is where things start to come together and make sense.
-
-**Step 3: Application**
-Finally, we learn how to apply what we've learned. This is the most rewarding part because you get to see how it all works together.
-
-**Important tips:**
-- Don't rush through the material
-- Make sure you understand each step before moving on
-- Practice with different examples
-- Ask for help when you need it
-
-## Practical Examples and Applications
-
-Let's look at some concrete examples to help you understand ${subtopic.replace(/_/g, ' ')} better.
-
-**Example 1: Everyday Situations**
-Think about times in your daily life when you might use these concepts. Whether it's organizing your room, planning your time, or solving everyday problems, these skills are everywhere.
-
-**Example 2: Academic Applications**
-In school, you'll use ${subtopic.replace(/_/g, ' ')} in many different subjects. It's not just about this one topic - it's about developing thinking skills that help you everywhere.
-
-**Example 3: Future Learning**
-As you advance in your studies, this foundation will support more complex topics. Students who master these basics find later topics much easier to understand.
-
-**Practice suggestions:**
-- Try to identify these concepts in your daily life
-- Practice explaining them to someone else
-- Work through different types of problems
-- Don't be afraid to make mistakes - they're part of learning
-
-## Putting It All Together
-
-Now that we've covered the basics, let's see how everything connects. ${subtopic.replace(/_/g, ' ')} isn't just isolated facts - it's part of a bigger picture.
-
-**The big picture:**
-Understanding how different concepts relate to each other helps you see patterns and make connections. This makes learning more efficient and more enjoyable.
-
-**Review checklist:**
-- Can you explain the basic concepts?
-- Do you understand why this topic is important?
-- Can you think of real-world examples?
-- Are you ready to practice what you've learned?
-
-**Next steps:**
-After you finish this lesson, you'll take a quiz to test your understanding. Don't worry - it's designed to help you learn, not to trick you. If you don't pass the first time, you can review the material and try again.
-
-Remember: Every expert was once a beginner. You're doing great by taking the time to learn this properly. Take your time, ask questions, and most importantly, believe in yourself!`,
+        lesson: generateSubjectSpecificContent(subject, grade, topic, subtopic),
         metadata: {
           topic: topic,
           subtopic: subtopic,
