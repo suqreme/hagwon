@@ -29,31 +29,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Safety timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      console.warn('Auth loading timeout - forcing loading to false')
+      setLoading(false)
+    }, 10000) // 10 seconds max
+
     // Skip during SSR/build
     if (typeof window === 'undefined') {
       setLoading(false)
+      clearTimeout(timeout)
       return
     }
 
     // Check for classroom student first
     const classroomStudent = localStorage.getItem('current_classroom_student')
     if (classroomStudent) {
-      const student = JSON.parse(classroomStudent)
-      setUser({
-        id: student.id,
-        email: student.email,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        user_metadata: student.user_metadata
-      })
+      try {
+        const student = JSON.parse(classroomStudent)
+        setUser({
+          id: student.id,
+          email: student.email,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          user_metadata: student.user_metadata
+        })
+      } catch (error) {
+        console.error('Failed to parse classroom student data:', error)
+        localStorage.removeItem('current_classroom_student')
+      }
       setLoading(false)
+      clearTimeout(timeout)
       return
     }
 
     // Skip if Supabase is not configured
     if (!supabase) {
-      console.warn('Supabase not configured - running in demo mode')
+      console.log('Supabase not configured - running in demo mode')
       setLoading(false)
+      clearTimeout(timeout)
       return
     }
 
@@ -81,7 +95,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      subscription.unsubscribe()
+      clearTimeout(timeout)
+    }
   }, [])
 
   const fetchUserProfile = async (userId: string) => {

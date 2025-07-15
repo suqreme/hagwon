@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { ThemeInitializer } from '@/components/providers/theme-initializer';
+import LoadingDebug from '@/components/debug/LoadingDebug';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,53 +29,12 @@ const sourceCodePro = Source_Code_Pro({
 export const metadata: Metadata = {
   title: "EduRoot - AI-Powered Learning Platform",
   description: "Global, AI-guided, self-paced education system for GED and K-12 students",
-  applicationName: "EduRoot",
-  keywords: ["education", "learning", "AI tutor", "GED", "K-12", "global education", "voice learning"],
+  keywords: ["education", "learning", "AI tutor", "GED", "K-12", "global education"],
   authors: [{ name: "EduRoot Team" }],
-  creator: "EduRoot",
-  publisher: "EduRoot",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://your-app.vercel.app",
-    title: "EduRoot - Global Education Platform",
-    description: "AI-powered education for K-12 and GED students worldwide. Learn with voice AI tutors, track progress, and access quality education anywhere.",
-    siteName: "EduRoot",
-    images: [
-      {
-        url: "/icons/icon-512x512.png",
-        width: 512,
-        height: 512,
-        alt: "EduRoot Logo",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "EduRoot - Global Education Platform",
-    description: "AI-powered education for K-12 and GED students worldwide",
-    images: ["/icons/icon-512x512.png"],
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "EduRoot",
-  },
-  manifest: "/manifest.json",
-  icons: {
-    icon: [
-      { url: "/icons/icon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/icons/icon-32x32.png", sizes: "32x32", type: "image/png" },
-    ],
-    apple: [
-      { url: "/icons/icon-152x152.png", sizes: "152x152", type: "image/png" },
-      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
-    ],
   },
   viewport: {
     width: "device-width",
@@ -82,7 +42,6 @@ export const metadata: Metadata = {
     maximumScale: 5,
     userScalable: true,
   },
-  themeColor: "#2563eb",
 };
 
 export default function RootLayout({
@@ -161,6 +120,7 @@ export default function RootLayout({
         >
           <ThemeInitializer />
           <AuthProvider>
+            <LoadingDebug />
             {children}
           </AuthProvider>
         </ThemeProvider>
