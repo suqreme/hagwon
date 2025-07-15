@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -14,10 +15,12 @@ interface ThemeSwitcherProps {
 export function ThemeSwitcher({ onClose }: ThemeSwitcherProps) {
   const [currentTheme, setCurrentTheme] = useState('')
   const [isOpen, setIsOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const themes = themeService.getThemes()
 
   useEffect(() => {
     setCurrentTheme(themeService.getCurrentTheme())
+    setMounted(true)
   }, [])
 
   const handleThemeChange = (themeId: string) => {
@@ -30,23 +33,9 @@ export function ThemeSwitcher({ onClose }: ThemeSwitcherProps) {
     if (onClose) onClose()
   }
 
-  if (!isOpen) {
-    return (
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setIsOpen(true)}
-        className="flex items-center space-x-2"
-      >
-        <Palette className="w-4 h-4" />
-        <span>Themes</span>
-      </Button>
-    )
-  }
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-background rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+  const modalContent = (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
+      <div className="bg-background border rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
@@ -112,5 +101,20 @@ export function ThemeSwitcher({ onClose }: ThemeSwitcherProps) {
         </div>
       </div>
     </div>
+  )
+
+  return (
+    <>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setIsOpen(true)}
+        className="flex items-center space-x-2"
+      >
+        <Palette className="w-4 h-4" />
+        <span>Themes</span>
+      </Button>
+      {mounted && isOpen && createPortal(modalContent, document.body)}
+    </>
   )
 }

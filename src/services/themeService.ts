@@ -248,9 +248,9 @@ class ThemeService {
 
   getCurrentTheme(): string {
     try {
-      return localStorage.getItem(this.storageKey) || 'doom-64'
+      return localStorage.getItem(this.storageKey) || 'candyland'
     } catch (error) {
-      return 'doom-64'
+      return 'candyland'
     }
   }
 

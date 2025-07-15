@@ -104,7 +104,9 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <ThemeToggle />
+              <div className="relative">
+                <ThemeToggle />
+              </div>
               <Button 
                 variant="outline" 
                 onClick={() => router.push('/login')}
