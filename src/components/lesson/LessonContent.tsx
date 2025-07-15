@@ -362,8 +362,8 @@ export default function LessonContent({ lessonData, onComplete }: LessonContentP
               </div>
             </div>
 
-            {/* Tutor Help Section - Temporarily removed for testing */}
-            {/* <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-200 dark:border-purple-700">
+            {/* Tutor Help Section */}
+            <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-200 dark:border-purple-700">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
@@ -382,7 +382,7 @@ export default function LessonContent({ lessonData, onComplete }: LessonContentP
                   Talk to Tutor
                 </Button>
               </div>
-            </div> */}
+            </div>
 
             {/* Navigation */}
             <div className="flex justify-between items-center pt-6 border-t border-border">
