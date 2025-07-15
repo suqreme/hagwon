@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CheckCircle, Mail, AlertCircle } from 'lucide-react'
@@ -16,7 +17,8 @@ export default function LoginForm() {
   const [success, setSuccess] = useState('')
   const [showConfirmation, setShowConfirmation] = useState(false)
 
-  const { signIn, signUp } = useAuth()
+  const { signIn, signUp, user } = useAuth()
+  const router = useRouter()
 
 
   // Check for URL parameters on component mount
@@ -41,6 +43,14 @@ export default function LoginForm() {
     }
   }, [])
 
+  // Handle successful login redirect
+  useEffect(() => {
+    if (user && !loading) {
+      console.log('User logged in, redirecting to home page')
+      router.push('/')
+    }
+  }, [user, loading, router])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     console.log('LoginForm: handleSubmit called')
@@ -58,6 +68,7 @@ export default function LoginForm() {
         console.log('LoginForm: Calling signIn...')
         await signIn(email, password)
         console.log('LoginForm: signIn completed successfully')
+        setSuccess('Login successful! Redirecting...')
       }
     } catch (error: unknown) {
       console.log('LoginForm: Error occurred:', error)
@@ -181,7 +192,14 @@ export default function LoginForm() {
           disabled={loading}
           className="w-full"
         >
-          {loading ? 'Loading...' : (isSignUp ? 'Create Account' : 'Sign In')}
+          {loading ? (
+            <div className="flex items-center space-x-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              <span>{isSignUp ? 'Creating Account...' : 'Signing In...'}</span>
+            </div>
+          ) : (
+            isSignUp ? 'Create Account' : 'Sign In'
+          )}
         </Button>
       </form>
 
