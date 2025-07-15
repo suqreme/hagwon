@@ -40,11 +40,29 @@ export default function LessonContent({ lessonData, onComplete }: LessonContentP
   const [isElevenLabsAvailable, setIsElevenLabsAvailable] = useState(false)
   const [showTutorModal, setShowTutorModal] = useState(false)
 
-  // Split lesson content into sections for better pacing - memoized to prevent infinite loops
-  const sections = useMemo(() => 
-    lessonData.lesson.split('\n\n').filter(section => section.trim().length > 0),
-    [lessonData.lesson]
-  )
+  // Split lesson content into larger sections by headers for better pacing
+  const sections = useMemo(() => {
+    // Split by major headers (##) to create substantial sections
+    const headerSections = lessonData.lesson.split(/\n(?=## )/);
+    
+    // If no headers found, split by multiple paragraphs instead
+    if (headerSections.length === 1) {
+      // Group multiple paragraphs together (split every 3-4 paragraphs)
+      const paragraphs = lessonData.lesson.split('\n\n').filter(p => p.trim().length > 0);
+      const groupedSections = [];
+      
+      for (let i = 0; i < paragraphs.length; i += 3) {
+        const section = paragraphs.slice(i, i + 3).join('\n\n');
+        if (section.trim()) {
+          groupedSections.push(section);
+        }
+      }
+      
+      return groupedSections.length > 0 ? groupedSections : [lessonData.lesson];
+    }
+    
+    return headerSections.filter(section => section.trim().length > 0);
+  }, [lessonData.lesson])
 
   // Initialize voice service once
   useEffect(() => {
@@ -305,6 +323,11 @@ export default function LessonContent({ lessonData, onComplete }: LessonContentP
           <div className="space-y-6">
             {/* Current Section */}
             <div className="prose max-w-none">
+              {/* Debug info - remove in production */}
+              <div className="text-xs text-muted-foreground mb-2 bg-muted p-2 rounded">
+                Debug: Section {currentSection + 1} of {sections.length} | 
+                Length: {sections[currentSection]?.length || 0} chars
+              </div>
               <div className="text-lg leading-relaxed text-foreground">
                 {/* Check if content contains markdown headers */}
                 {sections[currentSection]?.includes('#') ? (
@@ -339,8 +362,8 @@ export default function LessonContent({ lessonData, onComplete }: LessonContentP
               </div>
             </div>
 
-            {/* Tutor Help Section */}
-            <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-200 dark:border-purple-700">
+            {/* Tutor Help Section - Temporarily removed for testing */}
+            {/* <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-200 dark:border-purple-700">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
@@ -359,7 +382,7 @@ export default function LessonContent({ lessonData, onComplete }: LessonContentP
                   Talk to Tutor
                 </Button>
               </div>
-            </div>
+            </div> */}
 
             {/* Navigation */}
             <div className="flex justify-between items-center pt-6 border-t border-border">
