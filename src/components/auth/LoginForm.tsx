@@ -18,13 +18,6 @@ export default function LoginForm() {
 
   const { signIn, signUp } = useAuth()
 
-  // Test if JavaScript is working at all
-  console.log('LoginForm component mounted')
-  
-  const testClick = () => {
-    console.log('TEST BUTTON CLICKED - JavaScript is working!')
-    alert('JavaScript is working!')
-  }
 
   // Check for URL parameters on component mount
   useEffect(() => {
@@ -182,14 +175,6 @@ export default function LoginForm() {
             <span className="text-green-700 text-sm">{success}</span>
           </div>
         )}
-
-        <Button
-          type="button"
-          onClick={testClick}
-          className="w-full mb-2 bg-red-500 hover:bg-red-600"
-        >
-          🚨 TEST BUTTON - Click Me First!
-        </Button>
 
         <Button
           type="submit"

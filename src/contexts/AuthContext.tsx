@@ -110,35 +110,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('Fetching user profile for ID:', userId)
       
-      // TEMPORARY DEBUG: Skip database and create fake profile
-      const { data: userData } = await supabase.auth.getUser()
-      if (userData.user) {
-        console.log('Creating temporary profile for debug')
-        const tempProfile = {
-          id: userData.user.id,
-          email: userData.user.email,
-          role: userData.user.email === 'zerotosran@hotmail.com' ? 'admin' : 'student',
-          subscription_plan: 'free',
-          created_at: userData.user.created_at,
-          updated_at: new Date().toISOString()
-        }
-        setUser(tempProfile)
-        setLoading(false)
-        return
-      }
-      
-      // Add timeout to prevent hanging
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
-      
       const { data, error } = await supabase
         .from('user_profiles')
         .select('*')
         .eq('id', userId)
-        .abortSignal(controller.signal)
         .single()
-      
-      clearTimeout(timeoutId)
 
       if (error) {
         console.error('Database error:', error)
@@ -177,24 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error: any) {
       console.error('Failed to fetch user profile:', error)
-      
-      // If it's an abort error (timeout), create a minimal user profile
-      if (error.name === 'AbortError') {
-        console.log('Profile fetch timed out, creating minimal user profile')
-        const { data: userData } = await supabase.auth.getUser()
-        if (userData.user) {
-          setUser({
-            id: userData.user.id,
-            email: userData.user.email,
-            role: 'student',
-            subscription_plan: 'free',
-            created_at: userData.user.created_at,
-            updated_at: new Date().toISOString()
-          })
-        }
-      } else {
-        setUser(null)
-      }
+      setUser(null)
     } finally {
       setLoading(false)
     }
@@ -203,24 +162,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = async (email: string, password: string) => {
     console.log('SignIn called with:', email)
     
-    // EMERGENCY BYPASS: Skip Supabase entirely for testing
-    console.log('Creating fake user to bypass Supabase hang')
-    const fakeUser = {
-      id: email === 'zerotosran@hotmail.com' ? '155c9cfb-54a6-4b20-a2ee-7cbeca0a94a2' : 'fake-user-id',
-      email: email,
-      role: email === 'zerotosran@hotmail.com' ? 'admin' : 'student',
-      subscription_plan: 'free',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }
-    
-    setUser(fakeUser)
-    setLoading(false)
-    console.log('Fake user set successfully:', fakeUser)
-    return
-    
-    // Original Supabase code (temporarily disabled)
-    /*
     if (!supabase) {
       // Demo mode - create a fake user
       const demoUser = {
@@ -243,7 +184,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log('signInWithPassword completed, error:', error)
     if (error) throw error
     console.log('signIn method completed successfully')
-    */
   }
 
   const signUp = async (email: string, password: string, metadata?: any) => {
