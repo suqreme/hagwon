@@ -305,8 +305,26 @@ export default function LessonContent({ lessonData, onComplete }: LessonContentP
           <div className="space-y-6">
             {/* Current Section */}
             <div className="prose max-w-none">
-              <div className="text-lg leading-relaxed whitespace-pre-line text-foreground">
-                {sections[currentSection]}
+              <div className="text-lg leading-relaxed text-foreground">
+                {/* Check if content contains markdown headers */}
+                {sections[currentSection]?.includes('#') ? (
+                  <div 
+                    dangerouslySetInnerHTML={{
+                      __html: sections[currentSection]
+                        .replace(/^# (.+)$/gm, '<h1 class="text-3xl font-bold mb-4">$1</h1>')
+                        .replace(/^## (.+)$/gm, '<h2 class="text-2xl font-semibold mb-3">$1</h2>')
+                        .replace(/^### (.+)$/gm, '<h3 class="text-xl font-medium mb-2">$1</h3>')
+                        .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>')
+                        .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>')
+                        .replace(/\n\n/g, '</p><p class="mb-4">')
+                        .replace(/^(?!<[h123]|<p)(.+)$/gm, '<p class="mb-4">$1</p>')
+                    }}
+                  />
+                ) : (
+                  <div className="whitespace-pre-line">
+                    {sections[currentSection]}
+                  </div>
+                )}
               </div>
             </div>
 
