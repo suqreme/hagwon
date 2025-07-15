@@ -110,11 +110,40 @@ export default function Dashboard() {
   const loadUserProgress = () => {
     if (!user) return
     
-    const stats = progressService.getUserStats(user.id)
-    setUserStats(stats)
-    
-    const lastLessonData = progressService.getLastLesson(user.id)
-    setLastLesson(lastLessonData)
+    try {
+      // For now, use default profile (user.id) until multi-student is fully integrated
+      const stats = progressService.getProgressStats(user.id)
+      setUserStats({
+        lessonsCompleted: stats.totalLessonsCompleted,
+        quizzesPassed: stats.totalQuizzesPassed,
+        totalXP: Math.floor(stats.averageScore * stats.totalQuizzesPassed),
+        currentStreak: stats.currentStreak,
+        lastLessonDate: stats.lastActivity
+      })
+      
+      // Get in-progress lessons as fallback for last lesson
+      const inProgressLessons = progressService.getInProgressLessons(user.id)
+      if (inProgressLessons.length > 0) {
+        const lastLesson = inProgressLessons[inProgressLessons.length - 1]
+        setLastLesson({
+          subject: lastLesson.subject,
+          grade: lastLesson.grade,
+          topic: lastLesson.topic,
+          subtopic: lastLesson.subtopic,
+          lastAccessed: lastLesson.lastAccessedAt
+        })
+      }
+    } catch (error) {
+      console.error('Error loading user progress:', error)
+      // Set default values if there's an error
+      setUserStats({
+        lessonsCompleted: 0,
+        quizzesPassed: 0,
+        totalXP: 0,
+        currentStreak: 0,
+        lastLessonDate: ''
+      })
+    }
   }
 
   const loadSubscriptionInfo = () => {
@@ -126,8 +155,25 @@ export default function Dashboard() {
 
   const loadCurriculum = async () => {
     try {
-      const curriculum = await curriculumService.getUserPath(selectedSubject, currentGrade, user?.id)
-      setTopics(curriculum.topics)
+      const availableTopics = await curriculumService.getAvailableTopics(selectedSubject, currentGrade)
+      
+      // Convert to the format expected by the dashboard
+      const topicsArray = Object.entries(availableTopics)
+        .sort(([,a], [,b]) => a.order - b.order)
+        .map(([topicId, topicData]) => ({
+          id: topicId,
+          name: topicData.title,
+          subtopics: Object.entries(topicData.subtopics)
+            .sort(([,a], [,b]) => a.order - b.order)
+            .map(([subtopicId, subtopicData]) => ({
+              id: subtopicId,
+              name: subtopicData.title,
+              unlocked: true, // For now, unlock all - should check prerequisites
+              completed: false // Should check progress
+            }))
+        }))
+      
+      setTopics(topicsArray)
     } catch (error) {
       console.error('Failed to load curriculum:', error)
     }
