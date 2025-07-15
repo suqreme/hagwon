@@ -3,15 +3,15 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
-import LandingPage from '@/components/landing/LandingPage'
 import LoginForm from '@/components/auth/LoginForm'
 import GradeEstimate from '@/components/auth/GradeEstimate'
 import DiagnosticTest from '@/components/auth/DiagnosticTest'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { ArrowLeft } from 'lucide-react'
 
-export default function Home() {
+export default function LoginPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
   const [step, setStep] = useState<'login' | 'estimate' | 'diagnostic' | 'complete'>('login')
@@ -60,9 +60,50 @@ export default function Home() {
     )
   }
 
-  // Show landing page for non-authenticated users
   if (!user && step === 'login') {
-    return <LandingPage />
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="max-w-4xl w-full">
+          <div className="text-center mb-8">
+            <Button
+              variant="ghost"
+              onClick={() => router.push('/')}
+              className="mb-4"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
+            <h1 className="text-4xl font-bold text-foreground mb-4">
+              Welcome to Hagwon
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              AI-powered learning platform for everyone, everywhere
+            </p>
+            <div className="mt-6 space-y-4">
+              <div className="flex items-center justify-center space-x-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => router.push('/student')}
+                >
+                  Multi-Student Mode
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => router.push('/classroom')}
+                >
+                  Classroom Mode (Old)
+                </Button>
+                <ThemeToggle />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                For shared devices with multiple students
+              </p>
+            </div>
+          </div>
+          <LoginForm />
+        </div>
+      </div>
+    )
   }
 
   // If user is logged in but hasn't completed onboarding, continue with flow
