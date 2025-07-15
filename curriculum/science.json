@@ -1,0 +1,315 @@
+{
+  "subject": "science",
+  "display_name": "Science",
+  "description": "Explore the natural world through hands-on learning",
+  "grade_levels": {
+    "kindergarten": {
+      "display_name": "Kindergarten Science",
+      "topics": {
+        "living_things": {
+          "name": "Living and Non-Living Things",
+          "description": "Learn to identify what is alive and what is not",
+          "subtopics": {
+            "animals": {
+              "name": "Animals Around Us",
+              "description": "Discover different animals and their homes",
+              "difficulty": 1,
+              "estimated_time": 15,
+              "learning_objectives": ["Identify common animals", "Understand animal needs"],
+              "prerequisites": []
+            },
+            "plants": {
+              "name": "Plants in Our World",
+              "description": "Learn about plants and how they grow",
+              "difficulty": 1,
+              "estimated_time": 15,
+              "learning_objectives": ["Identify plant parts", "Understand plant needs"],
+              "prerequisites": []
+            },
+            "needs_of_living_things": {
+              "name": "What Living Things Need",
+              "description": "Discover what animals and plants need to survive",
+              "difficulty": 2,
+              "estimated_time": 20,
+              "learning_objectives": ["Identify basic needs", "Compare animal and plant needs"],
+              "prerequisites": ["animals", "plants"]
+            }
+          }
+        },
+        "weather": {
+          "name": "Weather and Seasons",
+          "description": "Observe and describe weather patterns",
+          "subtopics": {
+            "daily_weather": {
+              "name": "Today's Weather",
+              "description": "Learn to observe and describe weather",
+              "difficulty": 1,
+              "estimated_time": 15,
+              "learning_objectives": ["Describe weather conditions", "Use weather words"],
+              "prerequisites": []
+            },
+            "seasons": {
+              "name": "Four Seasons",
+              "description": "Explore how weather changes throughout the year",
+              "difficulty": 2,
+              "estimated_time": 20,
+              "learning_objectives": ["Identify seasons", "Compare seasonal changes"],
+              "prerequisites": ["daily_weather"]
+            }
+          }
+        },
+        "senses": {
+          "name": "Using Our Five Senses",
+          "description": "Explore the world through sight, sound, touch, taste, and smell",
+          "subtopics": {
+            "sight": {
+              "name": "What We Can See",
+              "description": "Learn about vision and observing",
+              "difficulty": 1,
+              "estimated_time": 15,
+              "learning_objectives": ["Use sight to observe", "Describe what we see"],
+              "prerequisites": []
+            },
+            "sound": {
+              "name": "What We Can Hear",
+              "description": "Explore sounds in our environment",
+              "difficulty": 1,
+              "estimated_time": 15,
+              "learning_objectives": ["Identify different sounds", "Understand loud and quiet"],
+              "prerequisites": []
+            },
+            "all_senses": {
+              "name": "Using All Five Senses",
+              "description": "Combine all senses to explore objects",
+              "difficulty": 2,
+              "estimated_time": 25,
+              "learning_objectives": ["Use multiple senses", "Compare observations"],
+              "prerequisites": ["sight", "sound"]
+            }
+          }
+        }
+      }
+    },
+    "grade_1": {
+      "display_name": "Grade 1 Science",
+      "topics": {
+        "animal_behavior": {
+          "name": "How Animals Behave",
+          "description": "Study animal behaviors and adaptations",
+          "subtopics": {
+            "animal_movements": {
+              "name": "How Animals Move",
+              "description": "Explore different ways animals move",
+              "difficulty": 2,
+              "estimated_time": 20,
+              "learning_objectives": ["Compare animal movements", "Understand adaptations"],
+              "prerequisites": []
+            },
+            "animal_homes": {
+              "name": "Where Animals Live",
+              "description": "Learn about different animal habitats",
+              "difficulty": 2,
+              "estimated_time": 20,
+              "learning_objectives": ["Identify habitats", "Match animals to homes"],
+              "prerequisites": ["animal_movements"]
+            }
+          }
+        },
+        "plant_life": {
+          "name": "Plant Life Cycles",
+          "description": "Discover how plants grow and change",
+          "subtopics": {
+            "seed_to_plant": {
+              "name": "From Seed to Plant",
+              "description": "Follow a plant's growth journey",
+              "difficulty": 2,
+              "estimated_time": 25,
+              "learning_objectives": ["Sequence plant growth", "Identify growth stages"],
+              "prerequisites": []
+            },
+            "plant_parts": {
+              "name": "Parts of a Plant",
+              "description": "Learn about roots, stems, leaves, and flowers",
+              "difficulty": 2,
+              "estimated_time": 20,
+              "learning_objectives": ["Name plant parts", "Understand plant functions"],
+              "prerequisites": ["seed_to_plant"]
+            }
+          }
+        },
+        "simple_machines": {
+          "name": "Simple Machines",
+          "description": "Explore tools that make work easier",
+          "subtopics": {
+            "pushes_and_pulls": {
+              "name": "Pushes and Pulls",
+              "description": "Understand forces that move objects",
+              "difficulty": 2,
+              "estimated_time": 20,
+              "learning_objectives": ["Identify pushes and pulls", "Predict movement"],
+              "prerequisites": []
+            },
+            "levers": {
+              "name": "Levers Help Us",
+              "description": "Discover how levers make lifting easier",
+              "difficulty": 3,
+              "estimated_time": 25,
+              "learning_objectives": ["Identify levers", "Use simple levers"],
+              "prerequisites": ["pushes_and_pulls"]
+            }
+          }
+        }
+      }
+    },
+    "grade_3": {
+      "display_name": "Grade 3 Science",
+      "topics": {
+        "ecosystems": {
+          "name": "Ecosystems and Food Chains",
+          "description": "Explore how living things depend on each other",
+          "subtopics": {
+            "food_chains": {
+              "name": "Simple Food Chains",
+              "description": "Learn who eats whom in nature",
+              "difficulty": 3,
+              "estimated_time": 30,
+              "learning_objectives": ["Create food chains", "Identify producers and consumers"],
+              "prerequisites": []
+            },
+            "habitats": {
+              "name": "Different Habitats",
+              "description": "Compare forest, ocean, and desert ecosystems",
+              "difficulty": 3,
+              "estimated_time": 35,
+              "learning_objectives": ["Compare habitats", "Understand adaptations"],
+              "prerequisites": ["food_chains"]
+            }
+          }
+        },
+        "matter": {
+          "name": "States of Matter",
+          "description": "Explore solids, liquids, and gases",
+          "subtopics": {
+            "solid_liquid_gas": {
+              "name": "Solids, Liquids, and Gases",
+              "description": "Identify and compare states of matter",
+              "difficulty": 3,
+              "estimated_time": 30,
+              "learning_objectives": ["Classify matter states", "Compare properties"],
+              "prerequisites": []
+            },
+            "changing_states": {
+              "name": "How Matter Changes",
+              "description": "Explore melting, freezing, and evaporation",
+              "difficulty": 4,
+              "estimated_time": 35,
+              "learning_objectives": ["Explain state changes", "Predict changes"],
+              "prerequisites": ["solid_liquid_gas"]
+            }
+          }
+        }
+      }
+    },
+    "grade_5": {
+      "display_name": "Grade 5 Science",
+      "topics": {
+        "earth_systems": {
+          "name": "Earth's Systems",
+          "description": "Study Earth's land, water, and atmosphere",
+          "subtopics": {
+            "water_cycle": {
+              "name": "The Water Cycle",
+              "description": "Follow water's journey through Earth's systems",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Explain water cycle", "Identify processes"],
+              "prerequisites": []
+            },
+            "rock_cycle": {
+              "name": "Rocks and Minerals",
+              "description": "Explore how rocks form and change",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Classify rocks", "Understand rock formation"],
+              "prerequisites": ["water_cycle"]
+            }
+          }
+        },
+        "human_body": {
+          "name": "Human Body Systems",
+          "description": "Learn how body systems work together",
+          "subtopics": {
+            "digestive_system": {
+              "name": "How We Digest Food",
+              "description": "Follow food's journey through the body",
+              "difficulty": 4,
+              "estimated_time": 35,
+              "learning_objectives": ["Trace digestion process", "Identify organs"],
+              "prerequisites": []
+            },
+            "circulatory_system": {
+              "name": "Heart and Blood",
+              "description": "Learn how blood travels through the body",
+              "difficulty": 4,
+              "estimated_time": 35,
+              "learning_objectives": ["Understand circulation", "Identify heart function"],
+              "prerequisites": ["digestive_system"]
+            }
+          }
+        }
+      }
+    },
+    "grade_8": {
+      "display_name": "Grade 8 Science",
+      "topics": {
+        "chemistry": {
+          "name": "Introduction to Chemistry",
+          "description": "Explore atoms, molecules, and chemical reactions",
+          "subtopics": {
+            "atoms_molecules": {
+              "name": "Atoms and Molecules",
+              "description": "Understand the building blocks of matter",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Identify atomic structure", "Understand molecules"],
+              "prerequisites": []
+            },
+            "chemical_reactions": {
+              "name": "Chemical Reactions",
+              "description": "Learn how substances change chemically",
+              "difficulty": 5,
+              "estimated_time": 50,
+              "learning_objectives": ["Identify chemical changes", "Balance equations"],
+              "prerequisites": ["atoms_molecules"]
+            }
+          }
+        },
+        "physics": {
+          "name": "Forces and Motion",
+          "description": "Study how objects move and what causes motion",
+          "subtopics": {
+            "newtons_laws": {
+              "name": "Newton's Laws of Motion",
+              "description": "Understand the fundamental laws of movement",
+              "difficulty": 5,
+              "estimated_time": 50,
+              "learning_objectives": ["Apply Newton's laws", "Solve motion problems"],
+              "prerequisites": []
+            },
+            "energy": {
+              "name": "Forms of Energy",
+              "description": "Explore kinetic and potential energy",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Calculate energy", "Understand energy transfer"],
+              "prerequisites": ["newtons_laws"]
+            }
+          }
+        }
+      }
+    }
+  },
+  "ai_enabled": true,
+  "voice_enabled": true,
+  "offline_capable": true
+}

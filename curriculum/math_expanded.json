@@ -1,0 +1,505 @@
+{
+  "subject": "math",
+  "display_name": "Mathematics",
+  "description": "Build mathematical reasoning from basic arithmetic to advanced concepts",
+  "grade_levels": {
+    "grade_6": {
+      "display_name": "Grade 6 Math",
+      "topics": {
+        "ratios_proportions": {
+          "name": "Ratios and Proportions",
+          "description": "Understand and work with ratios and proportional relationships",
+          "subtopics": {
+            "understanding_ratios": {
+              "name": "Introduction to Ratios",
+              "description": "Understand what ratios represent and how to write them",
+              "difficulty": 4,
+              "estimated_time": 35,
+              "learning_objectives": ["Write ratios", "Compare quantities"],
+              "prerequisites": []
+            },
+            "equivalent_ratios": {
+              "name": "Equivalent Ratios",
+              "description": "Find and create equivalent ratios",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Scale ratios", "Find missing values"],
+              "prerequisites": ["understanding_ratios"]
+            },
+            "solving_proportions": {
+              "name": "Solving Proportions",
+              "description": "Use cross multiplication to solve proportions",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Cross multiply", "Solve for unknowns"],
+              "prerequisites": ["equivalent_ratios"]
+            }
+          }
+        },
+        "fractions_decimals": {
+          "name": "Advanced Fractions and Decimals",
+          "description": "Master operations with fractions and decimals",
+          "subtopics": {
+            "dividing_fractions": {
+              "name": "Dividing Fractions",
+              "description": "Divide fractions using reciprocals",
+              "difficulty": 5,
+              "estimated_time": 40,
+              "learning_objectives": ["Use reciprocals", "Solve division problems"],
+              "prerequisites": []
+            },
+            "decimal_operations": {
+              "name": "Decimal Operations",
+              "description": "Add, subtract, multiply, and divide decimals",
+              "difficulty": 4,
+              "estimated_time": 45,
+              "learning_objectives": ["Perform decimal operations", "Estimate answers"],
+              "prerequisites": ["dividing_fractions"]
+            },
+            "percent_problems": {
+              "name": "Percent Problems",
+              "description": "Solve real-world percent problems",
+              "difficulty": 5,
+              "estimated_time": 50,
+              "learning_objectives": ["Calculate percentages", "Find percent change"],
+              "prerequisites": ["decimal_operations"]
+            }
+          }
+        },
+        "integers": {
+          "name": "Integers and Coordinate Plane",
+          "description": "Work with positive and negative numbers",
+          "subtopics": {
+            "integer_operations": {
+              "name": "Integer Operations",
+              "description": "Add, subtract, multiply, and divide integers",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Use integer rules", "Solve problems"],
+              "prerequisites": []
+            },
+            "coordinate_plane": {
+              "name": "Coordinate Plane",
+              "description": "Plot points and find distances on coordinate plane",
+              "difficulty": 4,
+              "estimated_time": 35,
+              "learning_objectives": ["Plot points", "Find distances"],
+              "prerequisites": ["integer_operations"]
+            }
+          }
+        }
+      }
+    },
+    "grade_8": {
+      "display_name": "Grade 8 Math (Pre-Algebra)",
+      "topics": {
+        "linear_equations": {
+          "name": "Linear Equations",
+          "description": "Solve and graph linear equations",
+          "subtopics": {
+            "solving_equations": {
+              "name": "Solving Linear Equations",
+              "description": "Solve one and two-step equations",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Isolate variables", "Check solutions"],
+              "prerequisites": []
+            },
+            "graphing_lines": {
+              "name": "Graphing Linear Equations",
+              "description": "Graph lines using slope and y-intercept",
+              "difficulty": 5,
+              "estimated_time": 50,
+              "learning_objectives": ["Find slope", "Use slope-intercept form"],
+              "prerequisites": ["solving_equations"]
+            },
+            "systems_equations": {
+              "name": "Systems of Equations",
+              "description": "Solve systems using substitution and elimination",
+              "difficulty": 6,
+              "estimated_time": 55,
+              "learning_objectives": ["Use substitution", "Use elimination"],
+              "prerequisites": ["graphing_lines"]
+            }
+          }
+        },
+        "functions": {
+          "name": "Introduction to Functions",
+          "description": "Understand functions and functional relationships",
+          "subtopics": {
+            "function_notation": {
+              "name": "Function Notation",
+              "description": "Understand and use function notation",
+              "difficulty": 5,
+              "estimated_time": 40,
+              "learning_objectives": ["Use f(x) notation", "Evaluate functions"],
+              "prerequisites": []
+            },
+            "linear_functions": {
+              "name": "Linear Functions",
+              "description": "Work with linear functions and their properties",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Identify linear functions", "Find rate of change"],
+              "prerequisites": ["function_notation"]
+            }
+          }
+        },
+        "geometry_basics": {
+          "name": "Basic Geometry",
+          "description": "Explore geometric shapes and relationships",
+          "subtopics": {
+            "angles_triangles": {
+              "name": "Angles and Triangles",
+              "description": "Work with angles and triangle properties",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Classify angles", "Use triangle properties"],
+              "prerequisites": []
+            },
+            "pythagorean_theorem": {
+              "name": "Pythagorean Theorem",
+              "description": "Use the Pythagorean theorem to solve problems",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Apply theorem", "Find missing sides"],
+              "prerequisites": ["angles_triangles"]
+            }
+          }
+        }
+      }
+    },
+    "algebra_1": {
+      "display_name": "Algebra 1",
+      "topics": {
+        "polynomial_operations": {
+          "name": "Polynomial Operations",
+          "description": "Work with polynomials and their operations",
+          "subtopics": {
+            "adding_polynomials": {
+              "name": "Adding and Subtracting Polynomials",
+              "description": "Combine like terms in polynomial expressions",
+              "difficulty": 5,
+              "estimated_time": 40,
+              "learning_objectives": ["Combine like terms", "Simplify expressions"],
+              "prerequisites": []
+            },
+            "multiplying_polynomials": {
+              "name": "Multiplying Polynomials",
+              "description": "Multiply polynomials using distribution",
+              "difficulty": 6,
+              "estimated_time": 50,
+              "learning_objectives": ["Use FOIL method", "Multiply binomials"],
+              "prerequisites": ["adding_polynomials"]
+            },
+            "factoring": {
+              "name": "Factoring Polynomials",
+              "description": "Factor polynomials using various methods",
+              "difficulty": 6,
+              "estimated_time": 55,
+              "learning_objectives": ["Factor out GCF", "Factor trinomials"],
+              "prerequisites": ["multiplying_polynomials"]
+            }
+          }
+        },
+        "quadratic_equations": {
+          "name": "Quadratic Equations",
+          "description": "Solve and graph quadratic equations",
+          "subtopics": {
+            "solving_quadratics": {
+              "name": "Solving Quadratic Equations",
+              "description": "Solve quadratics by factoring and formula",
+              "difficulty": 6,
+              "estimated_time": 50,
+              "learning_objectives": ["Factor to solve", "Use quadratic formula"],
+              "prerequisites": []
+            },
+            "graphing_parabolas": {
+              "name": "Graphing Parabolas",
+              "description": "Graph quadratic functions and find key features",
+              "difficulty": 6,
+              "estimated_time": 55,
+              "learning_objectives": ["Find vertex", "Identify axis of symmetry"],
+              "prerequisites": ["solving_quadratics"]
+            }
+          }
+        },
+        "radical_expressions": {
+          "name": "Radical Expressions",
+          "description": "Simplify and solve radical expressions",
+          "subtopics": {
+            "simplifying_radicals": {
+              "name": "Simplifying Radicals",
+              "description": "Simplify square roots and other radicals",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Simplify square roots", "Rationalize denominators"],
+              "prerequisites": []
+            },
+            "radical_equations": {
+              "name": "Solving Radical Equations",
+              "description": "Solve equations containing radicals",
+              "difficulty": 6,
+              "estimated_time": 50,
+              "learning_objectives": ["Isolate radicals", "Check for extraneous solutions"],
+              "prerequisites": ["simplifying_radicals"]
+            }
+          }
+        }
+      }
+    },
+    "geometry": {
+      "display_name": "Geometry",
+      "topics": {
+        "proofs": {
+          "name": "Geometric Proofs",
+          "description": "Write formal geometric proofs",
+          "subtopics": {
+            "two_column_proofs": {
+              "name": "Two-Column Proofs",
+              "description": "Write formal two-column geometric proofs",
+              "difficulty": 6,
+              "estimated_time": 55,
+              "learning_objectives": ["Use logical reasoning", "Apply theorems"],
+              "prerequisites": []
+            },
+            "triangle_proofs": {
+              "name": "Triangle Congruence Proofs",
+              "description": "Prove triangles congruent using SSS, SAS, ASA",
+              "difficulty": 6,
+              "estimated_time": 60,
+              "learning_objectives": ["Apply congruence theorems", "Write formal proofs"],
+              "prerequisites": ["two_column_proofs"]
+            }
+          }
+        },
+        "area_volume": {
+          "name": "Area and Volume",
+          "description": "Calculate area and volume of geometric shapes",
+          "subtopics": {
+            "polygon_areas": {
+              "name": "Areas of Polygons",
+              "description": "Find areas of triangles, quadrilaterals, and polygons",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Apply area formulas", "Decompose shapes"],
+              "prerequisites": []
+            },
+            "circle_measurements": {
+              "name": "Circles: Area and Circumference",
+              "description": "Calculate circle measurements and related areas",
+              "difficulty": 5,
+              "estimated_time": 50,
+              "learning_objectives": ["Use circle formulas", "Find arc length"],
+              "prerequisites": ["polygon_areas"]
+            },
+            "solid_geometry": {
+              "name": "Surface Area and Volume",
+              "description": "Calculate surface area and volume of 3D shapes",
+              "difficulty": 6,
+              "estimated_time": 55,
+              "learning_objectives": ["Apply volume formulas", "Find surface area"],
+              "prerequisites": ["circle_measurements"]
+            }
+          }
+        }
+      }
+    },
+    "algebra_2": {
+      "display_name": "Algebra 2",
+      "topics": {
+        "exponential_logarithmic": {
+          "name": "Exponential and Logarithmic Functions",
+          "description": "Work with exponential growth, decay, and logarithms",
+          "subtopics": {
+            "exponential_functions": {
+              "name": "Exponential Functions",
+              "description": "Graph and analyze exponential functions",
+              "difficulty": 6,
+              "estimated_time": 50,
+              "learning_objectives": ["Graph exponentials", "Model growth and decay"],
+              "prerequisites": []
+            },
+            "logarithmic_functions": {
+              "name": "Logarithmic Functions",
+              "description": "Understand logs as inverse of exponentials",
+              "difficulty": 7,
+              "estimated_time": 55,
+              "learning_objectives": ["Evaluate logarithms", "Solve log equations"],
+              "prerequisites": ["exponential_functions"]
+            },
+            "log_properties": {
+              "name": "Properties of Logarithms",
+              "description": "Use logarithm properties to simplify expressions",
+              "difficulty": 7,
+              "estimated_time": 60,
+              "learning_objectives": ["Apply log rules", "Change bases"],
+              "prerequisites": ["logarithmic_functions"]
+            }
+          }
+        },
+        "trigonometry": {
+          "name": "Introduction to Trigonometry",
+          "description": "Learn basic trigonometric functions and identities",
+          "subtopics": {
+            "trig_ratios": {
+              "name": "Trigonometric Ratios",
+              "description": "Use sine, cosine, and tangent ratios",
+              "difficulty": 6,
+              "estimated_time": 50,
+              "learning_objectives": ["Find trig ratios", "Solve right triangles"],
+              "prerequisites": []
+            },
+            "unit_circle": {
+              "name": "Unit Circle",
+              "description": "Use the unit circle to find trig values",
+              "difficulty": 7,
+              "estimated_time": 55,
+              "learning_objectives": ["Navigate unit circle", "Find reference angles"],
+              "prerequisites": ["trig_ratios"]
+            },
+            "trig_functions": {
+              "name": "Trigonometric Functions",
+              "description": "Graph and analyze trig functions",
+              "difficulty": 7,
+              "estimated_time": 60,
+              "learning_objectives": ["Graph trig functions", "Find amplitude and period"],
+              "prerequisites": ["unit_circle"]
+            }
+          }
+        }
+      }
+    },
+    "calculus": {
+      "display_name": "Calculus",
+      "topics": {
+        "limits": {
+          "name": "Limits and Continuity",
+          "description": "Understand the concept of limits",
+          "subtopics": {
+            "limit_concept": {
+              "name": "Understanding Limits",
+              "description": "Evaluate limits graphically and algebraically",
+              "difficulty": 7,
+              "estimated_time": 60,
+              "learning_objectives": ["Evaluate limits", "Understand continuity"],
+              "prerequisites": []
+            },
+            "limit_laws": {
+              "name": "Limit Laws and Techniques",
+              "description": "Apply limit laws to evaluate complex limits",
+              "difficulty": 8,
+              "estimated_time": 65,
+              "learning_objectives": ["Apply limit laws", "Use L'Hôpital's rule"],
+              "prerequisites": ["limit_concept"]
+            }
+          }
+        },
+        "derivatives": {
+          "name": "Derivatives",
+          "description": "Calculate and apply derivatives",
+          "subtopics": {
+            "derivative_definition": {
+              "name": "Definition of Derivative",
+              "description": "Understand derivatives as rates of change",
+              "difficulty": 7,
+              "estimated_time": 60,
+              "learning_objectives": ["Use derivative definition", "Find instantaneous rates"],
+              "prerequisites": []
+            },
+            "derivative_rules": {
+              "name": "Derivative Rules",
+              "description": "Apply power, product, quotient, and chain rules",
+              "difficulty": 8,
+              "estimated_time": 70,
+              "learning_objectives": ["Apply derivative rules", "Find complex derivatives"],
+              "prerequisites": ["derivative_definition"]
+            },
+            "applications": {
+              "name": "Applications of Derivatives",
+              "description": "Use derivatives to solve optimization problems",
+              "difficulty": 8,
+              "estimated_time": 75,
+              "learning_objectives": ["Optimize functions", "Analyze motion"],
+              "prerequisites": ["derivative_rules"]
+            }
+          }
+        }
+      }
+    },
+    "ged_math": {
+      "display_name": "GED Mathematics",
+      "topics": {
+        "number_operations": {
+          "name": "Number Operations",
+          "description": "Master arithmetic for the GED test",
+          "subtopics": {
+            "fraction_decimal_percent": {
+              "name": "Fractions, Decimals, and Percents",
+              "description": "Convert between and calculate with different number forms",
+              "difficulty": 4,
+              "estimated_time": 45,
+              "learning_objectives": ["Convert between forms", "Solve word problems"],
+              "prerequisites": []
+            },
+            "ratio_proportion": {
+              "name": "Ratios and Proportions",
+              "description": "Solve proportion problems and scale factors",
+              "difficulty": 5,
+              "estimated_time": 40,
+              "learning_objectives": ["Set up proportions", "Find missing values"],
+              "prerequisites": ["fraction_decimal_percent"]
+            }
+          }
+        },
+        "algebraic_reasoning": {
+          "name": "Algebraic Reasoning",
+          "description": "Solve equations and work with expressions",
+          "subtopics": {
+            "linear_equations_ged": {
+              "name": "Linear Equations",
+              "description": "Solve linear equations and inequalities",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Solve equations", "Graph inequalities"],
+              "prerequisites": []
+            },
+            "quadratic_basics": {
+              "name": "Quadratic Functions",
+              "description": "Work with quadratic expressions and equations",
+              "difficulty": 6,
+              "estimated_time": 50,
+              "learning_objectives": ["Factor quadratics", "Use quadratic formula"],
+              "prerequisites": ["linear_equations_ged"]
+            }
+          }
+        },
+        "geometry_measurement": {
+          "name": "Geometry and Measurement",
+          "description": "Calculate areas, volumes, and work with coordinate geometry",
+          "subtopics": {
+            "area_perimeter": {
+              "name": "Area and Perimeter",
+              "description": "Calculate area and perimeter of common shapes",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Apply area formulas", "Find perimeters"],
+              "prerequisites": []
+            },
+            "volume_surface_area": {
+              "name": "Volume and Surface Area",
+              "description": "Calculate volume and surface area of 3D shapes",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Apply volume formulas", "Find surface areas"],
+              "prerequisites": ["area_perimeter"]
+            }
+          }
+        }
+      }
+    }
+  },
+  "ai_enabled": true,
+  "voice_enabled": true,
+  "offline_capable": true
+}
