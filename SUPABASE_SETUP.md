@@ -103,3 +103,41 @@ After setup, test these features:
 8. **offline_content** - Downloaded lessons for offline use
 
 Your EduRoot platform now has enterprise-grade data management! 🌍
+
+## 🐛 Troubleshooting
+
+### Issue: "Database error" or "Failed to fetch user profile"
+
+**Quick Fix for Development:**
+1. In Supabase Dashboard → SQL Editor
+2. Run the contents of `supabase/disable_rls_temporarily.sql`
+3. This disables Row Level Security for testing
+
+**Proper Fix:**
+1. Ensure the database schema is applied correctly
+2. Check that the `handle_new_user()` trigger is working
+3. Verify environment variables are set in Vercel
+
+### Issue: Admin redirect not working
+
+**Solution:**
+1. Create a user account normally through the app
+2. In Supabase Dashboard → SQL Editor  
+3. Run the contents of `supabase/create_admin_user.sql`
+4. Update the email to match your account
+
+### Issue: Subscription features not working
+
+**Check:**
+1. Database tables `subscriptions` and `hardship_requests` exist
+2. User profile has correct `subscription_plan` field
+3. AuthContext `canAccessFeature()` function works
+
+### Enable Debug Logging
+
+Add to your `.env.local`:
+```bash
+NEXT_PUBLIC_DEBUG_AUTH=true
+```
+
+This will show detailed authentication logs in the browser console.

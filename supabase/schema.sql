@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS public.user_gamification (
 CREATE TABLE IF NOT EXISTS public.subscriptions (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     user_id UUID REFERENCES public.user_profiles(id) ON DELETE CASCADE,
-    plan TEXT NOT NULL CHECK (plan IN ('free', 'basic', 'premium')),
+    plan TEXT NOT NULL CHECK (plan IN ('free', 'supporter', 'sponsor', 'hardship')),
     status TEXT DEFAULT 'active' CHECK (status IN ('active', 'cancelled', 'expired')),
     stripe_subscription_id TEXT,
     current_period_start TIMESTAMP WITH TIME ZONE,
@@ -97,6 +97,19 @@ CREATE TABLE IF NOT EXISTS public.subscriptions (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW()) NOT NULL,
     UNIQUE(user_id)
+);
+
+-- Hardship requests table
+CREATE TABLE IF NOT EXISTS public.hardship_requests (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES public.user_profiles(id) ON DELETE CASCADE,
+    hardship_reason TEXT NOT NULL,
+    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'denied')),
+    submitted_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW()) NOT NULL,
+    reviewed_at TIMESTAMP WITH TIME ZONE,
+    reviewed_by UUID REFERENCES public.user_profiles(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW()) NOT NULL
 );
 
 -- Community help requests and donations
@@ -138,6 +151,7 @@ ALTER TABLE public.lessons ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.quiz_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_gamification ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.hardship_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.help_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.offline_content ENABLE ROW LEVEL SECURITY;
 
@@ -171,6 +185,10 @@ CREATE POLICY "Users can access own subscriptions" ON public.subscriptions
 CREATE POLICY "Users can access own offline content" ON public.offline_content
     FOR ALL USING (auth.uid() = user_id);
 
+-- Hardship requests policies
+CREATE POLICY "Users can access own hardship requests" ON public.hardship_requests
+    FOR ALL USING (auth.uid() = user_id);
+
 -- Help requests are public for viewing, but users can only create their own
 CREATE POLICY "Help requests are publicly viewable" ON public.help_requests
     FOR SELECT USING (true);
@@ -181,13 +199,54 @@ CREATE POLICY "Users can create own help requests" ON public.help_requests
 CREATE POLICY "Users can update own help requests" ON public.help_requests
     FOR UPDATE USING (auth.uid() = user_id);
 
--- Admin access policies
-CREATE POLICY "Admins can access all data" ON public.user_profiles
+-- Admin access policies for user_profiles
+CREATE POLICY "Admins can view all profiles" ON public.user_profiles
+    FOR SELECT USING (
+        (auth.uid() = id) OR 
+        (auth.uid() IN (
+            SELECT id FROM public.user_profiles WHERE role = 'admin'
+        ))
+    );
+
+CREATE POLICY "Admins can update all profiles" ON public.user_profiles
+    FOR UPDATE USING (
+        (auth.uid() = id) OR 
+        (auth.uid() IN (
+            SELECT id FROM public.user_profiles WHERE role = 'admin'
+        ))
+    );
+
+-- Admin access to other tables
+CREATE POLICY "Admins can access all user progress" ON public.user_progress
     FOR ALL USING (
-        EXISTS (
-            SELECT 1 FROM public.user_profiles
-            WHERE id = auth.uid() AND role = 'admin'
-        )
+        (auth.uid() = user_id) OR 
+        (auth.uid() IN (
+            SELECT id FROM public.user_profiles WHERE role = 'admin'
+        ))
+    );
+
+CREATE POLICY "Admins can access all subscriptions" ON public.subscriptions
+    FOR ALL USING (
+        (auth.uid() = user_id) OR 
+        (auth.uid() IN (
+            SELECT id FROM public.user_profiles WHERE role = 'admin'
+        ))
+    );
+
+CREATE POLICY "Admins can access all hardship requests" ON public.hardship_requests
+    FOR ALL USING (
+        (auth.uid() = user_id) OR 
+        (auth.uid() IN (
+            SELECT id FROM public.user_profiles WHERE role = 'admin'
+        ))
+    );
+
+CREATE POLICY "Admins can access all help requests" ON public.help_requests
+    FOR ALL USING (
+        true OR
+        (auth.uid() IN (
+            SELECT id FROM public.user_profiles WHERE role = 'admin'
+        ))
     );
 
 -- Functions for updated_at timestamps
@@ -235,6 +294,9 @@ CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.subscriptions
 CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.help_requests
     FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
 
+CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.hardship_requests
+    FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
 -- Indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON public.user_progress(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_progress_subject_topic ON public.user_progress(subject, topic);
@@ -242,3 +304,7 @@ CREATE INDEX IF NOT EXISTS idx_lessons_user_subject ON public.lessons(user_id, s
 CREATE INDEX IF NOT EXISTS idx_quiz_results_user_id ON public.quiz_results(user_id);
 CREATE INDEX IF NOT EXISTS idx_help_requests_status ON public.help_requests(status);
 CREATE INDEX IF NOT EXISTS idx_help_requests_location ON public.help_requests(location);
+CREATE INDEX IF NOT EXISTS idx_hardship_requests_user_id ON public.hardship_requests(user_id);
+CREATE INDEX IF NOT EXISTS idx_hardship_requests_status ON public.hardship_requests(status);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON public.subscriptions(user_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_plan ON public.subscriptions(plan);

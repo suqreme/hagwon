@@ -88,6 +88,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!supabase) return
     
     try {
+      console.log('Fetching user profile for ID:', userId)
+      
       const { data, error } = await supabase
         .from('user_profiles')
         .select('*')
@@ -95,22 +97,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single()
 
       if (error) {
-        console.error('Database error - full error object:', error)
-        console.error('Database error - JSON stringified:', JSON.stringify(error, null, 2))
-        throw error
+        console.error('Database error:', error)
+        
+        // If user profile doesn't exist, try to create it
+        if (error.code === 'PGRST116') {
+          console.log('User profile not found, attempting to create one...')
+          
+          const { data: userData } = await supabase.auth.getUser()
+          if (userData.user) {
+            const { data: newProfile, error: createError } = await supabase
+              .from('user_profiles')
+              .insert({
+                id: userData.user.id,
+                email: userData.user.email,
+                role: 'student',
+                subscription_plan: 'free'
+              })
+              .select()
+              .single()
+            
+            if (createError) {
+              console.error('Failed to create user profile:', createError)
+              setUser(null)
+            } else {
+              console.log('User profile created successfully:', newProfile)
+              setUser(newProfile)
+            }
+          }
+        } else {
+          throw error
+        }
+      } else {
+        console.log('User profile found:', data)
+        setUser(data)
       }
-      
-      console.log('User profile found:', data)
-      setUser(data)
     } catch (error: any) {
-      console.error('Catch block - full error object:', error)
-      console.error('Catch block - JSON stringified:', JSON.stringify(error, null, 2))
-      console.error('Catch block - error type:', typeof error)
-      console.error('Catch block - error constructor:', error?.constructor?.name)
-      
-      // The database trigger should have created the profile automatically
-      // If it's still failing, it might be a temporary database issue
-      // Set loading to false so the user isn't stuck
+      console.error('Failed to fetch user profile:', error)
       setUser(null)
     } finally {
       setLoading(false)
