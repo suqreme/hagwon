@@ -34,6 +34,10 @@ class ProfileService {
   }
 
   private getOrCreateDeviceId(): string {
+    if (typeof window === 'undefined') {
+      return 'ssr_device_' + Date.now()
+    }
+    
     let deviceId = localStorage.getItem('hagwon_device_id')
     if (!deviceId) {
       deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
@@ -44,6 +48,16 @@ class ProfileService {
 
   // Get all profiles for this device
   getDeviceProfiles(): DeviceProfiles {
+    if (typeof window === 'undefined') {
+      // Return empty profiles for SSR
+      return {
+        deviceId: this.deviceId,
+        profiles: [],
+        currentProfile: null,
+        createdAt: new Date().toISOString()
+      }
+    }
+
     try {
       const stored = localStorage.getItem(this.storageKey)
       if (stored) {
@@ -64,6 +78,10 @@ class ProfileService {
 
   // Save profiles to localStorage
   private saveProfiles(deviceProfiles: DeviceProfiles): void {
+    if (typeof window === 'undefined') {
+      return
+    }
+    
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(deviceProfiles))
     } catch (error) {
