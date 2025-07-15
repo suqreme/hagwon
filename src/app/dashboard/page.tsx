@@ -55,8 +55,12 @@ export default function Dashboard() {
       router.push('/')
     }
     
-    // Redirect admins to admin dashboard
-    if (!loading && user && isAdmin()) {
+    // Check if admin wants to view student dashboard
+    const urlParams = new URLSearchParams(window.location.search)
+    const viewAsStudent = urlParams.get('view') === 'student'
+    
+    // Redirect admins to admin dashboard (unless they specifically want student view)
+    if (!loading && user && isAdmin() && !viewAsStudent) {
       router.push('/admin')
     }
   }, [user, loading, router, isAdmin])

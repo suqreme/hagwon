@@ -170,7 +170,7 @@ export default function AdminDashboard() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => router.push('/dashboard')}
+                onClick={() => router.push('/dashboard?view=student')}
               >
                 <Home className="w-4 h-4 mr-2" />
                 Student View
