@@ -1,0 +1,295 @@
+{
+  "subject": "history",
+  "display_name": "History & Social Studies",
+  "description": "Explore human civilization and cultural understanding",
+  "grade_levels": {
+    "kindergarten": {
+      "display_name": "Kindergarten Social Studies",
+      "topics": {
+        "community": {
+          "name": "My Community",
+          "description": "Learn about families, neighborhoods, and helpers",
+          "subtopics": {
+            "family": {
+              "name": "All About Families",
+              "description": "Explore different types of families and traditions",
+              "difficulty": 1,
+              "estimated_time": 15,
+              "learning_objectives": ["Describe family roles", "Compare family traditions"],
+              "prerequisites": []
+            },
+            "community_helpers": {
+              "name": "People Who Help Us",
+              "description": "Meet firefighters, teachers, doctors, and more",
+              "difficulty": 1,
+              "estimated_time": 20,
+              "learning_objectives": ["Identify community helpers", "Understand their jobs"],
+              "prerequisites": ["family"]
+            },
+            "neighborhoods": {
+              "name": "Our Neighborhood",
+              "description": "Explore places and people in our community",
+              "difficulty": 2,
+              "estimated_time": 20,
+              "learning_objectives": ["Map neighborhood features", "Understand community"],
+              "prerequisites": ["community_helpers"]
+            }
+          }
+        },
+        "celebrations": {
+          "name": "Holidays and Celebrations",
+          "description": "Learn about different cultural celebrations",
+          "subtopics": {
+            "holidays": {
+              "name": "Special Days",
+              "description": "Explore holidays from different cultures",
+              "difficulty": 1,
+              "estimated_time": 15,
+              "learning_objectives": ["Identify holidays", "Compare celebrations"],
+              "prerequisites": []
+            },
+            "traditions": {
+              "name": "Family Traditions",
+              "description": "Learn about customs passed down in families",
+              "difficulty": 2,
+              "estimated_time": 20,
+              "learning_objectives": ["Describe traditions", "Respect differences"],
+              "prerequisites": ["holidays"]
+            }
+          }
+        }
+      }
+    },
+    "grade_2": {
+      "display_name": "Grade 2 History",
+      "topics": {
+        "american_symbols": {
+          "name": "American Symbols and Landmarks",
+          "description": "Discover symbols that represent America",
+          "subtopics": {
+            "flag_pledge": {
+              "name": "The American Flag",
+              "description": "Learn about the flag and Pledge of Allegiance",
+              "difficulty": 2,
+              "estimated_time": 20,
+              "learning_objectives": ["Identify flag parts", "Understand flag respect"],
+              "prerequisites": []
+            },
+            "landmarks": {
+              "name": "Famous American Places",
+              "description": "Explore the Statue of Liberty, Mount Rushmore, and more",
+              "difficulty": 2,
+              "estimated_time": 25,
+              "learning_objectives": ["Identify landmarks", "Understand significance"],
+              "prerequisites": ["flag_pledge"]
+            }
+          }
+        },
+        "native_americans": {
+          "name": "First Americans",
+          "description": "Learn about Native American history and culture",
+          "subtopics": {
+            "tribes": {
+              "name": "Native American Tribes",
+              "description": "Explore different tribes and their ways of life",
+              "difficulty": 3,
+              "estimated_time": 30,
+              "learning_objectives": ["Compare tribal cultures", "Understand diversity"],
+              "prerequisites": []
+            },
+            "contributions": {
+              "name": "Native American Contributions",
+              "description": "Learn how Native Americans shaped America",
+              "difficulty": 3,
+              "estimated_time": 25,
+              "learning_objectives": ["Identify contributions", "Appreciate heritage"],
+              "prerequisites": ["tribes"]
+            }
+          }
+        }
+      }
+    },
+    "grade_4": {
+      "display_name": "Grade 4 History",
+      "topics": {
+        "american_revolution": {
+          "name": "American Revolution",
+          "description": "Discover how America became independent",
+          "subtopics": {
+            "causes": {
+              "name": "Why the Colonists Were Upset",
+              "description": "Learn about taxes and unfair treatment",
+              "difficulty": 3,
+              "estimated_time": 35,
+              "learning_objectives": ["Identify causes", "Understand colonial perspective"],
+              "prerequisites": []
+            },
+            "key_events": {
+              "name": "Important Revolutionary Events",
+              "description": "Explore Boston Tea Party, battles, and Declaration",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Sequence events", "Understand significance"],
+              "prerequisites": ["causes"]
+            },
+            "founding_fathers": {
+              "name": "Leaders of the Revolution",
+              "description": "Meet Washington, Franklin, Jefferson, and others",
+              "difficulty": 3,
+              "estimated_time": 30,
+              "learning_objectives": ["Identify leaders", "Understand contributions"],
+              "prerequisites": ["key_events"]
+            }
+          }
+        },
+        "westward_expansion": {
+          "name": "Moving West",
+          "description": "Learn how America grew from coast to coast",
+          "subtopics": {
+            "oregon_trail": {
+              "name": "The Oregon Trail",
+              "description": "Follow pioneers on their journey west",
+              "difficulty": 3,
+              "estimated_time": 35,
+              "learning_objectives": ["Understand pioneer challenges", "Map the trail"],
+              "prerequisites": []
+            },
+            "gold_rush": {
+              "name": "California Gold Rush",
+              "description": "Discover how gold changed the West",
+              "difficulty": 4,
+              "estimated_time": 30,
+              "learning_objectives": ["Understand gold rush impact", "Analyze migration"],
+              "prerequisites": ["oregon_trail"]
+            }
+          }
+        }
+      }
+    },
+    "grade_6": {
+      "display_name": "Grade 6 World History",
+      "topics": {
+        "ancient_civilizations": {
+          "name": "Ancient Civilizations",
+          "description": "Explore early human societies and achievements",
+          "subtopics": {
+            "mesopotamia": {
+              "name": "Ancient Mesopotamia",
+              "description": "Discover the 'Cradle of Civilization'",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Understand early civilization", "Identify innovations"],
+              "prerequisites": []
+            },
+            "egypt": {
+              "name": "Ancient Egypt",
+              "description": "Explore pyramids, pharaohs, and the Nile",
+              "difficulty": 4,
+              "estimated_time": 45,
+              "learning_objectives": ["Understand Egyptian society", "Analyze achievements"],
+              "prerequisites": ["mesopotamia"]
+            },
+            "greece": {
+              "name": "Ancient Greece",
+              "description": "Learn about democracy, philosophy, and culture",
+              "difficulty": 4,
+              "estimated_time": 45,
+              "learning_objectives": ["Understand Greek contributions", "Analyze democracy"],
+              "prerequisites": ["egypt"]
+            },
+            "rome": {
+              "name": "Ancient Rome",
+              "description": "Explore the Roman Empire and its legacy",
+              "difficulty": 5,
+              "estimated_time": 50,
+              "learning_objectives": ["Understand Roman government", "Analyze empire"],
+              "prerequisites": ["greece"]
+            }
+          }
+        },
+        "medieval_world": {
+          "name": "Medieval Times",
+          "description": "Discover the Middle Ages in Europe and beyond",
+          "subtopics": {
+            "feudalism": {
+              "name": "Feudal System",
+              "description": "Learn about lords, knights, and peasants",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Understand feudal hierarchy", "Analyze medieval life"],
+              "prerequisites": []
+            },
+            "crusades": {
+              "name": "The Crusades",
+              "description": "Explore religious wars and cultural exchange",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Understand religious conflict", "Analyze cultural impact"],
+              "prerequisites": ["feudalism"]
+            }
+          }
+        }
+      }
+    },
+    "grade_8": {
+      "display_name": "Grade 8 American History",
+      "topics": {
+        "civil_war": {
+          "name": "American Civil War",
+          "description": "Study the war that divided and reunited America",
+          "subtopics": {
+            "causes": {
+              "name": "Causes of the Civil War",
+              "description": "Understand slavery, states' rights, and sectionalism",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Analyze multiple causes", "Understand perspectives"],
+              "prerequisites": []
+            },
+            "battles": {
+              "name": "Major Civil War Battles",
+              "description": "Explore Gettysburg, Antietam, and other key battles",
+              "difficulty": 5,
+              "estimated_time": 50,
+              "learning_objectives": ["Analyze military strategy", "Understand turning points"],
+              "prerequisites": ["causes"]
+            },
+            "reconstruction": {
+              "name": "Reconstruction Era",
+              "description": "Learn how America rebuilt after the war",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Understand reconstruction challenges", "Analyze outcomes"],
+              "prerequisites": ["battles"]
+            }
+          }
+        },
+        "industrial_revolution": {
+          "name": "Industrial Revolution",
+          "description": "Discover how machines changed American life",
+          "subtopics": {
+            "inventions": {
+              "name": "Important Inventions",
+              "description": "Explore steam engines, telegraphs, and factories",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Identify key inventions", "Understand impact"],
+              "prerequisites": []
+            },
+            "urbanization": {
+              "name": "Growth of Cities",
+              "description": "Learn how industrialization created modern cities",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Analyze urban growth", "Understand social changes"],
+              "prerequisites": ["inventions"]
+            }
+          }
+        }
+      }
+    }
+  },
+  "ai_enabled": true,
+  "voice_enabled": true,
+  "offline_capable": true
+}

@@ -1,0 +1,110 @@
+{
+  "grade": "grade_1",
+  "subject": "english",
+  "title": "Grade 1 English Language Arts",
+  "description": "Foundation reading, writing, and language skills for first grade students",
+  "topics": {
+    "phonics": {
+      "title": "Phonics",
+      "description": "Learn letter sounds and how to blend them into words",
+      "order": 1,
+      "subtopics": {
+        "letter_sounds": {
+          "title": "Letter Sounds",
+          "description": "Learn the sounds that letters make",
+          "order": 1,
+          "learning_objective": "Students will be able to identify and produce the sounds of all 26 letters",
+          "estimated_duration": "20-25 minutes",
+          "prerequisites": [],
+          "difficulty": "beginner"
+        },
+        "blending_sounds": {
+          "title": "Blending Sounds",
+          "description": "Blend letter sounds together to make words",
+          "order": 2,
+          "learning_objective": "Students will be able to blend 2-3 letter sounds to form simple words",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": ["letter_sounds"],
+          "difficulty": "beginner"
+        },
+        "simple_words": {
+          "title": "Simple Words",
+          "description": "Read simple 3-letter words",
+          "order": 3,
+          "learning_objective": "Students will be able to read simple CVC (consonant-vowel-consonant) words",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": ["blending_sounds"],
+          "difficulty": "intermediate"
+        }
+      }
+    },
+    "reading": {
+      "title": "Reading",
+      "description": "Learn to read simple sentences and stories",
+      "order": 2,
+      "subtopics": {
+        "sight_words": {
+          "title": "Sight Words",
+          "description": "Learn common words that appear frequently in reading",
+          "order": 1,
+          "learning_objective": "Students will be able to recognize and read 25 common sight words",
+          "estimated_duration": "20-25 minutes",
+          "prerequisites": ["simple_words"],
+          "difficulty": "beginner"
+        },
+        "simple_sentences": {
+          "title": "Simple Sentences",
+          "description": "Read simple sentences with familiar words",
+          "order": 2,
+          "learning_objective": "Students will be able to read simple sentences with sight words and phonetic words",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": ["sight_words"],
+          "difficulty": "intermediate"
+        },
+        "reading_comprehension": {
+          "title": "Reading Comprehension",
+          "description": "Understand what you read",
+          "order": 3,
+          "learning_objective": "Students will be able to answer simple questions about what they read",
+          "estimated_duration": "30-35 minutes",
+          "prerequisites": ["simple_sentences"],
+          "difficulty": "intermediate"
+        }
+      }
+    },
+    "writing": {
+      "title": "Writing",
+      "description": "Learn to write letters, words, and simple sentences",
+      "order": 3,
+      "subtopics": {
+        "letter_formation": {
+          "title": "Letter Formation",
+          "description": "Learn to write uppercase and lowercase letters",
+          "order": 1,
+          "learning_objective": "Students will be able to write all 26 letters in uppercase and lowercase",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": ["letter_sounds"],
+          "difficulty": "beginner"
+        },
+        "writing_words": {
+          "title": "Writing Words",
+          "description": "Write simple words by sounding them out",
+          "order": 2,
+          "learning_objective": "Students will be able to write simple CVC words using phonetic spelling",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": ["letter_formation", "simple_words"],
+          "difficulty": "intermediate"
+        },
+        "writing_sentences": {
+          "title": "Writing Sentences",
+          "description": "Write simple sentences with capital letters and periods",
+          "order": 3,
+          "learning_objective": "Students will be able to write simple sentences with proper capitalization and punctuation",
+          "estimated_duration": "30-35 minutes",
+          "prerequisites": ["writing_words"],
+          "difficulty": "intermediate"
+        }
+      }
+    }
+  }
+}

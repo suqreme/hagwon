@@ -1,0 +1,27 @@
+{
+  "subjects": ["math", "english"],
+  "grades": ["kindergarten", "grade_1", "grade_2", "grade_3", "grade_4", "grade_5"],
+  "structure": {
+    "math": {
+      "kindergarten": "kindergarten.json",
+      "grade_1": "grade_1.json", 
+      "grade_2": "grade_2.json",
+      "grade_3": "grade_3.json",
+      "grade_4": "grade_4.json",
+      "grade_5": "grade_5.json"
+    },
+    "english": {
+      "kindergarten": "kindergarten.json",
+      "grade_1": "grade_1.json",
+      "grade_2": "grade_2.json", 
+      "grade_3": "grade_3.json",
+      "grade_4": "grade_4.json",
+      "grade_5": "grade_5.json"
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-01-15",
+    "description": "Hagwon curriculum structure for K-5 education"
+  }
+}

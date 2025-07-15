@@ -161,7 +161,7 @@ export default function AdminDashboard() {
                 <Crown className="w-8 h-8 text-primary" />
                 <div>
                   <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
-                  <p className="text-sm text-muted-foreground">EduRoot Platform Management</p>
+                  <p className="text-sm text-muted-foreground">Hagwon Platform Management</p>
                 </div>
               </div>
             </div>

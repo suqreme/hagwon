@@ -160,7 +160,7 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">EduRoot Dashboard</h1>
+              <h1 className="text-2xl font-bold text-foreground">Hagwon Dashboard</h1>
               <p className="text-muted-foreground">
                 Welcome back, {user.email}! 
                 {userPlacement && <span className="ml-2 text-primary">• Placed at {userPlacement}</span>}

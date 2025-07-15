@@ -25,7 +25,7 @@ export function UserMenu() {
   }
 
   const isClassroomUser = user.email?.includes('@classroom.local')
-  const isAdmin = user.email === 'admin@eduroot.com'
+  const isAdmin = user.email === 'admin@hagwon.app'
 
   return (
     <div className="relative">

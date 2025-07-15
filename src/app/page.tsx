@@ -65,7 +65,7 @@ export default function Home() {
         <div className="max-w-4xl w-full">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-foreground mb-4">
-              Welcome to EduRoot
+              Welcome to Hagwon
             </h1>
             <p className="text-xl text-muted-foreground">
               AI-powered learning platform for everyone, everywhere
@@ -107,7 +107,7 @@ export default function Home() {
       <div className="max-w-4xl w-full">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Welcome to EduRoot
+            Welcome to Hagwon
           </h1>
           <p className="text-xl text-muted-foreground">
             Let&apos;s find your perfect starting point

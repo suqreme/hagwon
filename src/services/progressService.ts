@@ -1,229 +1,420 @@
-interface LessonProgress {
-  userId: string
-  subject: string
-  grade: string
-  topic: string
-  subtopic: string
-  completed: boolean
-  score?: number
-  attempts: number
-  lastAccessed: string
-  timeSpent: number // in minutes
+import { StudentProfile } from './profileService';
+
+export interface LessonProgress {
+  id: string;
+  profileId: string;
+  subject: string;
+  grade: string;
+  topic: string;
+  subtopic: string;
+  status: 'not_started' | 'in_progress' | 'completed';
+  score?: number;
+  attempts: number;
+  timeSpent: number; // in seconds
+  startedAt?: string;
+  completedAt?: string;
+  lastAccessedAt: string;
 }
 
-interface UserStats {
-  lessonsCompleted: number
-  quizzesPassed: number
-  totalXP: number
-  currentStreak: number
-  lastLessonDate: string
+export interface QuizResult {
+  id: string;
+  profileId: string;
+  lessonId: string;
+  score: number;
+  totalQuestions: number;
+  correctAnswers: number;
+  timeSpent: number;
+  answers: Array<{
+    questionId: string;
+    selectedAnswer: number;
+    isCorrect: boolean;
+    timeSpent: number;
+  }>;
+  completedAt: string;
 }
 
-export class ProgressService {
-  private getStorageKey(userId: string, type: string): string {
-    return `eduroot_${type}_${userId}`
-  }
+export interface ProgressStats {
+  totalLessonsCompleted: number;
+  totalQuizzesPassed: number;
+  currentStreak: number;
+  longestStreak: number;
+  averageScore: number;
+  totalTimeSpent: number;
+  subjectProgress: Record<string, {
+    lessonsCompleted: number;
+    quizzesPassed: number;
+    averageScore: number;
+    topicsCompleted: string[];
+  }>;
+  lastActivity: string;
+}
 
-  // Save lesson completion
-  saveProgress(progress: LessonProgress): void {
-    const key = this.getStorageKey(progress.userId, 'progress')
-    const existingProgress = this.getAllProgress(progress.userId)
+export interface AchievementBadge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  unlockedAt: string;
+  type: 'lesson' | 'quiz' | 'streak' | 'mastery' | 'time';
+}
+
+class ProgressService {
+  private storageKey = 'hagwon_progress_data';
+
+  private getStorageData(): Record<string, any> {
+    if (typeof window === 'undefined') return {};
     
-    const progressKey = `${progress.subject}_${progress.grade}_${progress.topic}_${progress.subtopic}`
-    existingProgress[progressKey] = progress
+    try {
+      const data = localStorage.getItem(this.storageKey);
+      return data ? JSON.parse(data) : {};
+    } catch (error) {
+      console.error('Failed to get progress data:', error);
+      return {};
+    }
+  }
+
+  private setStorageData(data: Record<string, any>): void {
+    if (typeof window === 'undefined') return;
     
-    localStorage.setItem(key, JSON.stringify(existingProgress))
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(data));
+    } catch (error) {
+      console.error('Failed to set progress data:', error);
+    }
+  }
+
+  private generateId(): string {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+  }
+
+  startLesson(profileId: string, subject: string, grade: string, topic: string, subtopic: string): string {
+    const data = this.getStorageData();
+    const lessonId = this.generateId();
     
-    // Update user stats
-    this.updateUserStats(progress.userId)
-  }
+    const progressKey = `${profileId}_progress`;
+    if (!data[progressKey]) {
+      data[progressKey] = {};
+    }
 
-  // Get all progress for a user
-  getAllProgress(userId: string): Record<string, LessonProgress> {
-    const key = this.getStorageKey(userId, 'progress')
-    const stored = localStorage.getItem(key)
-    return stored ? JSON.parse(stored) : {}
-  }
+    const lessonProgress: LessonProgress = {
+      id: lessonId,
+      profileId,
+      subject,
+      grade,
+      topic,
+      subtopic,
+      status: 'in_progress',
+      attempts: 1,
+      timeSpent: 0,
+      startedAt: new Date().toISOString(),
+      lastAccessedAt: new Date().toISOString()
+    };
 
-  // Get progress for specific lesson
-  getLessonProgress(userId: string, subject: string, grade: string, topic: string, subtopic: string): LessonProgress | null {
-    const allProgress = this.getAllProgress(userId)
-    const progressKey = `${subject}_${grade}_${topic}_${subtopic}`
-    return allProgress[progressKey] || null
-  }
-
-  // Check if lesson is completed
-  isLessonCompleted(userId: string, subject: string, grade: string, topic: string, subtopic: string): boolean {
-    const progress = this.getLessonProgress(userId, subject, grade, topic, subtopic)
-    return progress?.completed || false
-  }
-
-  // Get completed lessons for a subject/grade
-  getCompletedLessons(userId: string, subject: string, grade: string): string[] {
-    const allProgress = this.getAllProgress(userId)
-    const completed: string[] = []
+    data[progressKey][lessonId] = lessonProgress;
+    this.setStorageData(data);
     
-    Object.values(allProgress).forEach(progress => {
-      if (progress.subject === subject && 
-          progress.grade === grade && 
-          progress.completed) {
-        completed.push(`${progress.topic}_${progress.subtopic}`)
+    return lessonId;
+  }
+
+  updateLessonProgress(lessonId: string, updates: Partial<LessonProgress>): void {
+    const data = this.getStorageData();
+    
+    // Find lesson in all profiles
+    for (const key in data) {
+      if (key.endsWith('_progress') && data[key][lessonId]) {
+        data[key][lessonId] = {
+          ...data[key][lessonId],
+          ...updates,
+          lastAccessedAt: new Date().toISOString()
+        };
+        this.setStorageData(data);
+        return;
       }
-    })
-    
-    return completed
+    }
   }
 
-  // Determine which lessons should be unlocked
-  getUnlockedLessons(userId: string, subject: string, grade: string): string[] {
-    const completed = this.getCompletedLessons(userId, subject, grade)
-    const unlocked = ['counting_numbers_1_10'] // Always unlock first lesson
+  completeLesson(lessonId: string, score?: number): void {
+    this.updateLessonProgress(lessonId, {
+      status: 'completed',
+      score,
+      completedAt: new Date().toISOString()
+    });
+  }
+
+  recordQuizResult(profileId: string, lessonId: string, result: Omit<QuizResult, 'id' | 'profileId' | 'lessonId' | 'completedAt'>): void {
+    const data = this.getStorageData();
+    const quizId = this.generateId();
     
-    // Simple unlock logic: unlock next lesson when previous is completed
+    const quizKey = `${profileId}_quizzes`;
+    if (!data[quizKey]) {
+      data[quizKey] = {};
+    }
+
+    const quizResult: QuizResult = {
+      id: quizId,
+      profileId,
+      lessonId,
+      ...result,
+      completedAt: new Date().toISOString()
+    };
+
+    data[quizKey][quizId] = quizResult;
+    this.setStorageData(data);
+
+    // Update lesson progress based on quiz result
+    const passed = result.score >= 70; // 70% passing score
+    if (passed) {
+      this.completeLesson(lessonId, result.score);
+    }
+  }
+
+  getProgressStats(profileId: string): ProgressStats {
+    const data = this.getStorageData();
+    const progressKey = `${profileId}_progress`;
+    const quizKey = `${profileId}_quizzes`;
+    
+    const lessons = data[progressKey] || {};
+    const quizzes = data[quizKey] || {};
+    
+    const completedLessons = Object.values(lessons).filter(
+      (lesson: any) => lesson.status === 'completed'
+    );
+    
+    const passedQuizzes = Object.values(quizzes).filter(
+      (quiz: any) => quiz.score >= 70
+    );
+
+    // Calculate streak
+    const currentStreak = this.calculateCurrentStreak(profileId);
+    const longestStreak = this.calculateLongestStreak(profileId);
+
+    // Calculate subject progress
+    const subjectProgress: Record<string, any> = {};
+    completedLessons.forEach((lesson: any) => {
+      const subject = lesson.subject;
+      if (!subjectProgress[subject]) {
+        subjectProgress[subject] = {
+          lessonsCompleted: 0,
+          quizzesPassed: 0,
+          averageScore: 0,
+          topicsCompleted: new Set()
+        };
+      }
+      
+      subjectProgress[subject].lessonsCompleted++;
+      subjectProgress[subject].topicsCompleted.add(lesson.topic);
+    });
+
+    passedQuizzes.forEach((quiz: any) => {
+      const lesson = Object.values(lessons).find((l: any) => l.id === quiz.lessonId);
+      if (lesson) {
+        const subject = (lesson as any).subject;
+        if (subjectProgress[subject]) {
+          subjectProgress[subject].quizzesPassed++;
+        }
+      }
+    });
+
+    // Calculate average scores
+    Object.keys(subjectProgress).forEach(subject => {
+      const subjectQuizzes = passedQuizzes.filter((quiz: any) => {
+        const lesson = Object.values(lessons).find((l: any) => l.id === quiz.lessonId);
+        return lesson && (lesson as any).subject === subject;
+      });
+      
+      if (subjectQuizzes.length > 0) {
+        const totalScore = subjectQuizzes.reduce((sum: number, quiz: any) => sum + quiz.score, 0);
+        subjectProgress[subject].averageScore = totalScore / subjectQuizzes.length;
+      }
+      
+      subjectProgress[subject].topicsCompleted = Array.from(subjectProgress[subject].topicsCompleted);
+    });
+
+    const totalTimeSpent = Object.values(lessons).reduce(
+      (total: number, lesson: any) => total + (lesson.timeSpent || 0),
+      0
+    );
+
+    const lastActivity = Math.max(
+      ...Object.values(lessons).map((lesson: any) => 
+        new Date(lesson.lastAccessedAt).getTime()
+      ),
+      0
+    );
+
+    return {
+      totalLessonsCompleted: completedLessons.length,
+      totalQuizzesPassed: passedQuizzes.length,
+      currentStreak,
+      longestStreak,
+      averageScore: passedQuizzes.length > 0 
+        ? passedQuizzes.reduce((sum: number, quiz: any) => sum + quiz.score, 0) / passedQuizzes.length
+        : 0,
+      totalTimeSpent,
+      subjectProgress,
+      lastActivity: lastActivity > 0 ? new Date(lastActivity).toISOString() : new Date().toISOString()
+    };
+  }
+
+  private calculateCurrentStreak(profileId: string): number {
+    const data = this.getStorageData();
+    const quizKey = `${profileId}_quizzes`;
+    const quizzes = Object.values(data[quizKey] || {}) as QuizResult[];
+    
+    if (quizzes.length === 0) return 0;
+    
+    // Sort by completion date (newest first)
+    const sortedQuizzes = quizzes.sort((a, b) => 
+      new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime()
+    );
+    
+    let streak = 0;
+    for (const quiz of sortedQuizzes) {
+      if (quiz.score >= 70) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+    
+    return streak;
+  }
+
+  private calculateLongestStreak(profileId: string): number {
+    const data = this.getStorageData();
+    const quizKey = `${profileId}_quizzes`;
+    const quizzes = Object.values(data[quizKey] || {}) as QuizResult[];
+    
+    if (quizzes.length === 0) return 0;
+    
+    // Sort by completion date (oldest first)
+    const sortedQuizzes = quizzes.sort((a, b) => 
+      new Date(a.completedAt).getTime() - new Date(b.completedAt).getTime()
+    );
+    
+    let longestStreak = 0;
+    let currentStreak = 0;
+    
+    for (const quiz of sortedQuizzes) {
+      if (quiz.score >= 70) {
+        currentStreak++;
+        longestStreak = Math.max(longestStreak, currentStreak);
+      } else {
+        currentStreak = 0;
+      }
+    }
+    
+    return longestStreak;
+  }
+
+  getCompletedLessons(profileId: string, subject?: string, grade?: string): string[] {
+    const data = this.getStorageData();
+    const progressKey = `${profileId}_progress`;
+    const lessons = Object.values(data[progressKey] || {}) as LessonProgress[];
+    
+    return lessons
+      .filter(lesson => {
+        const isCompleted = lesson.status === 'completed';
+        const subjectMatch = !subject || lesson.subject === subject;
+        const gradeMatch = !grade || lesson.grade === grade;
+        return isCompleted && subjectMatch && gradeMatch;
+      })
+      .map(lesson => `${lesson.topic}_${lesson.subtopic}`);
+  }
+
+  getUnlockedLessons(profileId: string, subject: string, grade: string): string[] {
+    const completed = this.getCompletedLessons(profileId, subject, grade);
+    const unlocked = ['numbers_and_counting_counting_to_10']; // Always unlock first lesson
+    
+    // For now, simple logic - unlock next lesson when previous is completed
+    // This should be replaced with curriculum-based prerequisite checking
     const lessonOrder = [
-      'counting_numbers_1_10',
-      'counting_counting_objects',
-      'basic_shapes_circle_square_triangle',
-      'addition_subtraction_addition_within_10',
-      'addition_subtraction_subtraction_within_10',
-      'place_value_tens_and_ones'
-    ]
+      'numbers_and_counting_counting_to_10',
+      'numbers_and_counting_counting_to_20',
+      'numbers_and_counting_number_recognition',
+      'addition_basic_addition',
+      'addition_addition_with_objects',
+      'addition_addition_word_problems',
+      'subtraction_basic_subtraction',
+      'subtraction_subtraction_with_objects',
+      'shapes_basic_shapes',
+      'shapes_shape_properties'
+    ];
     
     lessonOrder.forEach((lesson, index) => {
       if (index > 0 && completed.includes(lessonOrder[index - 1])) {
-        unlocked.push(lesson)
+        unlocked.push(lesson);
       }
-    })
+    });
     
-    return unlocked
+    return unlocked;
   }
 
-  // Get last accessed lesson for resume functionality
-  getLastLesson(userId: string): LessonProgress | null {
-    const allProgress = this.getAllProgress(userId)
-    const progressArray = Object.values(allProgress)
+  getInProgressLessons(profileId: string): LessonProgress[] {
+    const data = this.getStorageData();
+    const progressKey = `${profileId}_progress`;
+    const lessons = Object.values(data[progressKey] || {}) as LessonProgress[];
     
-    if (progressArray.length === 0) return null
-    
-    // Sort by last accessed date
-    progressArray.sort((a, b) => new Date(b.lastAccessed).getTime() - new Date(a.lastAccessed).getTime())
-    
-    // Return the most recent incomplete lesson, or most recent completed if all complete
-    const incompleteLesson = progressArray.find(p => !p.completed)
-    return incompleteLesson || progressArray[0]
+    return lessons.filter(lesson => lesson.status === 'in_progress');
   }
 
-  // Update user stats
-  private updateUserStats(userId: string): void {
-    const allProgress = this.getAllProgress(userId)
-    const completedLessons = Object.values(allProgress).filter(p => p.completed)
-    const passedQuizzes = completedLessons.filter(p => (p.score || 0) >= 70)
+  getLessonProgress(lessonId: string): LessonProgress | null {
+    const data = this.getStorageData();
     
-    const stats: UserStats = {
-      lessonsCompleted: completedLessons.length,
-      quizzesPassed: passedQuizzes.length,
-      totalXP: completedLessons.reduce((xp, lesson) => xp + (lesson.score || 0), 0),
-      currentStreak: this.calculateStreak(completedLessons),
-      lastLessonDate: completedLessons.length > 0 
-        ? completedLessons[completedLessons.length - 1].lastAccessed
-        : ''
-    }
-    
-    const key = this.getStorageKey(userId, 'stats')
-    localStorage.setItem(key, JSON.stringify(stats))
-  }
-
-  // Get user statistics
-  getUserStats(userId: string): UserStats {
-    const key = this.getStorageKey(userId, 'stats')
-    const stored = localStorage.getItem(key)
-    
-    if (stored) {
-      return JSON.parse(stored)
-    }
-    
-    // Return default stats
-    return {
-      lessonsCompleted: 0,
-      quizzesPassed: 0,
-      totalXP: 0,
-      currentStreak: 0,
-      lastLessonDate: ''
-    }
-  }
-
-  // Calculate learning streak
-  private calculateStreak(completedLessons: LessonProgress[]): number {
-    if (completedLessons.length === 0) return 0
-    
-    // Sort lessons by date
-    const sorted = completedLessons.sort((a, b) => 
-      new Date(a.lastAccessed).getTime() - new Date(b.lastAccessed).getTime()
-    )
-    
-    let streak = 1
-    const oneDay = 24 * 60 * 60 * 1000
-    
-    for (let i = sorted.length - 1; i > 0; i--) {
-      const current = new Date(sorted[i].lastAccessed)
-      const previous = new Date(sorted[i - 1].lastAccessed)
-      const daysDiff = (current.getTime() - previous.getTime()) / oneDay
-      
-      if (daysDiff <= 2) { // Allow 1-2 day gaps
-        streak++
-      } else {
-        break
+    for (const key in data) {
+      if (key.endsWith('_progress') && data[key][lessonId]) {
+        return data[key][lessonId];
       }
     }
     
-    return streak
+    return null;
   }
 
-  // Start a lesson (track access time)
-  startLesson(userId: string, subject: string, grade: string, topic: string, subtopic: string): void {
-    const existing = this.getLessonProgress(userId, subject, grade, topic, subtopic)
+  getQuizHistory(profileId: string, limit: number = 10): QuizResult[] {
+    const data = this.getStorageData();
+    const quizKey = `${profileId}_quizzes`;
+    const quizzes = Object.values(data[quizKey] || {}) as QuizResult[];
     
-    const progress: LessonProgress = {
-      userId,
-      subject,
-      grade,
-      topic,
-      subtopic,
-      completed: existing?.completed || false,
-      score: existing?.score,
-      attempts: (existing?.attempts || 0) + 1,
-      lastAccessed: new Date().toISOString(),
-      timeSpent: existing?.timeSpent || 0
+    return quizzes
+      .sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime())
+      .slice(0, limit);
+  }
+
+  unlockAchievement(profileId: string, achievement: Omit<AchievementBadge, 'unlockedAt'>): void {
+    const data = this.getStorageData();
+    const achievementKey = `${profileId}_achievements`;
+    
+    if (!data[achievementKey]) {
+      data[achievementKey] = {};
     }
-    
-    this.saveProgress(progress)
+
+    const badge: AchievementBadge = {
+      ...achievement,
+      unlockedAt: new Date().toISOString()
+    };
+
+    data[achievementKey][achievement.id] = badge;
+    this.setStorageData(data);
   }
 
-  // Complete a lesson with quiz score
-  completeLesson(userId: string, subject: string, grade: string, topic: string, subtopic: string, score: number, timeSpent: number): void {
-    const progress: LessonProgress = {
-      userId,
-      subject,
-      grade,
-      topic,
-      subtopic,
-      completed: true,
-      score,
-      attempts: this.getLessonProgress(userId, subject, grade, topic, subtopic)?.attempts || 1,
-      lastAccessed: new Date().toISOString(),
-      timeSpent
-    }
+  getAchievements(profileId: string): AchievementBadge[] {
+    const data = this.getStorageData();
+    const achievementKey = `${profileId}_achievements`;
     
-    this.saveProgress(progress)
+    return Object.values(data[achievementKey] || {}) as AchievementBadge[];
   }
 
-  // Clear all progress (for demo reset)
-  clearProgress(userId: string): void {
-    const progressKey = this.getStorageKey(userId, 'progress')
-    const statsKey = this.getStorageKey(userId, 'stats')
+  clearProgress(profileId: string): void {
+    const data = this.getStorageData();
+    const progressKey = `${profileId}_progress`;
+    const quizKey = `${profileId}_quizzes`;
+    const achievementKey = `${profileId}_achievements`;
+
+    delete data[progressKey];
+    delete data[quizKey];
+    delete data[achievementKey];
     
-    localStorage.removeItem(progressKey)
-    localStorage.removeItem(statsKey)
+    this.setStorageData(data);
   }
 }
 

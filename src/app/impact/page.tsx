@@ -68,7 +68,7 @@ export default function ImpactPage() {
         studentsServed: 45,
         donorName: 'Tech for Good Foundation',
         photos: ['/api/placeholder/400/300', '/api/placeholder/400/300'],
-        contactEmail: 'kibera@eduroot.org',
+        contactEmail: 'kibera@hagwon.app',
         establishedDate: '2023-08-15',
         status: 'active',
         monthlyImpact: {
@@ -89,7 +89,7 @@ export default function ImpactPage() {
         studentsServed: 32,
         donorName: 'Anonymous Donor',
         photos: ['/api/placeholder/400/300'],
-        contactEmail: 'guatemala@eduroot.org',
+        contactEmail: 'guatemala@hagwon.app',
         establishedDate: '2023-06-20',
         status: 'active',
         monthlyImpact: {
@@ -110,7 +110,7 @@ export default function ImpactPage() {
         studentsServed: 67,
         donorName: 'Global Education Alliance',
         photos: ['/api/placeholder/400/300', '/api/placeholder/400/300'],
-        contactEmail: 'jordan@eduroot.org',
+        contactEmail: 'jordan@hagwon.app',
         establishedDate: '2023-04-10',
         status: 'active',
         monthlyImpact: {

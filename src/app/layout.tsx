@@ -27,10 +27,10 @@ const sourceCodePro = Source_Code_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "EduRoot - AI-Powered Learning Platform",
-  description: "Global, AI-guided, self-paced education system for GED and K-12 students",
-  keywords: ["education", "learning", "AI tutor", "GED", "K-12", "global education"],
-  authors: [{ name: "EduRoot Team" }],
+  title: "Hagwon - AI-Powered Learning Platform",
+  description: "Global, AI-guided, self-paced education system for GED and K-12 students, accessible even in underserved areas",
+  keywords: ["education", "learning", "AI tutor", "GED", "K-12", "global education", "rural education", "offline learning"],
+  authors: [{ name: "Hagwon Team" }],
   formatDetection: {
     email: false,
     address: false,

@@ -1,0 +1,379 @@
+{
+  "subject": "english",
+  "display_name": "English Language Arts",
+  "description": "Master reading, writing, speaking, and critical thinking skills",
+  "grade_levels": {
+    "grade_6": {
+      "display_name": "Grade 6 English",
+      "topics": {
+        "literature": {
+          "name": "Literature Analysis",
+          "description": "Read and analyze novels, short stories, and poetry",
+          "subtopics": {
+            "character_development": {
+              "name": "Character Analysis",
+              "description": "Understand how authors develop characters",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Analyze character traits", "Track character growth"],
+              "prerequisites": []
+            },
+            "theme_analysis": {
+              "name": "Identifying Themes",
+              "description": "Recognize and explain central themes in literature",
+              "difficulty": 4,
+              "estimated_time": 35,
+              "learning_objectives": ["Identify themes", "Support with evidence"],
+              "prerequisites": ["character_development"]
+            },
+            "poetry_elements": {
+              "name": "Elements of Poetry",
+              "description": "Explore rhythm, rhyme, and figurative language",
+              "difficulty": 4,
+              "estimated_time": 35,
+              "learning_objectives": ["Identify poetic devices", "Analyze meaning"],
+              "prerequisites": ["theme_analysis"]
+            }
+          }
+        },
+        "writing": {
+          "name": "Advanced Writing",
+          "description": "Develop clear, organized, and persuasive writing",
+          "subtopics": {
+            "expository_writing": {
+              "name": "Expository Essays",
+              "description": "Write informative and explanatory texts",
+              "difficulty": 4,
+              "estimated_time": 45,
+              "learning_objectives": ["Organize information", "Use evidence effectively"],
+              "prerequisites": []
+            },
+            "persuasive_writing": {
+              "name": "Persuasive Essays",
+              "description": "Write arguments that convince readers",
+              "difficulty": 5,
+              "estimated_time": 50,
+              "learning_objectives": ["Develop arguments", "Address counterarguments"],
+              "prerequisites": ["expository_writing"]
+            },
+            "creative_writing": {
+              "name": "Creative Writing",
+              "description": "Write original stories and descriptive pieces",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Use descriptive language", "Develop plot"],
+              "prerequisites": ["persuasive_writing"]
+            }
+          }
+        },
+        "grammar": {
+          "name": "Advanced Grammar",
+          "description": "Master complex sentence structures and usage",
+          "subtopics": {
+            "complex_sentences": {
+              "name": "Complex Sentences",
+              "description": "Use dependent and independent clauses",
+              "difficulty": 4,
+              "estimated_time": 30,
+              "learning_objectives": ["Combine clauses", "Use conjunctions"],
+              "prerequisites": []
+            },
+            "verb_tenses": {
+              "name": "Perfect Verb Tenses",
+              "description": "Master present, past, and future perfect tenses",
+              "difficulty": 4,
+              "estimated_time": 35,
+              "learning_objectives": ["Use perfect tenses", "Maintain consistency"],
+              "prerequisites": ["complex_sentences"]
+            }
+          }
+        }
+      }
+    },
+    "grade_8": {
+      "display_name": "Grade 8 English",
+      "topics": {
+        "literary_analysis": {
+          "name": "Literary Analysis",
+          "description": "Analyze complex texts and literary devices",
+          "subtopics": {
+            "symbolism": {
+              "name": "Symbolism and Allegory",
+              "description": "Understand deeper meanings in literature",
+              "difficulty": 5,
+              "estimated_time": 40,
+              "learning_objectives": ["Identify symbols", "Interpret allegorical meaning"],
+              "prerequisites": []
+            },
+            "irony": {
+              "name": "Types of Irony",
+              "description": "Recognize verbal, situational, and dramatic irony",
+              "difficulty": 5,
+              "estimated_time": 35,
+              "learning_objectives": ["Distinguish irony types", "Analyze effect"],
+              "prerequisites": ["symbolism"]
+            },
+            "point_of_view": {
+              "name": "Narrative Perspective",
+              "description": "Analyze how point of view affects meaning",
+              "difficulty": 5,
+              "estimated_time": 40,
+              "learning_objectives": ["Identify POV", "Analyze reliability"],
+              "prerequisites": ["irony"]
+            }
+          }
+        },
+        "research_writing": {
+          "name": "Research and Citation",
+          "description": "Conduct research and write formal papers",
+          "subtopics": {
+            "research_methods": {
+              "name": "Research Strategies",
+              "description": "Find and evaluate reliable sources",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Evaluate sources", "Take effective notes"],
+              "prerequisites": []
+            },
+            "mla_format": {
+              "name": "MLA Citation Format",
+              "description": "Properly cite sources using MLA style",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Format citations", "Create works cited"],
+              "prerequisites": ["research_methods"]
+            },
+            "research_paper": {
+              "name": "Research Paper Writing",
+              "description": "Write a formal research paper with citations",
+              "difficulty": 6,
+              "estimated_time": 60,
+              "learning_objectives": ["Synthesize sources", "Support thesis"],
+              "prerequisites": ["mla_format"]
+            }
+          }
+        },
+        "speaking_listening": {
+          "name": "Speaking and Listening",
+          "description": "Develop oral communication and presentation skills",
+          "subtopics": {
+            "formal_presentations": {
+              "name": "Formal Presentations",
+              "description": "Plan and deliver effective presentations",
+              "difficulty": 4,
+              "estimated_time": 40,
+              "learning_objectives": ["Organize presentations", "Use visual aids"],
+              "prerequisites": []
+            },
+            "debate_skills": {
+              "name": "Debate and Discussion",
+              "description": "Participate in formal debates and discussions",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Present arguments", "Respond respectfully"],
+              "prerequisites": ["formal_presentations"]
+            }
+          }
+        }
+      }
+    },
+    "grade_9": {
+      "display_name": "Grade 9 English (Freshman)",
+      "topics": {
+        "world_literature": {
+          "name": "World Literature",
+          "description": "Explore literature from diverse cultures and time periods",
+          "subtopics": {
+            "shakespearean_drama": {
+              "name": "Introduction to Shakespeare",
+              "description": "Read and analyze a Shakespearean play",
+              "difficulty": 6,
+              "estimated_time": 60,
+              "learning_objectives": ["Understand Elizabethan language", "Analyze dramatic elements"],
+              "prerequisites": []
+            },
+            "mythology": {
+              "name": "World Mythology",
+              "description": "Study myths from different cultures",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Compare mythologies", "Understand cultural values"],
+              "prerequisites": ["shakespearean_drama"]
+            },
+            "modern_fiction": {
+              "name": "Modern Fiction",
+              "description": "Read contemporary novels and short stories",
+              "difficulty": 5,
+              "estimated_time": 50,
+              "learning_objectives": ["Analyze modern themes", "Compare time periods"],
+              "prerequisites": ["mythology"]
+            }
+          }
+        },
+        "advanced_writing": {
+          "name": "Advanced Composition",
+          "description": "Master sophisticated writing techniques",
+          "subtopics": {
+            "literary_analysis_essays": {
+              "name": "Literary Analysis Essays",
+              "description": "Write in-depth analysis of literary works",
+              "difficulty": 6,
+              "estimated_time": 55,
+              "learning_objectives": ["Develop complex thesis", "Use textual evidence"],
+              "prerequisites": []
+            },
+            "personal_narrative": {
+              "name": "Personal Narrative",
+              "description": "Write compelling personal stories",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Use narrative techniques", "Reflect on experience"],
+              "prerequisites": ["literary_analysis_essays"]
+            },
+            "argumentative_essays": {
+              "name": "Advanced Argumentation",
+              "description": "Write sophisticated argumentative essays",
+              "difficulty": 6,
+              "estimated_time": 50,
+              "learning_objectives": ["Address complex issues", "Refute counterarguments"],
+              "prerequisites": ["personal_narrative"]
+            }
+          }
+        }
+      }
+    },
+    "grade_12": {
+      "display_name": "Grade 12 English (Senior)",
+      "topics": {
+        "american_literature": {
+          "name": "American Literature",
+          "description": "Survey of American literary movements and authors",
+          "subtopics": {
+            "colonial_literature": {
+              "name": "Colonial and Revolutionary Literature",
+              "description": "Read early American writings and founding documents",
+              "difficulty": 6,
+              "estimated_time": 50,
+              "learning_objectives": ["Understand historical context", "Analyze rhetoric"],
+              "prerequisites": []
+            },
+            "romanticism": {
+              "name": "American Romanticism",
+              "description": "Study Emerson, Thoreau, and transcendentalism",
+              "difficulty": 6,
+              "estimated_time": 55,
+              "learning_objectives": ["Understand philosophy", "Analyze nature writing"],
+              "prerequisites": ["colonial_literature"]
+            },
+            "modern_american": {
+              "name": "Modern American Literature",
+              "description": "Read 20th century American authors",
+              "difficulty": 6,
+              "estimated_time": 60,
+              "learning_objectives": ["Analyze modern themes", "Understand social context"],
+              "prerequisites": ["romanticism"]
+            }
+          }
+        },
+        "college_prep_writing": {
+          "name": "College Preparatory Writing",
+          "description": "Develop college-level writing and critical thinking",
+          "subtopics": {
+            "college_essay": {
+              "name": "College Application Essays",
+              "description": "Write compelling personal statements",
+              "difficulty": 6,
+              "estimated_time": 50,
+              "learning_objectives": ["Show personality", "Demonstrate growth"],
+              "prerequisites": []
+            },
+            "critical_analysis": {
+              "name": "Critical Analysis Papers",
+              "description": "Write sophisticated analytical essays",
+              "difficulty": 7,
+              "estimated_time": 60,
+              "learning_objectives": ["Synthesize multiple sources", "Develop original insights"],
+              "prerequisites": ["college_essay"]
+            },
+            "academic_research": {
+              "name": "Advanced Research Projects",
+              "description": "Complete independent research projects",
+              "difficulty": 7,
+              "estimated_time": 75,
+              "learning_objectives": ["Design research questions", "Present findings"],
+              "prerequisites": ["critical_analysis"]
+            }
+          }
+        }
+      }
+    },
+    "ged": {
+      "display_name": "GED Language Arts",
+      "topics": {
+        "reading_comprehension": {
+          "name": "GED Reading Comprehension",
+          "description": "Master reading skills for the GED test",
+          "subtopics": {
+            "main_idea": {
+              "name": "Main Ideas and Details",
+              "description": "Identify central ideas and supporting details",
+              "difficulty": 5,
+              "estimated_time": 40,
+              "learning_objectives": ["Find main ideas", "Distinguish details"],
+              "prerequisites": []
+            },
+            "inference": {
+              "name": "Making Inferences",
+              "description": "Draw conclusions from written text",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Make logical inferences", "Use context clues"],
+              "prerequisites": ["main_idea"]
+            },
+            "text_analysis": {
+              "name": "Analyzing Arguments",
+              "description": "Evaluate reasoning and evidence in texts",
+              "difficulty": 6,
+              "estimated_time": 50,
+              "learning_objectives": ["Evaluate arguments", "Identify bias"],
+              "prerequisites": ["inference"]
+            }
+          }
+        },
+        "writing_skills": {
+          "name": "GED Writing Skills",
+          "description": "Develop writing skills for the GED essay",
+          "subtopics": {
+            "essay_structure": {
+              "name": "Essay Organization",
+              "description": "Structure clear, well-organized essays",
+              "difficulty": 5,
+              "estimated_time": 45,
+              "learning_objectives": ["Organize ideas", "Use transitions"],
+              "prerequisites": []
+            },
+            "evidence_support": {
+              "name": "Using Evidence",
+              "description": "Support arguments with relevant evidence",
+              "difficulty": 5,
+              "estimated_time": 40,
+              "learning_objectives": ["Select evidence", "Explain connections"],
+              "prerequisites": ["essay_structure"]
+            },
+            "ged_essay_practice": {
+              "name": "GED Essay Practice",
+              "description": "Practice timed essay writing for the GED",
+              "difficulty": 6,
+              "estimated_time": 50,
+              "learning_objectives": ["Write under time pressure", "Score proficiently"],
+              "prerequisites": ["evidence_support"]
+            }
+          }
+        }
+      }
+    }
+  },
+  "ai_enabled": true,
+  "voice_enabled": true,
+  "offline_capable": true
+}

@@ -6,9 +6,9 @@ look into \home\ariappa\ged\phases.md and for build phases
 ## PRD (Product Requirements Document)
 # 📘 PRD: AI-Powered GED & Homeschooling Platform
 
-## 🧭 Product Name (Placeholder)
+## 🧭 Product Name
 
-**EduRoot** – A global, AI-guided, self-paced education system for GED and K–12 students, accessible even in the most underserved parts of the world.
+**Hagwon** (hagwon.app) – A global, AI-guided, self-paced education system for GED and K–12 students, accessible even in the most underserved parts of the world.
 
 ---
 
