@@ -194,11 +194,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return
     }
     
+    // Get the current domain for the confirmation email
+    const currentDomain = typeof window !== 'undefined' 
+      ? window.location.origin 
+      : 'https://www.hagwon.app' // Fallback to production domain
+    
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: metadata
+        data: metadata,
+        emailRedirectTo: `${currentDomain}/auth/callback`
       }
     })
     if (error) throw error

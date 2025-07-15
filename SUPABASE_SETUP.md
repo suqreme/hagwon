@@ -33,12 +33,14 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 In Supabase dashboard → **Authentication** → **Settings**:
 
-1. **Site URL:** `https://your-app.vercel.app`
+1. **Site URL:** `https://www.hagwon.app` (your production domain)
 2. **Redirect URLs:** Add:
-   - `https://your-app.vercel.app/auth/callback`
+   - `https://www.hagwon.app/auth/callback`
    - `http://localhost:3000/auth/callback` (for development)
 
 3. **Email Templates:** Customize signup/reset emails with your branding
+
+**IMPORTANT:** Make sure to update your live domain in the Site URL and Redirect URLs, otherwise email confirmations will redirect to localhost!
 
 ## Step 5: Enable Authentication Providers
 
