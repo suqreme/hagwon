@@ -74,9 +74,15 @@ export default function Home() {
               <div className="flex items-center justify-center space-x-4">
                 <Button 
                   variant="outline" 
+                  onClick={() => router.push('/student')}
+                >
+                  Multi-Student Mode
+                </Button>
+                <Button 
+                  variant="outline" 
                   onClick={() => router.push('/classroom')}
                 >
-                  Classroom Mode
+                  Classroom Mode (Old)
                 </Button>
                 <ThemeToggle />
               </div>

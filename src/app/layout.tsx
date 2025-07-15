@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Oxanium, Source_Code_Pro } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ProfileProvider } from '@/contexts/ProfileContext';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { ThemeInitializer } from '@/components/providers/theme-initializer';
 
@@ -122,7 +123,9 @@ export default function RootLayout({
         >
           <ThemeInitializer />
           <AuthProvider>
-            {children}
+            <ProfileProvider>
+              {children}
+            </ProfileProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>
