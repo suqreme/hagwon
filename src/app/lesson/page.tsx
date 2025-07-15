@@ -141,7 +141,40 @@ function LessonPageContent() {
       
       // Create a fallback lesson for demo purposes
       const fallbackLesson = {
-        lesson: `# Welcome to ${subtopic.replace(/_/g, ' ')}!\n\nThis is a demo lesson about ${subtopic.replace(/_/g, ' ')} for ${grade.replace('_', ' ')} level.\n\n## What You'll Learn\n\nIn this lesson, we'll explore the basic concepts and help you understand this topic step by step.\n\n## Let's Get Started!\n\nThis is an interactive lesson that will guide you through the material at your own pace.`,
+        lesson: `# Welcome to ${subtopic.replace(/_/g, ' ')}!
+
+This is a comprehensive lesson about **${subtopic.replace(/_/g, ' ')}** for ${grade.replace('_', ' ')} level students.
+
+## What You'll Learn
+
+In this lesson, we'll explore the fundamental concepts of ${subtopic.replace(/_/g, ' ')} and help you understand this topic step by step.
+
+By the end of this lesson, you will be able to:
+- Understand the basic principles of ${subtopic.replace(/_/g, ' ')}
+- Apply what you've learned through practical examples
+- Feel confident about the key concepts
+- Be ready to take the quiz and demonstrate your knowledge
+
+## Let's Get Started!
+
+This is an interactive lesson that will guide you through the material at your own pace. We'll start with the basics and gradually build up your understanding.
+
+### Why This Topic Matters
+
+Understanding ${subtopic.replace(/_/g, ' ')} is important because it forms the foundation for more advanced concepts in ${subject === 'math' ? 'mathematics' : 'English language arts'}.
+
+### How This Lesson Works
+
+1. **Read carefully** - Take your time with each section
+2. **Think about examples** - Try to relate concepts to real life
+3. **Ask questions** - Use the AI tutor if you need help
+4. **Take the quiz** - Test your understanding at the end
+
+### Ready to Learn?
+
+Great! Let's dive into the fascinating world of ${subtopic.replace(/_/g, ' ')}. Remember, learning is a journey, and every expert was once a beginner.
+
+Take your time, read carefully, and don't hesitate to ask for help if you need it. You've got this!`,
         metadata: {
           topic: topic,
           subtopic: subtopic,

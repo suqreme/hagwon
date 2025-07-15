@@ -311,13 +311,24 @@ export default function LessonContent({ lessonData, onComplete }: LessonContentP
                   <div 
                     dangerouslySetInnerHTML={{
                       __html: sections[currentSection]
-                        .replace(/^# (.+)$/gm, '<h1 class="text-3xl font-bold mb-4">$1</h1>')
-                        .replace(/^## (.+)$/gm, '<h2 class="text-2xl font-semibold mb-3">$1</h2>')
-                        .replace(/^### (.+)$/gm, '<h3 class="text-xl font-medium mb-2">$1</h3>')
-                        .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>')
+                        .replace(/^# (.+)$/gm, '<h1 class="text-3xl font-bold mb-6 text-primary">$1</h1>')
+                        .replace(/^## (.+)$/gm, '<h2 class="text-2xl font-semibold mb-4 text-primary">$1</h2>')
+                        .replace(/^### (.+)$/gm, '<h3 class="text-xl font-medium mb-3 text-primary">$1</h3>')
+                        .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-primary">$1</strong>')
                         .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>')
-                        .replace(/\n\n/g, '</p><p class="mb-4">')
-                        .replace(/^(?!<[h123]|<p)(.+)$/gm, '<p class="mb-4">$1</p>')
+                        .replace(/^- (.+)$/gm, '<li class="mb-2 ml-4">• $1</li>')
+                        .replace(/^(\d+)\. (.+)$/gm, '<li class="mb-2 ml-4">$1. $2</li>')
+                        .replace(/(<li.*<\/li>)/gm, '<ul class="mb-4 space-y-1">$1</ul>')
+                        .replace(/<\/ul>\s*<ul[^>]*>/g, '')
+                        .split('\n')
+                        .filter(line => line.trim())
+                        .map(line => {
+                          if (line.match(/^<[h123]/)) return line;
+                          if (line.match(/^<[ul]/)) return line;
+                          if (line.includes('<li')) return line;
+                          return `<p class="mb-4 leading-relaxed">${line}</p>`;
+                        })
+                        .join('\n')
                     }}
                   />
                 ) : (
