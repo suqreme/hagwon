@@ -145,36 +145,83 @@ function LessonPageContent() {
 
 This is a comprehensive lesson about **${subtopic.replace(/_/g, ' ')}** for ${grade.replace('_', ' ')} level students.
 
-## What You'll Learn
+In this lesson, we'll explore the fundamental concepts step by step, with practical examples and clear explanations. This topic is essential for building a strong foundation in ${subject === 'math' ? 'mathematics' : 'English language arts'}.
 
-In this lesson, we'll explore the fundamental concepts of ${subtopic.replace(/_/g, ' ')} and help you understand this topic step by step.
+**What makes this lesson special:**
+- Clear, step-by-step explanations
+- Real-world examples you can relate to
+- Practice opportunities to reinforce learning
+- Interactive elements to keep you engaged
 
-By the end of this lesson, you will be able to:
-- Understand the basic principles of ${subtopic.replace(/_/g, ' ')}
-- Apply what you've learned through practical examples
-- Feel confident about the key concepts
-- Be ready to take the quiz and demonstrate your knowledge
+## Understanding the Basics
 
-## Let's Get Started!
+Let's start with the foundation. ${subtopic.replace(/_/g, ' ')} is a crucial concept that you'll use throughout your studies and even in everyday life.
 
-This is an interactive lesson that will guide you through the material at your own pace. We'll start with the basics and gradually build up your understanding.
+**Key concepts to remember:**
+- Every topic builds on previous knowledge
+- Practice makes perfect
+- It's okay to take your time
+- Questions are encouraged
 
-### Why This Topic Matters
+**Why this matters:** Understanding ${subtopic.replace(/_/g, ' ')} helps you think more clearly, solve problems more effectively, and prepares you for more advanced topics. Many students find this challenging at first, but with practice, it becomes much easier.
 
-Understanding ${subtopic.replace(/_/g, ' ')} is important because it forms the foundation for more advanced concepts in ${subject === 'math' ? 'mathematics' : 'English language arts'}.
+**Real-world connections:** You encounter concepts related to ${subtopic.replace(/_/g, ' ')} in many situations - from everyday problem-solving to more complex tasks. This makes learning it both practical and rewarding.
 
-### How This Lesson Works
+## Breaking It Down Step by Step
 
-1. **Read carefully** - Take your time with each section
-2. **Think about examples** - Try to relate concepts to real life
-3. **Ask questions** - Use the AI tutor if you need help
-4. **Take the quiz** - Test your understanding at the end
+Now let's dive deeper into the specific elements of ${subtopic.replace(/_/g, ' ')}. We'll take this one step at a time.
 
-### Ready to Learn?
+**Step 1: Foundation**
+The first thing to understand is the basic structure. Think of this like building a house - you need a solid foundation before you can build the walls and roof.
 
-Great! Let's dive into the fascinating world of ${subtopic.replace(/_/g, ' ')}. Remember, learning is a journey, and every expert was once a beginner.
+**Step 2: Building Up**
+Once you have the foundation, we add the next layer of understanding. This is where things start to come together and make sense.
 
-Take your time, read carefully, and don't hesitate to ask for help if you need it. You've got this!`,
+**Step 3: Application**
+Finally, we learn how to apply what we've learned. This is the most rewarding part because you get to see how it all works together.
+
+**Important tips:**
+- Don't rush through the material
+- Make sure you understand each step before moving on
+- Practice with different examples
+- Ask for help when you need it
+
+## Practical Examples and Applications
+
+Let's look at some concrete examples to help you understand ${subtopic.replace(/_/g, ' ')} better.
+
+**Example 1: Everyday Situations**
+Think about times in your daily life when you might use these concepts. Whether it's organizing your room, planning your time, or solving everyday problems, these skills are everywhere.
+
+**Example 2: Academic Applications**
+In school, you'll use ${subtopic.replace(/_/g, ' ')} in many different subjects. It's not just about this one topic - it's about developing thinking skills that help you everywhere.
+
+**Example 3: Future Learning**
+As you advance in your studies, this foundation will support more complex topics. Students who master these basics find later topics much easier to understand.
+
+**Practice suggestions:**
+- Try to identify these concepts in your daily life
+- Practice explaining them to someone else
+- Work through different types of problems
+- Don't be afraid to make mistakes - they're part of learning
+
+## Putting It All Together
+
+Now that we've covered the basics, let's see how everything connects. ${subtopic.replace(/_/g, ' ')} isn't just isolated facts - it's part of a bigger picture.
+
+**The big picture:**
+Understanding how different concepts relate to each other helps you see patterns and make connections. This makes learning more efficient and more enjoyable.
+
+**Review checklist:**
+- Can you explain the basic concepts?
+- Do you understand why this topic is important?
+- Can you think of real-world examples?
+- Are you ready to practice what you've learned?
+
+**Next steps:**
+After you finish this lesson, you'll take a quiz to test your understanding. Don't worry - it's designed to help you learn, not to trick you. If you don't pass the first time, you can review the material and try again.
+
+Remember: Every expert was once a beginner. You're doing great by taking the time to learn this properly. Take your time, ask questions, and most importantly, believe in yourself!`,
         metadata: {
           topic: topic,
           subtopic: subtopic,

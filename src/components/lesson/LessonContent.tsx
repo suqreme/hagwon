@@ -311,10 +311,10 @@ export default function LessonContent({ lessonData, onComplete }: LessonContentP
                   <div 
                     dangerouslySetInnerHTML={{
                       __html: sections[currentSection]
-                        .replace(/^# (.+)$/gm, '<h1 class="text-3xl font-bold mb-6 text-primary">$1</h1>')
-                        .replace(/^## (.+)$/gm, '<h2 class="text-2xl font-semibold mb-4 text-primary">$1</h2>')
-                        .replace(/^### (.+)$/gm, '<h3 class="text-xl font-medium mb-3 text-primary">$1</h3>')
-                        .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-primary">$1</strong>')
+                        .replace(/^# (.+)$/gm, '<h1 class="text-3xl font-bold mb-6 text-foreground">$1</h1>')
+                        .replace(/^## (.+)$/gm, '<h2 class="text-2xl font-semibold mb-4 text-foreground">$1</h2>')
+                        .replace(/^### (.+)$/gm, '<h3 class="text-xl font-medium mb-3 text-foreground">$1</h3>')
+                        .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-foreground">$1</strong>')
                         .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>')
                         .replace(/^- (.+)$/gm, '<li class="mb-2 ml-4">• $1</li>')
                         .replace(/^(\d+)\. (.+)$/gm, '<li class="mb-2 ml-4">$1. $2</li>')
