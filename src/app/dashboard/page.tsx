@@ -178,6 +178,13 @@ export default function Dashboard() {
               <Button 
                 variant="ghost"
                 size="sm"
+                onClick={() => router.push('/our-goals')}
+              >
+                🎯 Our Goals
+              </Button>
+              <Button 
+                variant="ghost"
+                size="sm"
                 onClick={() => router.push('/games')}
               >
                 Games

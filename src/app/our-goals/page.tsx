@@ -141,8 +141,8 @@ export default function CampaignPage() {
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Dashboard
               </Button>
-              <h1 className="text-2xl font-bold text-foreground">Global Education Campaign</h1>
-              <p className="text-muted-foreground">Together, we're changing lives one student at a time</p>
+              <h1 className="text-2xl font-bold text-foreground">Our Fundraising Goals</h1>
+              <p className="text-muted-foreground">Building the future of global education, milestone by milestone</p>
             </div>
             <ThemeToggle />
           </div>
@@ -195,7 +195,7 @@ export default function CampaignPage() {
         {/* Campaign Timeline */}
         <div className="space-y-8">
           <h2 className="text-3xl font-bold text-center mb-8">
-            🚀 Campaign Milestones
+            🎯 Our Fundraising Goals
           </h2>
           
           {campaignMilestones.map((milestone, index) => {

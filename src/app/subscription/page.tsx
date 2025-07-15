@@ -216,8 +216,8 @@ export default function SubscriptionPage() {
               <Button variant="outline" onClick={handleHardshipRequest}>
                 Apply for Free Access
               </Button>
-              <Button variant="ghost" onClick={() => router.push('/campaign')}>
-                See Our Global Impact
+              <Button variant="ghost" onClick={() => router.push('/our-goals')}>
+                See Our Fundraising Goals
               </Button>
             </div>
           </CardContent>
