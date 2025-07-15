@@ -107,7 +107,16 @@ class EnhancedVoiceService {
   }
 
   public async speak(options: TextToSpeechOptions): Promise<void> {
-    const provider = options.provider || this.settings.provider
+    let provider = options.provider || this.settings.provider
+    
+    // Check subscription for premium voices
+    if (provider === 'elevenlabs' || provider === 'google') {
+      const hasAccess = await this.checkPremiumVoiceAccess()
+      if (!hasAccess) {
+        console.log('Premium voice access not available, falling back to web speech')
+        provider = 'web'
+      }
+    }
     
     try {
       switch (provider) {
@@ -127,6 +136,36 @@ class EnhancedVoiceService {
         return this.speakWithWebAPI(options)
       }
       throw error
+    }
+  }
+
+  private async checkPremiumVoiceAccess(): Promise<boolean> {
+    try {
+      if (typeof window !== 'undefined') {
+        // Check if ElevenLabs is configured
+        const hasElevenLabsKey = !!process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY
+        
+        // Get auth context from localStorage or window
+        const authData = window.localStorage?.getItem('auth-user')
+        if (authData) {
+          try {
+            const user = JSON.parse(authData)
+            // Check if user has premium subscription
+            return user.subscription_status === 'premium' || 
+                   user.subscription_status === 'sponsor' ||
+                   user.user_metadata?.role === 'admin'
+          } catch (e) {
+            console.warn('Could not parse auth data for voice access check')
+          }
+        }
+        
+        // Fallback to API key availability
+        return hasElevenLabsKey
+      }
+      return false
+    } catch (error) {
+      console.error('Error checking premium voice access:', error)
+      return false
     }
   }
 

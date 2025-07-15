@@ -10,9 +10,15 @@ interface AuthContextType {
   supabaseUser: SupabaseUser | null
   loading: boolean
   signIn: (email: string, password: string) => Promise<void>
-  signUp: (email: string, password: string) => Promise<void>
+  signUp: (email: string, password: string, metadata?: any) => Promise<void>
   signOut: () => Promise<void>
   createAnonymousUser: (country?: string) => Promise<void>
+  updateProfile: (updates: Partial<User>) => Promise<void>
+  hasSubscription: () => boolean
+  isAdmin: () => boolean
+  isPremiumUser: () => boolean
+  canAccessFeature: (feature: string) => boolean
+  refreshUserProfile: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -133,16 +139,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) throw error
   }
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, metadata?: any) => {
     if (!supabase) {
       // Demo mode - create a fake user
       const demoUser = {
         id: 'demo-user',
         email,
-        country: 'US',
+        country: metadata?.country || 'US',
         isAnonymous: false,
         subscription_status: 'free' as const,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        user_metadata: metadata
       }
       setUser(demoUser)
       return
@@ -151,6 +158,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: metadata
+      }
     })
     if (error) throw error
   }
@@ -174,6 +184,71 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     throw new Error('Anonymous mode not yet implemented')
   }
 
+  const updateProfile = async (updates: Partial<User>) => {
+    if (!supabase || !user) {
+      console.warn('Cannot update profile: Supabase not configured or user not logged in')
+      return
+    }
+
+    try {
+      const { error } = await supabase
+        .from('user_profiles')
+        .update(updates)
+        .eq('id', user.id)
+
+      if (error) throw error
+
+      // Update local state
+      setUser(prev => prev ? { ...prev, ...updates } : null)
+    } catch (error: any) {
+      console.error('Error updating profile:', error)
+      throw new Error(error.message || 'Failed to update profile')
+    }
+  }
+
+  const hasSubscription = () => {
+    if (!user) return false
+    return user.subscription_status !== 'free'
+  }
+
+  const isAdmin = () => {
+    if (!user || !user.user_metadata) return false
+    return user.user_metadata.role === 'admin'
+  }
+
+  const isPremiumUser = () => {
+    if (!user) return false
+    return user.subscription_status === 'premium' || user.subscription_status === 'sponsor'
+  }
+
+  const canAccessFeature = (feature: string) => {
+    if (!user) return false
+    
+    // Admin can access everything
+    if (isAdmin()) return true
+
+    // Feature-based access control
+    switch (feature) {
+      case 'ai_tutor':
+        return hasSubscription() || user.subscription_status === 'free' // AI tutor available to all
+      case 'premium_voices':
+        return isPremiumUser()
+      case 'offline_downloads':
+        return hasSubscription()
+      case 'advanced_analytics':
+        return isPremiumUser()
+      case 'unlimited_lessons':
+        return hasSubscription()
+      default:
+        return true // Default features available to all
+    }
+  }
+
+  const refreshUserProfile = async () => {
+    if (!user) return
+    await fetchUserProfile(user.id)
+  }
+
   const value = {
     user,
     supabaseUser,
@@ -182,6 +257,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signUp,
     signOut,
     createAnonymousUser,
+    updateProfile,
+    hasSubscription,
+    isAdmin,
+    isPremiumUser,
+    canAccessFeature,
+    refreshUserProfile,
   }
 
   return (

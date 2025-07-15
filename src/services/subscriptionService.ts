@@ -1,3 +1,5 @@
+import { supabase } from '@/lib/supabase'
+
 interface SubscriptionStatus {
   plan: 'free' | 'supporter' | 'sponsor' | 'hardship'
   status: 'active' | 'inactive' | 'pending' | 'cancelled'
@@ -9,6 +11,21 @@ interface SubscriptionStatus {
     offlineDownloads: boolean
     certificateGeneration: boolean
     scholarshipFunding: boolean
+  }
+}
+
+interface HardshipRequest {
+  id: string
+  user_id: string
+  hardship_reason: string
+  status: 'pending' | 'approved' | 'denied'
+  submitted_at: string
+  reviewed_at?: string
+  reviewed_by?: string
+  user_profiles?: {
+    full_name: string
+    email: string
+    country: string
   }
 }
 
@@ -160,6 +177,193 @@ class SubscriptionService {
 
     const used = this.getLessonUsageToday(userId)
     return Math.max(0, subscription.features.dailyLessonLimit - used)
+  }
+
+  // Supabase integration methods
+  async getSubscriptionStats(): Promise<{
+    totalUsers: number
+    freeUsers: number
+    supporterUsers: number
+    sponsorUsers: number
+    hardshipUsers: number
+    monthlyRevenue: number
+  }> {
+    if (!supabase) {
+      return {
+        totalUsers: 1,
+        freeUsers: 1,
+        supporterUsers: 0,
+        sponsorUsers: 0,
+        hardshipUsers: 0,
+        monthlyRevenue: 0
+      }
+    }
+
+    try {
+      // Get subscription counts
+      const { data: subscriptions } = await supabase
+        .from('subscriptions')
+        .select('plan, status')
+        .eq('status', 'active')
+
+      const stats = {
+        totalUsers: subscriptions?.length || 0,
+        freeUsers: 0,
+        supporterUsers: 0,
+        sponsorUsers: 0,
+        hardshipUsers: 0,
+        monthlyRevenue: 0
+      }
+
+      subscriptions?.forEach(sub => {
+        switch (sub.plan) {
+          case 'free':
+            stats.freeUsers++
+            break
+          case 'supporter':
+            stats.supporterUsers++
+            stats.monthlyRevenue += 5
+            break
+          case 'sponsor':
+            stats.sponsorUsers++
+            stats.monthlyRevenue += 25
+            break
+          case 'hardship':
+            stats.hardshipUsers++
+            break
+        }
+      })
+
+      // Add free users (those without subscription records)
+      const { count: totalUserCount } = await supabase
+        .from('user_profiles')
+        .select('*', { count: 'exact', head: true })
+
+      stats.freeUsers = (totalUserCount || 0) - (subscriptions?.length || 0)
+      stats.totalUsers = totalUserCount || 0
+
+      return stats
+    } catch (error) {
+      console.error('Error fetching subscription stats:', error)
+      return {
+        totalUsers: 0,
+        freeUsers: 0,
+        supporterUsers: 0,
+        sponsorUsers: 0,
+        hardshipUsers: 0,
+        monthlyRevenue: 0
+      }
+    }
+  }
+
+  async submitHardshipRequest(userId: string, reason: string): Promise<void> {
+    if (!supabase) {
+      console.warn('Supabase not configured - cannot submit hardship request')
+      return
+    }
+
+    try {
+      const { error } = await supabase
+        .from('hardship_requests')
+        .insert({
+          user_id: userId,
+          hardship_reason: reason,
+          status: 'pending',
+          submitted_at: new Date().toISOString()
+        })
+
+      if (error) throw error
+    } catch (error) {
+      console.error('Error submitting hardship request:', error)
+      throw error
+    }
+  }
+
+  async getPendingHardshipRequests(): Promise<HardshipRequest[]> {
+    if (!supabase) return []
+
+    try {
+      const { data, error } = await supabase
+        .from('hardship_requests')
+        .select(`
+          *,
+          user_profiles (
+            full_name,
+            email,
+            country
+          )
+        `)
+        .eq('status', 'pending')
+        .order('submitted_at', { ascending: false })
+
+      if (error) throw error
+      return data || []
+    } catch (error) {
+      console.error('Error fetching hardship requests:', error)
+      return []
+    }
+  }
+
+  async approveHardshipRequest(userId: string, reviewedBy: string): Promise<void> {
+    if (!supabase) {
+      console.warn('Supabase not configured - cannot approve hardship request')
+      return
+    }
+
+    try {
+      // Update hardship request
+      const { error: requestError } = await supabase
+        .from('hardship_requests')
+        .update({
+          status: 'approved',
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: reviewedBy
+        })
+        .eq('user_id', userId)
+        .eq('status', 'pending')
+
+      if (requestError) throw requestError
+
+      // Create/update subscription
+      const { error: subError } = await supabase
+        .from('subscriptions')
+        .upsert({
+          user_id: userId,
+          plan: 'hardship',
+          status: 'active',
+          hardship_approved: true,
+          updated_at: new Date().toISOString()
+        })
+
+      if (subError) throw subError
+    } catch (error) {
+      console.error('Error approving hardship request:', error)
+      throw error
+    }
+  }
+
+  async denyHardshipRequest(userId: string, reviewedBy: string): Promise<void> {
+    if (!supabase) {
+      console.warn('Supabase not configured - cannot deny hardship request')
+      return
+    }
+
+    try {
+      const { error } = await supabase
+        .from('hardship_requests')
+        .update({
+          status: 'denied',
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: reviewedBy
+        })
+        .eq('user_id', userId)
+        .eq('status', 'pending')
+
+      if (error) throw error
+    } catch (error) {
+      console.error('Error denying hardship request:', error)
+      throw error
+    }
   }
 }
 

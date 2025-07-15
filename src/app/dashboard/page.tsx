@@ -33,7 +33,7 @@ interface UserStats {
 }
 
 export default function Dashboard() {
-  const { user, loading, signOut } = useAuth()
+  const { user, loading, signOut, isAdmin } = useAuth()
   const router = useRouter()
   const [subjects, setSubjects] = useState<string[]>([])
   const [selectedSubject, setSelectedSubject] = useState('math')
@@ -54,7 +54,12 @@ export default function Dashboard() {
     if (!loading && !user) {
       router.push('/')
     }
-  }, [user, loading, router])
+    
+    // Redirect admins to admin dashboard
+    if (!loading && user && isAdmin()) {
+      router.push('/admin')
+    }
+  }, [user, loading, router, isAdmin])
 
   useEffect(() => {
     loadSubjects()
