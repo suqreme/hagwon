@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { useAuth } from '@/contexts/AuthContext'
 import { userManagementService, type AdminUserView } from '@/services/userManagementService'
 import { subscriptionService } from '@/services/subscriptionService'
@@ -18,7 +20,10 @@ import {
   Crown,
   AlertCircle,
   CheckCircle,
-  XCircle
+  XCircle,
+  Home,
+  LogOut,
+  Settings
 } from 'lucide-react'
 
 interface PlatformStats {
@@ -40,7 +45,8 @@ interface SubscriptionStats {
 }
 
 export default function AdminDashboard() {
-  const { user, isAdmin } = useAuth()
+  const { user, isAdmin, signOut } = useAuth()
+  const router = useRouter()
   const [platformStats, setPlatformStats] = useState<PlatformStats | null>(null)
   const [subscriptionStats, setSubscriptionStats] = useState<SubscriptionStats | null>(null)
   const [recentUsers, setRecentUsers] = useState<AdminUserView[]>([])
@@ -134,20 +140,73 @@ export default function AdminDashboard() {
     )
   }
 
+  const handleLogout = async () => {
+    try {
+      await signOut()
+      router.push('/')
+    } catch (error) {
+      console.error('Logout error:', error)
+      router.push('/')
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        
-        {/* Header */}
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
-            <p className="text-muted-foreground">EduRoot Platform Management</p>
+    <div className="min-h-screen bg-background">
+      {/* Navigation Header */}
+      <header className="bg-card shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <Crown className="w-8 h-8 text-primary" />
+                <div>
+                  <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
+                  <p className="text-sm text-muted-foreground">EduRoot Platform Management</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push('/dashboard')}
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Student View
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={loadAdminData}
+              >
+                Refresh Data
+              </Button>
+              
+              <ThemeToggle />
+              
+              <div className="flex items-center space-x-2 px-3 py-2 bg-primary/10 rounded-lg">
+                <Crown className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium">
+                  {user?.email?.split('@')[0] || 'Admin'}
+                </span>
+              </div>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
-          <Button onClick={loadAdminData} variant="outline">
-            Refresh Data
-          </Button>
         </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
         {/* Platform Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -354,7 +413,7 @@ export default function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </main>
     </div>
   )
 }
