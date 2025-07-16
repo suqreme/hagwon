@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { Plus, Users, UserX, RotateCcw } from 'lucide-react'
+import { T } from '@/components/ui/auto-translate'
 
 interface Student {
   id: string
@@ -122,13 +123,13 @@ export default function ClassroomMode() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Classroom Mode</h1>
-              <p className="text-muted-foreground">Manage multiple students on one device</p>
+              <h1 className="text-2xl font-bold text-foreground"><T>Classroom Mode</T></h1>
+              <p className="text-muted-foreground"><T>Manage multiple students on one device</T></p>
             </div>
             <div className="flex items-center space-x-4">
               <Badge variant="secondary" className="flex items-center gap-2">
                 <Users className="w-4 h-4" />
-                {students.length} Students
+                {students.length} <T>Students</T>
               </Badge>
               <ThemeToggle />
               <Button 
@@ -136,7 +137,7 @@ export default function ClassroomMode() {
                 size="sm"
                 onClick={() => router.push('/')}
               >
-                Exit Classroom
+                <T>Exit Classroom</T>
               </Button>
             </div>
           </div>
@@ -148,7 +149,7 @@ export default function ClassroomMode() {
         
         {/* Actions */}
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-lg font-semibold text-foreground">Students</h2>
+          <h2 className="text-lg font-semibold text-foreground"><T>Students</T></h2>
           <div className="flex space-x-4">
             {students.length > 0 && (
               <Button 
@@ -158,12 +159,12 @@ export default function ClassroomMode() {
                 className="text-destructive hover:text-destructive"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
-                Clear All
+                <T>Clear All</T>
               </Button>
             )}
             <Button onClick={() => setShowAddForm(true)}>
               <Plus className="w-4 h-4 mr-2" />
-              Add Student
+              <T>Add Student</T>
             </Button>
           </div>
         </div>
@@ -172,13 +173,13 @@ export default function ClassroomMode() {
         {showAddForm && (
           <Card className="mb-8">
             <CardHeader>
-              <CardTitle>Add New Student</CardTitle>
+              <CardTitle><T>Add New Student</T></CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Student Nickname
+                    <T>Student Nickname</T>
                   </label>
                   <input
                     type="text"
@@ -191,23 +192,23 @@ export default function ClassroomMode() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Starting Grade Level
+                    <T>Starting Grade Level</T>
                   </label>
                   <select
                     value={selectedGrade}
                     onChange={(e) => setSelectedGrade(e.target.value)}
                     className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                   >
-                    <option value="kindergarten">Kindergarten</option>
-                    <option value="grade_1">1st Grade</option>
-                    <option value="grade_2">2nd Grade</option>
-                    <option value="grade_3">3rd Grade</option>
+                    <option value="kindergarten"><T>Kindergarten</T></option>
+                    <option value="grade_1"><T>1st Grade</T></option>
+                    <option value="grade_2"><T>2nd Grade</T></option>
+                    <option value="grade_3"><T>3rd Grade</T></option>
                   </select>
                 </div>
                 <div className="flex space-x-4">
-                  <Button onClick={addStudent}>Add Student</Button>
+                  <Button onClick={addStudent}><T>Add Student</T></Button>
                   <Button variant="outline" onClick={() => setShowAddForm(false)}>
-                    Cancel
+                    <T>Cancel</T>
                   </Button>
                 </div>
               </div>
@@ -220,13 +221,13 @@ export default function ClassroomMode() {
           <Card>
             <CardContent className="text-center py-12">
               <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">No Students Yet</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2"><T>No Students Yet</T></h3>
               <p className="text-muted-foreground mb-4">
-                Add students to start using classroom mode. Each student will have their own progress tracked separately.
+                <T>Add students to start using classroom mode. Each student will have their own progress tracked separately.</T>
               </p>
               <Button onClick={() => setShowAddForm(true)}>
                 <Plus className="w-4 h-4 mr-2" />
-                Add First Student
+                <T>Add First Student</T>
               </Button>
             </CardContent>
           </Card>
@@ -255,7 +256,7 @@ export default function ClassroomMode() {
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Lessons:</span>
+                      <span className="text-muted-foreground"><T>Lessons</T>:</span>
                       <span className="font-medium">{student.progress.lessonsCompleted}</span>
                     </div>
                     <div className="flex justify-between text-sm">
@@ -263,17 +264,17 @@ export default function ClassroomMode() {
                       <span className="font-medium">{student.progress.totalXP}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Streak:</span>
-                      <span className="font-medium">{student.progress.currentStreak} days</span>
+                      <span className="text-muted-foreground"><T>Streak</T>:</span>
+                      <span className="font-medium">{student.progress.currentStreak} <T>days</T></span>
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      Added: {new Date(student.created).toLocaleDateString()}
+                      <T>Added</T>: {new Date(student.created).toLocaleDateString()}
                     </div>
                     <Button 
                       className="w-full mt-4"
                       onClick={() => switchToStudent(student)}
                     >
-                      Switch to {student.nickname}
+                      <T>Switch to</T> {student.nickname}
                     </Button>
                   </div>
                 </CardContent>
@@ -285,15 +286,15 @@ export default function ClassroomMode() {
         {/* Instructions */}
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>How Classroom Mode Works</CardTitle>
+            <CardTitle><T>How Classroom Mode Works</T></CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>• Each student gets their own profile with separate progress tracking</p>
-              <p>• Students can be added with nicknames to protect privacy</p>
-              <p>• All data is stored locally on this device</p>
-              <p>• Use "Export Progress" (coming soon) to backup student data</p>
-              <p>• Perfect for shared computers in libraries, schools, or community centers</p>
+              <p>• <T>Each student gets their own profile with separate progress tracking</T></p>
+              <p>• <T>Students can be added with nicknames to protect privacy</T></p>
+              <p>• <T>All data is stored locally on this device</T></p>
+              <p>• <T>Use "Export Progress" (coming soon) to backup student data</T></p>
+              <p>• <T>Perfect for shared computers in libraries, schools, or community centers</T></p>
             </div>
           </CardContent>
         </Card>

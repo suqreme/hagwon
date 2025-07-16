@@ -22,6 +22,8 @@ import {
   CheckCircle,
   XCircle,
   Home,
+  Trash2,
+  AlertTriangle,
   LogOut,
   Settings
 } from 'lucide-react'
@@ -162,6 +164,93 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error('Error denying request:', error)
       alert('Failed to deny request')
+    }
+  }
+
+  const handleDeleteRequest = async (requestId: string, requestType: string) => {
+    if (!confirm(`Are you sure you want to permanently delete this ${requestType}? This action cannot be undone.`)) {
+      return
+    }
+
+    try {
+      const updatedRequests = allRequests.filter(request => request.id !== requestId)
+      localStorage.setItem('admin_requests', JSON.stringify(updatedRequests))
+      setAllRequests(updatedRequests)
+      
+      alert(`Request deleted successfully.`)
+    } catch (error) {
+      console.error('Error deleting request:', error)
+      alert('Failed to delete request')
+    }
+  }
+
+  const handleDeleteUser = async (userId: string, userEmail: string) => {
+    if (!confirm(`Are you sure you want to permanently delete user ${userEmail}? This will remove all their data and cannot be undone.`)) {
+      return
+    }
+
+    try {
+      // Remove from users data
+      const updatedUsers = users.filter(u => u.id !== userId)
+      setUsers(updatedUsers)
+      
+      // Remove user's progress data
+      localStorage.removeItem(`onboarding_${userId}`)
+      localStorage.removeItem(`placement_${userId}`)
+      localStorage.removeItem(`progress_${userId}`)
+      localStorage.removeItem(`subscription_${userId}`)
+      
+      // Remove from classroom students if exists
+      const classroomStudents = JSON.parse(localStorage.getItem('classroom_students') || '[]')
+      const updatedClassroom = classroomStudents.filter((student: any) => student.id !== userId)
+      localStorage.setItem('classroom_students', JSON.stringify(updatedClassroom))
+      
+      // Remove any requests from this user
+      const updatedRequests = allRequests.filter(request => request.user_id !== userId)
+      localStorage.setItem('admin_requests', JSON.stringify(updatedRequests))
+      setAllRequests(updatedRequests)
+      
+      alert(`User ${userEmail} and all associated data deleted successfully.`)
+      await loadAdminData() // Refresh data
+    } catch (error) {
+      console.error('Error deleting user:', error)
+      alert('Failed to delete user')
+    }
+  }
+
+  const handleClearAllData = async () => {
+    if (!confirm('⚠️ DANGER: This will permanently delete ALL user data, requests, and progress. Type "DELETE ALL" to confirm.')) {
+      return
+    }
+    
+    const confirmation = prompt('Type "DELETE ALL" to confirm permanent deletion of all data:')
+    if (confirmation !== 'DELETE ALL') {
+      alert('Deletion cancelled - confirmation text did not match.')
+      return
+    }
+
+    try {
+      // Clear all localStorage data
+      localStorage.removeItem('admin_requests')
+      localStorage.removeItem('classroom_students')
+      
+      // Clear all user-specific data
+      users.forEach(user => {
+        localStorage.removeItem(`onboarding_${user.id}`)
+        localStorage.removeItem(`placement_${user.id}`)
+        localStorage.removeItem(`progress_${user.id}`)
+        localStorage.removeItem(`subscription_${user.id}`)
+      })
+      
+      // Reset state
+      setUsers([])
+      setAllRequests([])
+      
+      alert('All data has been permanently deleted.')
+      await loadAdminData() // Refresh data
+    } catch (error) {
+      console.error('Error clearing all data:', error)
+      alert('Failed to clear all data')
     }
   }
 
@@ -458,26 +547,36 @@ export default function AdminDashboard() {
                         )}
                       </div>
                       
-                      {request.status === 'pending' && (
-                        <div className="flex space-x-2">
-                          <Button
-                            size="sm"
-                            onClick={() => handleApproveRequest(request.id, request.type)}
-                            className="bg-green-600 hover:bg-green-700"
-                          >
-                            <CheckCircle className="w-4 h-4 mr-1" />
-                            <T>Approve</T>
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => handleDenyRequest(request.id, request.type)}
-                          >
-                            <XCircle className="w-4 h-4 mr-1" />
-                            <T>Deny</T>
-                          </Button>
-                        </div>
-                      )}
+                      <div className="flex space-x-2">
+                        {request.status === 'pending' ? (
+                          <>
+                            <Button
+                              size="sm"
+                              onClick={() => handleApproveRequest(request.id, request.type)}
+                              className="bg-green-600 hover:bg-green-700"
+                            >
+                              <CheckCircle className="w-4 h-4 mr-1" />
+                              <T>Approve</T>
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleDenyRequest(request.id, request.type)}
+                            >
+                              <XCircle className="w-4 h-4 mr-1" />
+                              <T>Deny</T>
+                            </Button>
+                          </>
+                        ) : null}
+                        <Button 
+                          size="sm" 
+                          variant="destructive"
+                          onClick={() => handleDeleteRequest(request.id, request.type)}
+                        >
+                          <Trash2 className="w-4 h-4 mr-1" />
+                          <T>Delete</T>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -523,13 +622,23 @@ export default function AdminDashboard() {
                       )}
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm text-muted-foreground">
-                      {user.lessons_completed} <T>lessons completed</T>
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      <T>Joined</T> {new Date(user.created_at).toLocaleDateString()}
-                    </p>
+                  <div className="flex items-center space-x-4">
+                    <div className="text-right">
+                      <p className="text-sm text-muted-foreground">
+                        {user.lessons_completed} <T>lessons completed</T>
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        <T>Joined</T> {new Date(user.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Button 
+                      size="sm" 
+                      variant="destructive"
+                      onClick={() => handleDeleteUser(user.id, user.email)}
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      <T>Delete</T>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -564,6 +673,65 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Data Management Section */}
+        <Card className="border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-800">
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2 text-red-700 dark:text-red-400">
+              <AlertTriangle className="w-5 h-5" />
+              <span><T>Data Management</T></span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="bg-white dark:bg-gray-900 p-4 rounded-lg border border-red-200 dark:border-red-800">
+              <h3 className="font-semibold text-red-700 dark:text-red-400 mb-2">
+                <T>Danger Zone</T>
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                <T>These actions are permanent and cannot be undone. Use with extreme caution.</T>
+              </p>
+              
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 border rounded border-red-200 dark:border-red-800">
+                  <div>
+                    <p className="font-medium"><T>Clear All Platform Data</T></p>
+                    <p className="text-sm text-muted-foreground">
+                      <T>Delete all users, requests, progress data, and settings</T>
+                    </p>
+                  </div>
+                  <Button 
+                    variant="destructive" 
+                    onClick={handleClearAllData}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    <T>Delete All Data</T>
+                  </Button>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 border rounded border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-950/20">
+                  <div>
+                    <p className="font-medium text-yellow-700 dark:text-yellow-400">
+                      <T>Export Data (Coming Soon)</T>
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      <T>Download all platform data as JSON backup</T>
+                    </p>
+                  </div>
+                  <Button variant="outline" disabled>
+                    <T>Export Data</T>
+                  </Button>
+                </div>
+              </div>
+            </div>
+            
+            <div className="text-xs text-muted-foreground">
+              <p>⚠️ <T>Data deletion is permanent and cannot be recovered</T></p>
+              <p>📊 <T>Always export data before performing destructive operations</T></p>
+              <p>🔒 <T>Only administrators can perform these actions</T></p>
             </div>
           </CardContent>
         </Card>

@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { Check, Heart, Users, Globe } from 'lucide-react'
+import { T } from '@/components/ui/auto-translate'
 
 interface SubscriptionPlan {
   id: string
@@ -178,8 +179,8 @@ export default function SubscriptionPage() {
               >
                 ← Back to Dashboard
               </Button>
-              <h1 className="text-2xl font-bold text-foreground">Choose Your Plan</h1>
-              <p className="text-muted-foreground">Support global education while advancing your own learning</p>
+              <h1 className="text-2xl font-bold text-foreground"><T>Choose Your Plan</T></h1>
+              <p className="text-muted-foreground"><T>Support global education while advancing your own learning</T></p>
             </div>
             <ThemeToggle />
           </div>
@@ -220,7 +221,7 @@ export default function SubscriptionPage() {
             <Card key={plan.id} className={`relative ${plan.popular ? 'border-primary' : ''}`}>
               {plan.popular && (
                 <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
+                  <Badge className="bg-primary text-primary-foreground"><T>Most Popular</T></Badge>
                 </div>
               )}
               
@@ -289,7 +290,7 @@ export default function SubscriptionPage() {
           <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <Card className="w-full max-w-md">
               <CardHeader>
-                <CardTitle>Hardship Access Application</CardTitle>
+                <CardTitle><T>Hardship Access Application</T></CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>

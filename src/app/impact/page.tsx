@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { MapPin, Users, Heart, Globe, Camera, Mail, Phone } from 'lucide-react'
+import { T } from '@/components/ui/auto-translate'
 
 interface EducationCenter {
   id: string
@@ -48,6 +49,13 @@ export default function ImpactPage() {
   })
   const [selectedCenter, setSelectedCenter] = useState<EducationCenter | null>(null)
   const [showRequestForm, setShowRequestForm] = useState(false)
+  const [formData, setFormData] = useState({
+    communityName: '',
+    location: '',
+    description: '',
+    contactEmail: ''
+  })
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     loadImpactData()
@@ -156,6 +164,52 @@ export default function ImpactPage() {
     setShowRequestForm(true)
   }
 
+  const submitCommunityRequest = async () => {
+    if (!formData.communityName.trim() || !formData.location.trim() || !formData.description.trim() || !formData.contactEmail.trim()) {
+      alert('Please fill in all required fields')
+      return
+    }
+
+    setSubmitting(true)
+    
+    try {
+      // Create community help request object
+      const helpRequest = {
+        id: `community_help_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        community_name: formData.communityName,
+        location: formData.location,
+        description: formData.description,
+        contact_email: formData.contactEmail,
+        request_type: 'Community Support',
+        status: 'pending',
+        submitted_at: new Date().toISOString(),
+        type: 'help_request'
+      }
+
+      // Store in localStorage for admin to review
+      const existingRequests = JSON.parse(localStorage.getItem('admin_requests') || '[]')
+      existingRequests.push(helpRequest)
+      localStorage.setItem('admin_requests', JSON.stringify(existingRequests))
+
+      // Clear form and close
+      setFormData({
+        communityName: '',
+        location: '',
+        description: '',
+        contactEmail: ''
+      })
+      setShowRequestForm(false)
+      
+      alert('Your community support request has been submitted! We will review it and contact you within 1-2 weeks.')
+      
+    } catch (error) {
+      console.error('Error submitting community request:', error)
+      alert('Failed to submit request. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -169,14 +223,14 @@ export default function ImpactPage() {
                 onClick={() => router.push('/dashboard')}
                 className="mb-2"
               >
-                ← Back to Dashboard
+                <T>← Back to Dashboard</T>
               </Button>
-              <h1 className="text-2xl font-bold text-foreground">Global Impact Map</h1>
-              <p className="text-muted-foreground">See how education is changing lives around the world</p>
+              <h1 className="text-2xl font-bold text-foreground"><T>Global Impact Map</T></h1>
+              <p className="text-muted-foreground"><T>See how education is changing lives around the world</T></p>
             </div>
             <div className="flex items-center space-x-4">
               <Button onClick={handleRequestHelp}>
-                Request Help for Your Community
+                <T>Request Help for Your Community</T>
               </Button>
               <ThemeToggle />
             </div>
@@ -195,7 +249,7 @@ export default function ImpactPage() {
                 <MapPin className="w-8 h-8 text-primary" />
                 <div>
                   <p className="text-2xl font-bold">{stats.totalCenters}</p>
-                  <p className="text-sm text-muted-foreground">Active Centers</p>
+                  <p className="text-sm text-muted-foreground"><T>Active Centers</T></p>
                 </div>
               </div>
             </CardContent>
@@ -207,7 +261,7 @@ export default function ImpactPage() {
                 <Users className="w-8 h-8 text-blue-500" />
                 <div>
                   <p className="text-2xl font-bold">{stats.totalStudents}</p>
-                  <p className="text-sm text-muted-foreground">Students Served</p>
+                  <p className="text-sm text-muted-foreground"><T>Students Served</T></p>
                 </div>
               </div>
             </CardContent>
@@ -219,7 +273,7 @@ export default function ImpactPage() {
                 <Heart className="w-8 h-8 text-red-500" />
                 <div>
                   <p className="text-2xl font-bold">{stats.totalDonors}</p>
-                  <p className="text-sm text-muted-foreground">Generous Donors</p>
+                  <p className="text-sm text-muted-foreground"><T>Generous Donors</T></p>
                 </div>
               </div>
             </CardContent>
@@ -231,7 +285,7 @@ export default function ImpactPage() {
                 <Globe className="w-8 h-8 text-green-500" />
                 <div>
                   <p className="text-2xl font-bold">{stats.countriesReached}</p>
-                  <p className="text-sm text-muted-foreground">Countries Reached</p>
+                  <p className="text-sm text-muted-foreground"><T>Countries Reached</T></p>
                 </div>
               </div>
             </CardContent>
@@ -241,14 +295,14 @@ export default function ImpactPage() {
         {/* Map Placeholder */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Education Centers Worldwide</CardTitle>
+            <CardTitle><T>Education Centers Worldwide</T></CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-96 bg-muted flex items-center justify-center border">
               <div className="text-center">
                 <Globe className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Interactive map coming soon</p>
-                <p className="text-sm text-muted-foreground">Click on the centers below to explore their stories</p>
+                <p className="text-muted-foreground"><T>Interactive map coming soon</T></p>
+                <p className="text-sm text-muted-foreground"><T>Click on the centers below to explore their stories</T></p>
               </div>
             </div>
           </CardContent>
@@ -256,7 +310,7 @@ export default function ImpactPage() {
 
         {/* Education Centers */}
         <div className="space-y-6">
-          <h2 className="text-lg font-semibold text-foreground">Education Centers</h2>
+          <h2 className="text-lg font-semibold text-foreground"><T>Education Centers</T></h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {centers.map((center) => (
@@ -285,17 +339,17 @@ export default function ImpactPage() {
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <p className="font-medium">{center.studentsServed}</p>
-                      <p className="text-muted-foreground">Students Served</p>
+                      <p className="text-muted-foreground"><T>Students Served</T></p>
                     </div>
                     <div>
                       <p className="font-medium">{center.monthlyImpact.lessonsCompleted}</p>
-                      <p className="text-muted-foreground">Lessons/Month</p>
+                      <p className="text-muted-foreground"><T>Lessons/Month</T></p>
                     </div>
                   </div>
                   
                   {center.donorName && (
                     <div className="text-sm">
-                      <p className="text-muted-foreground">Powered by:</p>
+                      <p className="text-muted-foreground"><T>Powered by</T>:</p>
                       <p className="font-medium">{center.donorName}</p>
                     </div>
                   )}
@@ -325,58 +379,58 @@ export default function ImpactPage() {
               
               <CardContent className="space-y-6">
                 <div>
-                  <h3 className="font-semibold mb-2">Our Story</h3>
+                  <h3 className="font-semibold mb-2"><T>Our Story</T></h3>
                   <p className="text-sm">{selectedCenter.story}</p>
                 </div>
                 
                 {selectedCenter.status === 'active' && (
                   <>
                     <div>
-                      <h3 className="font-semibold mb-2">Monthly Impact</h3>
+                      <h3 className="font-semibold mb-2"><T>Monthly Impact</T></h3>
                       <div className="grid grid-cols-3 gap-4 text-sm">
                         <div className="text-center">
                           <p className="text-2xl font-bold text-primary">{selectedCenter.monthlyImpact.newStudents}</p>
-                          <p className="text-muted-foreground">New Students</p>
+                          <p className="text-muted-foreground"><T>New Students</T></p>
                         </div>
                         <div className="text-center">
                           <p className="text-2xl font-bold text-blue-500">{selectedCenter.monthlyImpact.lessonsCompleted}</p>
-                          <p className="text-muted-foreground">Lessons Completed</p>
+                          <p className="text-muted-foreground"><T>Lessons Completed</T></p>
                         </div>
                         <div className="text-center">
                           <p className="text-2xl font-bold text-green-500">{selectedCenter.monthlyImpact.certificatesEarned}</p>
-                          <p className="text-muted-foreground">Certificates Earned</p>
+                          <p className="text-muted-foreground"><T>Certificates Earned</T></p>
                         </div>
                       </div>
                     </div>
                     
                     {selectedCenter.donorName && (
                       <div>
-                        <h3 className="font-semibold mb-2">Made Possible By</h3>
+                        <h3 className="font-semibold mb-2"><T>Made Possible By</T></h3>
                         <p className="text-primary font-medium">{selectedCenter.donorName}</p>
-                        <p className="text-sm text-muted-foreground">Thank you for making education accessible!</p>
+                        <p className="text-sm text-muted-foreground"><T>Thank you for making education accessible!</T></p>
                       </div>
                     )}
                   </>
                 )}
                 
                 <div>
-                  <h3 className="font-semibold mb-2">Contact Information</h3>
+                  <h3 className="font-semibold mb-2"><T>Contact Information</T></h3>
                   <div className="flex items-center space-x-2 text-sm">
                     <Mail className="w-4 h-4" />
                     <span>{selectedCenter.contactEmail}</span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Established: {new Date(selectedCenter.establishedDate).toLocaleDateString()}
+                    <T>Established</T>: {new Date(selectedCenter.establishedDate).toLocaleDateString()}
                   </p>
                 </div>
                 
                 <div className="flex space-x-4">
                   <Button variant="outline" onClick={() => setSelectedCenter(null)}>
-                    Close
+                    <T>Close</T>
                   </Button>
                   {selectedCenter.status === 'requesting' && (
                     <Button>
-                      Sponsor This Center
+                      <T>Sponsor This Center</T>
                     </Button>
                   )}
                 </div>
@@ -390,15 +444,17 @@ export default function ImpactPage() {
           <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <Card className="w-full max-w-md">
               <CardHeader>
-                <CardTitle>Request Help for Your Community</CardTitle>
+                <CardTitle><T>Request Help for Your Community</T></CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Community/Organization Name
+                    <T>Community/Organization Name</T>
                   </label>
                   <input
                     type="text"
+                    value={formData.communityName}
+                    onChange={(e) => setFormData({...formData, communityName: e.target.value})}
                     className="w-full px-3 py-2 border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="Your community center name"
                   />
@@ -406,10 +462,12 @@ export default function ImpactPage() {
                 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Location
+                    <T>Location</T>
                   </label>
                   <input
                     type="text"
+                    value={formData.location}
+                    onChange={(e) => setFormData({...formData, location: e.target.value})}
                     className="w-full px-3 py-2 border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="City, Country"
                   />
@@ -417,9 +475,11 @@ export default function ImpactPage() {
                 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Tell us about your community and education needs
+                    <T>Tell us about your community and education needs</T>
                   </label>
                   <textarea
+                    value={formData.description}
+                    onChange={(e) => setFormData({...formData, description: e.target.value})}
                     className="w-full h-32 px-3 py-2 border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="Describe your community, the students you serve, and what kind of support you need..."
                   />
@@ -427,24 +487,32 @@ export default function ImpactPage() {
                 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Contact Email
+                    <T>Contact Email</T>
                   </label>
                   <input
                     type="email"
+                    value={formData.contactEmail}
+                    onChange={(e) => setFormData({...formData, contactEmail: e.target.value})}
                     className="w-full px-3 py-2 border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="your-email@example.com"
                   />
                 </div>
                 
                 <div className="flex space-x-4">
-                  <Button className="flex-1">Submit Request</Button>
+                  <Button 
+                    className="flex-1" 
+                    onClick={submitCommunityRequest}
+                    disabled={submitting || !formData.communityName.trim() || !formData.location.trim() || !formData.description.trim() || !formData.contactEmail.trim()}
+                  >
+                    {submitting ? 'Submitting...' : <T>Submit Request</T>}
+                  </Button>
                   <Button variant="outline" onClick={() => setShowRequestForm(false)}>
-                    Cancel
+                    <T>Cancel</T>
                   </Button>
                 </div>
                 
                 <p className="text-xs text-muted-foreground">
-                  We'll review your request and connect you with potential donors within 1-2 weeks.
+                  <T>We'll review your request and connect you with potential donors within 1-2 weeks.</T>
                 </p>
               </CardContent>
             </Card>

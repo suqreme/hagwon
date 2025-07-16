@@ -99,6 +99,19 @@ export function UserMenu() {
                     size="sm"
                     className="w-full justify-start"
                     onClick={() => {
+                      router.push('/profile')
+                      setShowDropdown(false)
+                    }}
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    <T>Profile Settings</T>
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start"
+                    onClick={() => {
                       router.push('/achievements')
                       setShowDropdown(false)
                     }}

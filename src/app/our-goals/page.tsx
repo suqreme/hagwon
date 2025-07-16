@@ -18,6 +18,7 @@ import {
   Languages,
   ArrowLeft
 } from 'lucide-react'
+import { T } from '@/components/ui/auto-translate'
 
 interface CampaignMilestone {
   goal: number
@@ -141,7 +142,7 @@ export default function CampaignPage() {
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Dashboard
               </Button>
-              <h1 className="text-2xl font-bold text-foreground">Our Fundraising Goals</h1>
+              <h1 className="text-2xl font-bold text-foreground"><T>Our Fundraising Goals</T></h1>
               <p className="text-muted-foreground">Building the future of global education, milestone by milestone</p>
             </div>
             <ThemeToggle />
@@ -164,28 +165,28 @@ export default function CampaignPage() {
                   <div className="text-4xl font-bold text-primary">
                     <CountUp end={impactStats.totalStudents} />
                   </div>
-                  <p className="text-muted-foreground">Students Learning</p>
+                  <p className="text-muted-foreground"><T>Students Learning</T></p>
                 </div>
                 
                 <div className="text-center">
                   <div className="text-4xl font-bold text-green-600">
                     <CountUp end={impactStats.countriesReached} />
                   </div>
-                  <p className="text-muted-foreground">Countries Reached</p>
+                  <p className="text-muted-foreground"><T>Countries Reached</T></p>
                 </div>
                 
                 <div className="text-center">
                   <div className="text-4xl font-bold text-blue-600">
                     $<CountUp end={impactStats.totalDonated} />
                   </div>
-                  <p className="text-muted-foreground">Total Donated</p>
+                  <p className="text-muted-foreground"><T>Total Donated</T></p>
                 </div>
                 
                 <div className="text-center">
                   <div className="text-4xl font-bold text-purple-600">
                     <CountUp end={impactStats.scholarshipsProvided} />
                   </div>
-                  <p className="text-muted-foreground">Scholarships Provided</p>
+                  <p className="text-muted-foreground"><T>Scholarships Provided</T></p>
                 </div>
               </div>
             </div>
