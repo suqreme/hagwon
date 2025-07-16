@@ -108,29 +108,29 @@ const NotificationItem = ({ notification, onClose }: {
   return (
     <div
       className={cn(
-        "max-w-sm w-full shadow-lg rounded-lg pointer-events-auto border transition-all duration-300 ease-in-out transform",
+        "min-w-80 max-w-md w-full shadow-lg rounded-lg pointer-events-auto border transition-all duration-300 ease-in-out transform",
         getBackgroundColor(),
         isVisible && !isLeaving ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
       )}
     >
       <div className="p-4">
-        <div className="flex items-start">
-          <div className="flex-shrink-0">
+        <div className="flex items-start space-x-3">
+          <div className="flex-shrink-0 mt-0.5">
             {getIcon()}
           </div>
-          <div className="ml-3 w-0 flex-1">
-            <p className="text-sm font-medium text-foreground">
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground leading-relaxed">
               {notification.title}
             </p>
             {notification.message && (
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground leading-relaxed break-words">
                 {notification.message}
               </p>
             )}
           </div>
-          <div className="ml-4 flex-shrink-0 flex">
+          <div className="flex-shrink-0">
             <button
-              className="inline-flex text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring rounded-md p-1"
+              className="inline-flex text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring rounded-md p-1 transition-colors"
               onClick={handleClose}
             >
               <X className="w-4 h-4" />
@@ -163,7 +163,7 @@ export const NotificationContainer = () => {
   }
 
   return (
-    <div className="fixed top-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none">
+    <div className="fixed top-4 right-4 z-50 flex flex-col space-y-3 pointer-events-none max-w-md w-full sm:w-auto">
       {notifications.map((notification) => (
         <NotificationItem
           key={notification.id}
