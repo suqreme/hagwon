@@ -180,4 +180,38 @@
   .hover\:theme-shadow-xl:hover {
     box-shadow: var(--shadow-xl);
   }
+
+  /* Mobile optimizations */
+  @media (max-width: 640px) {
+    /* Ensure minimum touch target sizes */
+    button, [role="button"], input, select, textarea {
+      min-height: 44px;
+    }
+    
+    /* Better spacing for mobile */
+    .space-x-4 > * + * { 
+      margin-left: 0.75rem; 
+    }
+    
+    /* Reduce padding on small screens */
+    .p-6 {
+      padding: 1rem;
+    }
+    
+    .px-8 {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    /* Better text sizes for mobile */
+    .text-4xl {
+      font-size: 2rem;
+      line-height: 2.25rem;
+    }
+    
+    .text-6xl {
+      font-size: 3rem;
+      line-height: 1;
+    }
+  }
 }

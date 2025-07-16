@@ -103,21 +103,26 @@ export default function LandingPage() {
                 <p className="text-xs text-muted-foreground">AI-Powered Learning</p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 md:space-x-4">
               <div className="relative">
                 <ThemeToggle />
               </div>
               <Button 
                 variant="outline" 
+                size="sm"
+                className="hidden sm:inline-flex"
                 onClick={() => router.push('/login')}
               >
-                Sign In
+                <span className="hidden md:inline">Sign In</span>
+                <span className="md:hidden">Login</span>
               </Button>
               <Button 
+                size="sm"
                 onClick={() => router.push('/student')}
                 className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90"
               >
-                Get Started
+                <span className="hidden sm:inline">Get Started</span>
+                <span className="sm:hidden">Start</span>
               </Button>
             </div>
           </div>
@@ -132,13 +137,13 @@ export default function LandingPage() {
             Now Available Worldwide
           </Badge>
           
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-pink-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-pink-600 bg-clip-text text-transparent">
             AI-Powered Learning
             <br />
             <span className="text-foreground">For Everyone, Everywhere</span>
           </h1>
           
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto px-4">
             Hagwon is a comprehensive educational platform designed for K-12 and GED students. 
             With AI-powered lessons, multi-student support, and offline capabilities, 
             we're making quality education accessible to learners around the world.

@@ -50,7 +50,7 @@ export default function StudentDashboard() {
               </div>
             </div>
             
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -59,8 +59,9 @@ export default function StudentDashboard() {
                   signOut()
                 }}
               >
-                <Users className="w-4 h-4 mr-2" />
-                Switch Profile
+                <Users className="w-4 h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Switch Profile</span>
+                <span className="sm:hidden">Switch</span>
               </Button>
               
               <ThemeToggle />
@@ -69,8 +70,10 @@ export default function StudentDashboard() {
                 variant="ghost"
                 size="sm"
                 onClick={signOut}
+                className="px-2"
               >
                 <LogOut className="w-4 h-4" />
+                <span className="sr-only">Logout</span>
               </Button>
             </div>
           </div>

@@ -34,8 +34,8 @@ export function ThemeSwitcher({ onClose }: ThemeSwitcherProps) {
   }
 
   const modalContent = (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
-      <div className="bg-background border rounded-lg theme-shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 z-[9999]">
+      <div className="bg-background border rounded-lg theme-shadow-2xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto mx-2 sm:mx-0">
         <div className="p-6">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
@@ -49,7 +49,7 @@ export function ThemeSwitcher({ onClose }: ThemeSwitcherProps) {
           </div>
 
           {/* Theme Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {themes.map((theme) => (
               <Card 
                 key={theme.id} 
