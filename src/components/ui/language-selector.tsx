@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { languageService } from '@/services/languageService'
 import { useTranslation } from '@/hooks/useTranslation'
 import { getLanguageByCode } from '@/lib/languages'
-import { Globe, Check, X, MapPin, Monitor, User } from 'lucide-react'
+import { Globe, Check, X, MapPin, Monitor, User, Plus } from 'lucide-react'
 
 interface LanguageSelectorProps {
   onClose?: () => void
@@ -20,6 +20,7 @@ export function LanguageSelector({ onClose }: LanguageSelectorProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [detectionSource, setDetectionSource] = useState<'location' | 'browser' | 'manual'>('manual')
+  const [showRequestForm, setShowRequestForm] = useState(false)
 
   useEffect(() => {
     setCurrentLanguage(languageService.getCurrentLanguage())
@@ -39,6 +40,17 @@ export function LanguageSelector({ onClose }: LanguageSelectorProps) {
     changeLanguage(languageCode)
     setCurrentLanguage(languageCode)
     setDetectionSource('manual')
+  }
+
+  const handleRequestLanguage = () => {
+    // Simple implementation - could be enhanced to open a form or send to admin
+    const userLanguage = prompt('What language would you like us to add? Please provide the language name and country:')
+    if (userLanguage) {
+      // In a real implementation, this would send to your admin/support system
+      alert(`Thank you! We've received your request for: "${userLanguage}". We'll consider adding it in a future update.`)
+      console.log('Language request:', userLanguage)
+      // TODO: Send to admin dashboard or support system
+    }
   }
 
   const handleClose = () => {
@@ -156,6 +168,30 @@ export function LanguageSelector({ onClose }: LanguageSelectorProps) {
                 <p className="text-blue-700 dark:text-blue-200">
                   We automatically detect your language based on your location. You can override this selection at any time, and your preference will be remembered.
                 </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Request Language Section */}
+          <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-950/30 rounded-lg border border-amber-200 dark:border-amber-800">
+            <div className="flex items-start space-x-3">
+              <Plus className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5" />
+              <div className="flex-1">
+                <p className="font-medium text-amber-900 dark:text-amber-100 mb-2">
+                  Don't see your language?
+                </p>
+                <p className="text-sm text-amber-700 dark:text-amber-200 mb-3">
+                  We're always adding new languages to make education accessible to everyone worldwide.
+                </p>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleRequestLanguage}
+                  className="border-amber-300 text-amber-700 hover:bg-amber-100 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/50"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Request Your Language
+                </Button>
               </div>
             </div>
           </div>
