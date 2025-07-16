@@ -11,63 +11,13 @@ import { Check, Heart, Users, Globe } from 'lucide-react'
 import { T } from '@/components/ui/auto-translate'
 import { supabase } from '@/lib/supabase'
 import { notifications } from '@/lib/notifications'
+import { SUBSCRIPTION_PLANS, type PlanId } from '@/lib/stripe'
 
-interface SubscriptionPlan {
-  id: string
-  name: string
-  price: number
-  interval: string
-  description: string
-  features: string[]
-  popular?: boolean
-}
-
-const plans: SubscriptionPlan[] = [
-  {
-    id: 'free',
-    name: 'Free Access',
-    price: 0,
-    interval: 'forever',
-    description: 'Basic learning with limited features',
-    features: [
-      '3 lessons per day',
-      'Basic progress tracking',
-      'Community support',
-      'Mobile access'
-    ]
-  },
-  {
-    id: 'supporter',
-    name: 'Supporter',
-    price: 5,
-    interval: 'month',
-    description: 'Support global education while learning',
-    features: [
-      'Unlimited lessons',
-      'Advanced progress analytics',
-      'Priority support',
-      'Offline lesson downloads',
-      'Certificate generation',
-      'Help fund scholarships'
-    ],
-    popular: true
-  },
-  {
-    id: 'sponsor',
-    name: 'Education Sponsor',
-    price: 25,
-    interval: 'month',
-    description: 'Sponsor education for underserved communities',
-    features: [
-      'Everything in Supporter',
-      'Sponsor 5 scholarship students',
-      'Impact reports and updates',
-      'Donor recognition (optional)',
-      'Priority feature requests',
-      'Monthly community calls'
-    ]
-  }
-]
+// Convert Stripe plans to component format
+const plans = Object.values(SUBSCRIPTION_PLANS).map(plan => ({
+  ...plan,
+  popular: plan.id === 'supporter'
+}))
 
 export default function SubscriptionPage() {
   const { user, loading: authLoading } = useAuth()
@@ -81,21 +31,38 @@ export default function SubscriptionPage() {
 
   useEffect(() => {
     setMounted(true)
+    
+    // Check for success or canceled status from Stripe redirect
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('success')) {
+      notifications.success.subscriptionActivated('your subscription')
+      // Clean up the URL
+      window.history.replaceState({}, document.title, window.location.pathname)
+    } else if (urlParams.get('canceled')) {
+      notifications.warning.unsavedChanges()
+      // Clean up the URL
+      window.history.replaceState({}, document.title, window.location.pathname)
+    }
   }, [])
 
   const handleSubscribe = async (planId: string) => {
+    if (!user) {
+      notifications.error.unauthorized()
+      return
+    }
+
     setLoading(planId)
     
     try {
-      // In a real implementation, this would integrate with Stripe
-      console.log(`Subscribing to plan: ${planId}`)
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      // For demo, just show success message
-      const planName = plans.find(p => p.id === planId)?.name || 'plan'
-      notifications.success.subscriptionActivated(planName)
+      if (planId === 'free') {
+        // Handle free plan - just update local state
+        const planName = plans.find(p => p.id === planId)?.name || 'Free Plan'
+        notifications.success.subscriptionActivated(planName)
+        return
+      }
+
+      // For paid plans, redirect to Stripe Checkout
+      await subscriptionService.createCheckoutSession(user.id, planId as PlanId)
       
     } catch (error) {
       console.error('Subscription error:', error)

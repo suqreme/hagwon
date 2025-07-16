@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import { getStripe, SUBSCRIPTION_PLANS, type PlanId } from '@/lib/stripe'
 
 interface SubscriptionStatus {
   plan: 'free' | 'supporter' | 'sponsor' | 'hardship'
@@ -427,6 +428,99 @@ class SubscriptionService {
       console.error('Error denying hardship request:', error)
       throw error
     }
+  }
+
+  // Stripe integration methods
+  async createCheckoutSession(userId: string, planId: PlanId): Promise<string> {
+    if (planId === 'free') {
+      throw new Error('Cannot create checkout for free plan')
+    }
+
+    const plan = SUBSCRIPTION_PLANS[planId]
+    if (!plan.stripePriceId) {
+      throw new Error(`No Stripe price ID configured for plan: ${planId}`)
+    }
+
+    try {
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          priceId: plan.stripePriceId,
+          userId: userId,
+          planId: planId,
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to create checkout session')
+      }
+
+      const { sessionId } = await response.json()
+      
+      // Redirect to Stripe Checkout
+      const stripe = await getStripe()
+      if (!stripe) {
+        throw new Error('Stripe not loaded')
+      }
+
+      const { error } = await stripe.redirectToCheckout({ sessionId })
+      if (error) {
+        throw error
+      }
+
+      return sessionId
+    } catch (error) {
+      console.error('Error creating checkout session:', error)
+      throw error
+    }
+  }
+
+  async createPortalSession(userId: string): Promise<string> {
+    try {
+      const response = await fetch('/api/stripe/portal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to create portal session')
+      }
+
+      const { url } = await response.json()
+      return url
+    } catch (error) {
+      console.error('Error creating portal session:', error)
+      throw error
+    }
+  }
+
+  async cancelSubscription(userId: string): Promise<void> {
+    try {
+      // Get the portal URL and redirect user to manage subscription
+      const portalUrl = await this.createPortalSession(userId)
+      window.open(portalUrl, '_blank')
+    } catch (error) {
+      console.error('Error canceling subscription:', error)
+      throw error
+    }
+  }
+
+  // Get subscription plans for UI
+  getSubscriptionPlans() {
+    return SUBSCRIPTION_PLANS
+  }
+
+  // Check if a plan requires Stripe checkout
+  requiresStripeCheckout(planId: string): boolean {
+    return planId !== 'free' && planId !== 'hardship'
   }
 }
 
