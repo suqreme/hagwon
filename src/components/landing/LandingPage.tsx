@@ -197,8 +197,8 @@ export default function LandingPage() {
             {features.map((feature, index) => (
               <Card 
                 key={index}
-                className={`transition-all duration-300 hover:shadow-lg border-2 ${
-                  hoveredFeature === index ? 'border-primary/30 shadow-xl' : 'border-border'
+                className={`transition-all duration-300 theme-shadow-md hover:theme-shadow-xl border-2 ${
+                  hoveredFeature === index ? 'border-primary/30 theme-shadow-xl' : 'border-border'
                 }`}
                 onMouseEnter={() => setHoveredFeature(index)}
                 onMouseLeave={() => setHoveredFeature(null)}

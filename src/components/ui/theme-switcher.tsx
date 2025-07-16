@@ -35,7 +35,7 @@ export function ThemeSwitcher({ onClose }: ThemeSwitcherProps) {
 
   const modalContent = (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
-      <div className="bg-background border rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-background border rounded-lg theme-shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
@@ -53,7 +53,7 @@ export function ThemeSwitcher({ onClose }: ThemeSwitcherProps) {
             {themes.map((theme) => (
               <Card 
                 key={theme.id} 
-                className={`cursor-pointer transition-all hover:shadow-lg ${
+                className={`cursor-pointer transition-all theme-shadow hover:theme-shadow-lg ${
                   currentTheme === theme.id ? 'ring-2 ring-primary' : ''
                 }`}
                 onClick={() => handleThemeChange(theme.id)}

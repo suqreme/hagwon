@@ -145,7 +145,7 @@ export default function ProfileSelector({ onProfileSelected }: ProfileSelectorPr
           {profiles.map((profile) => (
             <Card 
               key={profile.id} 
-              className="cursor-pointer hover:shadow-lg transition-shadow group"
+              className="cursor-pointer theme-shadow hover:theme-shadow-lg transition-shadow group"
               onClick={() => handleProfileClick(profile)}
             >
               <CardContent className="p-6 text-center">
@@ -196,7 +196,7 @@ export default function ProfileSelector({ onProfileSelected }: ProfileSelectorPr
           
           {/* Add new profile card */}
           <Card 
-            className="cursor-pointer hover:shadow-lg transition-shadow border-dashed"
+            className="cursor-pointer theme-shadow hover:theme-shadow-lg transition-shadow border-dashed"
             onClick={() => setShowCreateForm(true)}
           >
             <CardContent className="p-6 text-center">

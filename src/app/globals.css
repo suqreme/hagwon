@@ -146,4 +146,38 @@
     letter-spacing: 0.025em;
     font-weight: 500;
   }
+
+  /* Theme-aware shadow utilities */
+  .theme-shadow-sm {
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .theme-shadow {
+    box-shadow: var(--shadow);
+  }
+  
+  .theme-shadow-md {
+    box-shadow: var(--shadow-md);
+  }
+  
+  .theme-shadow-lg {
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .theme-shadow-xl {
+    box-shadow: var(--shadow-xl);
+  }
+  
+  .theme-shadow-2xl {
+    box-shadow: var(--shadow-2xl);
+  }
+
+  /* Hover states for theme shadows */
+  .hover\:theme-shadow-lg:hover {
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .hover\:theme-shadow-xl:hover {
+    box-shadow: var(--shadow-xl);
+  }
 }

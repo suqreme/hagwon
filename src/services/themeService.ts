@@ -310,6 +310,14 @@ class ThemeService {
           --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
           --font-mono: Space Mono, monospace;
           --radius: 0px;
+          --shadow-2xs: 2px 2px 0px 0px hsl(0 0% 0% / 1.00);
+          --shadow-xs: 2px 2px 0px 0px hsl(0 0% 0% / 1.00);
+          --shadow-sm: 3px 3px 0px 0px hsl(0 0% 0% / 1.00);
+          --shadow: 4px 4px 0px 0px hsl(0 0% 0% / 1.00);
+          --shadow-md: 5px 5px 0px 0px hsl(0 0% 0% / 1.00);
+          --shadow-lg: 6px 6px 0px 0px hsl(0 0% 0% / 1.00);
+          --shadow-xl: 8px 8px 0px 0px hsl(0 0% 0% / 1.00);
+          --shadow-2xl: 12px 12px 0px 0px hsl(0 0% 0% / 1.00);
         }
         
         .dark {
@@ -332,6 +340,14 @@ class ThemeService {
           --border: oklch(1.0000 0 0);
           --input: oklch(1.0000 0 0);
           --ring: oklch(0.7044 0.1872 23.1858);
+          --shadow-2xs: 2px 2px 0px 0px hsl(0 0% 100% / 1.00);
+          --shadow-xs: 2px 2px 0px 0px hsl(0 0% 100% / 1.00);
+          --shadow-sm: 3px 3px 0px 0px hsl(0 0% 100% / 1.00);
+          --shadow: 4px 4px 0px 0px hsl(0 0% 100% / 1.00);
+          --shadow-md: 5px 5px 0px 0px hsl(0 0% 100% / 1.00);
+          --shadow-lg: 6px 6px 0px 0px hsl(0 0% 100% / 1.00);
+          --shadow-xl: 8px 8px 0px 0px hsl(0 0% 100% / 1.00);
+          --shadow-2xl: 12px 12px 0px 0px hsl(0 0% 100% / 1.00);
           --chart-1: oklch(0.7044 0.1872 23.1858);
           --chart-2: oklch(0.9691 0.2005 109.6228);
           --chart-3: oklch(0.6755 0.1765 252.2592);
