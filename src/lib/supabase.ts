@@ -186,6 +186,103 @@ export type Database = {
           updated_at?: string
         }
       }
+      hardship_requests: {
+        Row: {
+          id: string
+          user_id: string
+          hardship_reason: string
+          status: 'pending' | 'approved' | 'denied'
+          submitted_at: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          hardship_reason: string
+          status?: 'pending' | 'approved' | 'denied'
+          submitted_at?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          hardship_reason?: string
+          status?: 'pending' | 'approved' | 'denied'
+          submitted_at?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      community_requests: {
+        Row: {
+          id: string
+          user_id: string | null
+          user_email: string
+          user_name: string | null
+          request_type: 'hardship_application' | 'language_request' | 'help_request'
+          status: 'pending' | 'approved' | 'denied'
+          hardship_reason: string | null
+          country: string | null
+          language_requested: string | null
+          community_name: string | null
+          location: string | null
+          description: string | null
+          contact_email: string | null
+          reviewed_by: string | null
+          reviewed_at: string | null
+          admin_notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          user_email: string
+          user_name?: string | null
+          request_type: 'hardship_application' | 'language_request' | 'help_request'
+          status?: 'pending' | 'approved' | 'denied'
+          hardship_reason?: string | null
+          country?: string | null
+          language_requested?: string | null
+          community_name?: string | null
+          location?: string | null
+          description?: string | null
+          contact_email?: string | null
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          admin_notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          user_email?: string
+          user_name?: string | null
+          request_type?: 'hardship_application' | 'language_request' | 'help_request'
+          status?: 'pending' | 'approved' | 'denied'
+          hardship_reason?: string | null
+          country?: string | null
+          language_requested?: string | null
+          community_name?: string | null
+          location?: string | null
+          description?: string | null
+          contact_email?: string | null
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          admin_notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
   }
 }

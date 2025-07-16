@@ -10,6 +10,7 @@ import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { useAuth } from '@/contexts/AuthContext'
 import { userManagementService, type AdminUserView } from '@/services/userManagementService'
 import { subscriptionService } from '@/services/subscriptionService'
+import { supabase } from '@/lib/supabase'
 import { 
   Users, 
   DollarSign, 
@@ -80,9 +81,39 @@ export default function AdminDashboard() {
       setRecentUsers(users.users)
       setHardshipRequests(hardship)
       
+      // Load hardship requests from Supabase
+      let supabaseRequests: any[] = []
+      if (supabase) {
+        try {
+          const { data, error } = await supabase
+            .from('hardship_requests')
+            .select('*')
+            .order('created_at', { ascending: false })
+          
+          if (data && !error) {
+            supabaseRequests = data.map(req => ({
+              ...req,
+              type: 'hardship_application',
+              user_name: req.user_id, // We'll need to join with user_profiles in the future
+              user_email: req.user_id // Placeholder
+            }))
+            console.log('Loaded hardship requests from Supabase:', supabaseRequests.length)
+          }
+        } catch (supabaseError) {
+          console.error('Error loading from Supabase:', supabaseError)
+        }
+      }
+      
       // Load all requests from localStorage
       const allStoredRequests = JSON.parse(localStorage.getItem('admin_requests') || '[]')
-      setAllRequests(allStoredRequests)
+      
+      // Combine Supabase and localStorage requests, avoiding duplicates
+      const combinedRequests = [...supabaseRequests, ...allStoredRequests]
+      const uniqueRequests = combinedRequests.filter((request, index, self) => 
+        index === self.findIndex(r => r.id === request.id)
+      )
+      
+      setAllRequests(uniqueRequests)
     } catch (error) {
       console.error('Error loading admin data:', error)
     } finally {
@@ -123,23 +154,46 @@ export default function AdminDashboard() {
 
   const handleApproveRequest = async (requestId: string, requestType: string) => {
     try {
-      const updatedRequests = allRequests.map(request => 
-        request.id === requestId 
-          ? { ...request, status: 'approved', reviewed_at: new Date().toISOString(), reviewed_by: user?.email }
-          : request
+      const request = allRequests.find(r => r.id === requestId)
+      if (!request) return
+
+      // Update in Supabase if it's a hardship request and we have Supabase
+      if (requestType === 'hardship_application' && supabase) {
+        try {
+          const { error } = await supabase
+            .from('hardship_requests')
+            .update({
+              status: 'approved',
+              reviewed_at: new Date().toISOString(),
+              reviewed_by: user?.id
+            })
+            .eq('id', requestId)
+          
+          if (error) {
+            console.error('Supabase update error:', error)
+          } else {
+            console.log('Updated hardship request in Supabase')
+          }
+        } catch (supabaseError) {
+          console.error('Supabase connection error:', supabaseError)
+        }
+      }
+
+      // Update localStorage
+      const updatedRequests = allRequests.map(req => 
+        req.id === requestId 
+          ? { ...req, status: 'approved', reviewed_at: new Date().toISOString(), reviewed_by: user?.email }
+          : req
       )
       
       localStorage.setItem('admin_requests', JSON.stringify(updatedRequests))
       setAllRequests(updatedRequests)
       
       // If it's a hardship request, grant access
-      if (requestType === 'hardship_application') {
-        const request = allRequests.find(r => r.id === requestId)
-        if (request && request.user_id) {
-          // Grant hardship access
-          const { subscriptionService } = require('@/services/subscriptionService')
-          subscriptionService.grantHardshipAccess(request.user_id)
-        }
+      if (requestType === 'hardship_application' && request.user_id) {
+        // Grant hardship access
+        const { subscriptionService } = require('@/services/subscriptionService')
+        subscriptionService.grantHardshipAccess(request.user_id)
       }
       
       alert(`Request ${requestType} approved successfully!`)
@@ -151,6 +205,29 @@ export default function AdminDashboard() {
 
   const handleDenyRequest = async (requestId: string, requestType: string) => {
     try {
+      // Update in Supabase if it's a hardship request and we have Supabase
+      if (requestType === 'hardship_application' && supabase) {
+        try {
+          const { error } = await supabase
+            .from('hardship_requests')
+            .update({
+              status: 'denied',
+              reviewed_at: new Date().toISOString(),
+              reviewed_by: user?.id
+            })
+            .eq('id', requestId)
+          
+          if (error) {
+            console.error('Supabase update error:', error)
+          } else {
+            console.log('Updated hardship request in Supabase')
+          }
+        } catch (supabaseError) {
+          console.error('Supabase connection error:', supabaseError)
+        }
+      }
+
+      // Update localStorage
       const updatedRequests = allRequests.map(request => 
         request.id === requestId 
           ? { ...request, status: 'denied', reviewed_at: new Date().toISOString(), reviewed_by: user?.email }
@@ -173,6 +250,25 @@ export default function AdminDashboard() {
     }
 
     try {
+      // Delete from Supabase if it's a hardship request and we have Supabase
+      if (requestType === 'hardship_application' && supabase) {
+        try {
+          const { error } = await supabase
+            .from('hardship_requests')
+            .delete()
+            .eq('id', requestId)
+          
+          if (error) {
+            console.error('Supabase delete error:', error)
+          } else {
+            console.log('Deleted hardship request from Supabase')
+          }
+        } catch (supabaseError) {
+          console.error('Supabase connection error:', supabaseError)
+        }
+      }
+
+      // Delete from localStorage
       const updatedRequests = allRequests.filter(request => request.id !== requestId)
       localStorage.setItem('admin_requests', JSON.stringify(updatedRequests))
       setAllRequests(updatedRequests)

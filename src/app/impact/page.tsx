@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { MapPin, Users, Heart, Globe, Camera, Mail, Phone } from 'lucide-react'
 import { T } from '@/components/ui/auto-translate'
+import { supabase } from '@/lib/supabase'
 
 interface EducationCenter {
   id: string
@@ -173,7 +174,36 @@ export default function ImpactPage() {
     setSubmitting(true)
     
     try {
-      // Create community help request object
+      let success = false
+      
+      // Try to save to Supabase first
+      if (supabase) {
+        try {
+          const { error } = await supabase
+            .from('community_requests')
+            .insert({
+              user_email: formData.contactEmail,
+              user_name: formData.communityName,
+              request_type: 'help_request',
+              status: 'pending',
+              community_name: formData.communityName,
+              location: formData.location,
+              description: formData.description,
+              contact_email: formData.contactEmail
+            })
+          
+          if (!error) {
+            success = true
+            console.log('Community request saved to Supabase successfully')
+          } else {
+            console.error('Supabase error:', error)
+          }
+        } catch (supabaseError) {
+          console.error('Supabase connection error:', supabaseError)
+        }
+      }
+
+      // Fallback to localStorage (for development and backup)
       const helpRequest = {
         id: `community_help_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         community_name: formData.communityName,
@@ -186,7 +216,7 @@ export default function ImpactPage() {
         type: 'help_request'
       }
 
-      // Store in localStorage for admin to review
+      // Store in localStorage for admin to review (always as backup)
       const existingRequests = JSON.parse(localStorage.getItem('admin_requests') || '[]')
       existingRequests.push(helpRequest)
       localStorage.setItem('admin_requests', JSON.stringify(existingRequests))
@@ -200,7 +230,11 @@ export default function ImpactPage() {
       })
       setShowRequestForm(false)
       
-      alert('Your community support request has been submitted! We will review it and contact you within 1-2 weeks.')
+      if (success) {
+        alert('Your community support request has been submitted! We will review it and contact you within 1-2 weeks.')
+      } else {
+        alert('Your community support request has been submitted locally! We will review it and contact you within 1-2 weeks.')
+      }
       
     } catch (error) {
       console.error('Error submitting community request:', error)

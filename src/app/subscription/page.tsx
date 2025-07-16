@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { Check, Heart, Users, Globe } from 'lucide-react'
 import { T } from '@/components/ui/auto-translate'
+import { supabase } from '@/lib/supabase'
 
 interface SubscriptionPlan {
   id: string
@@ -115,7 +116,32 @@ export default function SubscriptionPage() {
     setSubmittingHardship(true)
     
     try {
-      // Create hardship request object
+      let success = false
+      
+      // Try to save to Supabase first
+      if (supabase) {
+        try {
+          const { error } = await supabase
+            .from('hardship_requests')
+            .insert({
+              user_id: user.id,
+              hardship_reason: hardshipReason,
+              status: 'pending',
+              submitted_at: new Date().toISOString()
+            })
+          
+          if (!error) {
+            success = true
+            console.log('Hardship request saved to Supabase successfully')
+          } else {
+            console.error('Supabase error:', error)
+          }
+        } catch (supabaseError) {
+          console.error('Supabase connection error:', supabaseError)
+        }
+      }
+
+      // Fallback to localStorage (for development and backup)
       const hardshipRequest = {
         id: `hardship_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         user_id: user.id,
@@ -128,7 +154,7 @@ export default function SubscriptionPage() {
         type: 'hardship_application'
       }
 
-      // Store in localStorage for admin to review
+      // Store in localStorage for admin to review (always as backup)
       const existingRequests = JSON.parse(localStorage.getItem('admin_requests') || '[]')
       existingRequests.push(hardshipRequest)
       localStorage.setItem('admin_requests', JSON.stringify(existingRequests))
@@ -138,7 +164,11 @@ export default function SubscriptionPage() {
       setHardshipCountry('')
       setShowHardshipForm(false)
       
-      alert('Your hardship application has been submitted! We will review it within 2-3 business days and email you with the decision.')
+      if (success) {
+        alert('Your hardship application has been submitted! We will review it within 2-3 business days and email you with the decision.')
+      } else {
+        alert('Your hardship application has been submitted locally! We will review it within 2-3 business days and email you with the decision.')
+      }
       
     } catch (error) {
       console.error('Error submitting hardship application:', error)
