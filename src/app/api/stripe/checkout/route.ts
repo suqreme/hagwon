@@ -4,10 +4,12 @@ import { supabase } from '@/lib/supabase'
 import { createClient } from '@supabase/supabase-js'
 
 // Use service role key for server-side operations
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+const supabaseAdmin = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+  ? createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
+  : null
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,6 +17,14 @@ export async function POST(request: NextRequest) {
     if (!stripe) {
       return NextResponse.json(
         { error: 'Stripe not configured. Please add STRIPE_SECRET_KEY to environment variables.' },
+        { status: 500 }
+      )
+    }
+
+    // Check if Supabase is configured
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: 'Supabase not configured. Please add SUPABASE_SERVICE_ROLE_KEY to environment variables.' },
         { status: 500 }
       )
     }
