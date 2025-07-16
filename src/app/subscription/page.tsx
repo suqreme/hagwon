@@ -72,6 +72,9 @@ export default function SubscriptionPage() {
   const [loading, setLoading] = useState<string | null>(null)
   const [showHardshipForm, setShowHardshipForm] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [hardshipReason, setHardshipReason] = useState('')
+  const [hardshipCountry, setHardshipCountry] = useState('')
+  const [submittingHardship, setSubmittingHardship] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -100,6 +103,48 @@ export default function SubscriptionPage() {
 
   const handleHardshipRequest = () => {
     setShowHardshipForm(true)
+  }
+
+  const submitHardshipApplication = async () => {
+    if (!user || !hardshipReason.trim() || !hardshipCountry.trim()) {
+      alert('Please fill in all required fields')
+      return
+    }
+
+    setSubmittingHardship(true)
+    
+    try {
+      // Create hardship request object
+      const hardshipRequest = {
+        id: `hardship_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        user_id: user.id,
+        user_email: user.email,
+        user_name: user.email?.split('@')[0] || 'Unknown',
+        hardship_reason: hardshipReason,
+        country: hardshipCountry,
+        status: 'pending',
+        submitted_at: new Date().toISOString(),
+        type: 'hardship_application'
+      }
+
+      // Store in localStorage for admin to review
+      const existingRequests = JSON.parse(localStorage.getItem('admin_requests') || '[]')
+      existingRequests.push(hardshipRequest)
+      localStorage.setItem('admin_requests', JSON.stringify(existingRequests))
+
+      // Clear form and close
+      setHardshipReason('')
+      setHardshipCountry('')
+      setShowHardshipForm(false)
+      
+      alert('Your hardship application has been submitted! We will review it within 2-3 business days and email you with the decision.')
+      
+    } catch (error) {
+      console.error('Error submitting hardship application:', error)
+      alert('Failed to submit application. Please try again.')
+    } finally {
+      setSubmittingHardship(false)
+    }
   }
 
   if (authLoading || !mounted) {
@@ -252,8 +297,11 @@ export default function SubscriptionPage() {
                     Tell us about your situation
                   </label>
                   <textarea
+                    value={hardshipReason}
+                    onChange={(e) => setHardshipReason(e.target.value)}
                     className="w-full h-32 px-3 py-2 border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="Please describe your financial circumstances and why you need free access to education..."
+                    required
                   />
                 </div>
                 
@@ -263,13 +311,22 @@ export default function SubscriptionPage() {
                   </label>
                   <input
                     type="text"
+                    value={hardshipCountry}
+                    onChange={(e) => setHardshipCountry(e.target.value)}
                     className="w-full px-3 py-2 border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="Your location"
+                    required
                   />
                 </div>
                 
                 <div className="flex space-x-4">
-                  <Button className="flex-1">Submit Application</Button>
+                  <Button 
+                    className="flex-1" 
+                    onClick={submitHardshipApplication}
+                    disabled={submittingHardship || !hardshipReason.trim() || !hardshipCountry.trim()}
+                  >
+                    {submittingHardship ? 'Submitting...' : 'Submit Application'}
+                  </Button>
                   <Button variant="outline" onClick={() => setShowHardshipForm(false)}>
                     Cancel
                   </Button>

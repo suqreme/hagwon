@@ -43,13 +43,30 @@ export function LanguageSelector({ onClose }: LanguageSelectorProps) {
   }
 
   const handleRequestLanguage = () => {
-    // Simple implementation - could be enhanced to open a form or send to admin
     const userLanguage = prompt('What language would you like us to add? Please provide the language name and country:')
-    if (userLanguage) {
-      // In a real implementation, this would send to your admin/support system
-      alert(`Thank you! We've received your request for: "${userLanguage}". We'll consider adding it in a future update.`)
-      console.log('Language request:', userLanguage)
-      // TODO: Send to admin dashboard or support system
+    if (userLanguage && userLanguage.trim()) {
+      try {
+        // Create language request object
+        const languageRequest = {
+          id: `language_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          user_id: 'anonymous', // Could be user ID if logged in
+          language_requested: userLanguage.trim(),
+          status: 'pending',
+          submitted_at: new Date().toISOString(),
+          type: 'language_request'
+        }
+
+        // Store in localStorage for admin to review
+        const existingRequests = JSON.parse(localStorage.getItem('admin_requests') || '[]')
+        existingRequests.push(languageRequest)
+        localStorage.setItem('admin_requests', JSON.stringify(existingRequests))
+
+        alert(`Thank you! We've received your request for: "${userLanguage}". We'll consider adding it in a future update.`)
+        console.log('Language request submitted:', languageRequest)
+      } catch (error) {
+        console.error('Error submitting language request:', error)
+        alert('Failed to submit language request. Please try again.')
+      }
     }
   }
 

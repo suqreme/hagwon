@@ -259,6 +259,13 @@ export default function Dashboard() {
               >
                 <T>Offline Learning</T>
               </Button>
+              <Button 
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push('/help')}
+              >
+                💝 <T>Community Help</T>
+              </Button>
               <ThemeToggle />
               <UserMenu />
             </div>

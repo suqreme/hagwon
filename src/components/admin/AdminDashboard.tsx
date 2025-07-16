@@ -52,6 +52,7 @@ export default function AdminDashboard() {
   const [subscriptionStats, setSubscriptionStats] = useState<SubscriptionStats | null>(null)
   const [recentUsers, setRecentUsers] = useState<AdminUserView[]>([])
   const [hardshipRequests, setHardshipRequests] = useState<any[]>([])
+  const [allRequests, setAllRequests] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -76,6 +77,10 @@ export default function AdminDashboard() {
       setSubscriptionStats(subscription)
       setRecentUsers(users.users)
       setHardshipRequests(hardship)
+      
+      // Load all requests from localStorage
+      const allStoredRequests = JSON.parse(localStorage.getItem('admin_requests') || '[]')
+      setAllRequests(allStoredRequests)
     } catch (error) {
       console.error('Error loading admin data:', error)
     } finally {
@@ -111,6 +116,52 @@ export default function AdminDashboard() {
       await loadAdminData() // Refresh data
     } catch (error) {
       console.error('Error updating user role:', error)
+    }
+  }
+
+  const handleApproveRequest = async (requestId: string, requestType: string) => {
+    try {
+      const updatedRequests = allRequests.map(request => 
+        request.id === requestId 
+          ? { ...request, status: 'approved', reviewed_at: new Date().toISOString(), reviewed_by: user?.email }
+          : request
+      )
+      
+      localStorage.setItem('admin_requests', JSON.stringify(updatedRequests))
+      setAllRequests(updatedRequests)
+      
+      // If it's a hardship request, grant access
+      if (requestType === 'hardship_application') {
+        const request = allRequests.find(r => r.id === requestId)
+        if (request && request.user_id) {
+          // Grant hardship access
+          const { subscriptionService } = require('@/services/subscriptionService')
+          subscriptionService.grantHardshipAccess(request.user_id)
+        }
+      }
+      
+      alert(`Request ${requestType} approved successfully!`)
+    } catch (error) {
+      console.error('Error approving request:', error)
+      alert('Failed to approve request')
+    }
+  }
+
+  const handleDenyRequest = async (requestId: string, requestType: string) => {
+    try {
+      const updatedRequests = allRequests.map(request => 
+        request.id === requestId 
+          ? { ...request, status: 'denied', reviewed_at: new Date().toISOString(), reviewed_by: user?.email }
+          : request
+      )
+      
+      localStorage.setItem('admin_requests', JSON.stringify(updatedRequests))
+      setAllRequests(updatedRequests)
+      
+      alert(`Request ${requestType} denied.`)
+    } catch (error) {
+      console.error('Error denying request:', error)
+      alert('Failed to deny request')
     }
   }
 
@@ -336,6 +387,108 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* All Community Requests */}
+        {allRequests.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Settings className="w-5 h-5 text-blue-500" />
+                <span><T>Community Requests</T></span>
+                <Badge variant="secondary">{allRequests.filter(r => r.status === 'pending').length} pending</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {allRequests.slice(0, 10).map((request) => (
+                  <div key={request.id} className="border rounded-lg p-4">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <Badge variant="outline" className="capitalize">
+                            {request.type.replace('_', ' ')}
+                          </Badge>
+                          <Badge 
+                            variant={request.status === 'pending' ? 'default' : request.status === 'approved' ? 'secondary' : 'destructive'}
+                          >
+                            {request.status}
+                          </Badge>
+                        </div>
+                        
+                        {request.type === 'language_request' && (
+                          <>
+                            <p className="font-medium"><T>Language Request</T>: {request.language_requested}</p>
+                            <p className="text-sm text-muted-foreground">
+                              <T>Submitted</T>: {new Date(request.submitted_at).toLocaleDateString()}
+                            </p>
+                          </>
+                        )}
+                        
+                        {request.type === 'hardship_application' && (
+                          <>
+                            <p className="font-medium">{request.user_name || request.user_email}</p>
+                            <p className="text-sm text-muted-foreground">{request.country}</p>
+                            <p className="text-sm mt-1">{request.hardship_reason}</p>
+                            <p className="text-xs text-muted-foreground">
+                              <T>Submitted</T>: {new Date(request.submitted_at).toLocaleDateString()}
+                            </p>
+                          </>
+                        )}
+                        
+                        {request.type === 'community_help_request' && (
+                          <>
+                            <p className="font-medium"><T>Help Request</T>: {request.request_type.replace('_', ' ')}</p>
+                            <p className="text-sm text-muted-foreground">{request.location}</p>
+                            <p className="text-sm text-muted-foreground"><T>Contact</T>: {request.contact_info}</p>
+                            <p className="text-sm mt-1">{request.request_details}</p>
+                            <p className="text-xs text-muted-foreground">
+                              <T>Submitted</T>: {new Date(request.submitted_at).toLocaleDateString()}
+                            </p>
+                          </>
+                        )}
+                        
+                        {request.reviewed_at && (
+                          <p className="text-xs text-muted-foreground mt-2">
+                            <T>Reviewed by</T> {request.reviewed_by} <T>on</T> {new Date(request.reviewed_at).toLocaleDateString()}
+                          </p>
+                        )}
+                      </div>
+                      
+                      {request.status === 'pending' && (
+                        <div className="flex space-x-2">
+                          <Button
+                            size="sm"
+                            onClick={() => handleApproveRequest(request.id, request.type)}
+                            className="bg-green-600 hover:bg-green-700"
+                          >
+                            <CheckCircle className="w-4 h-4 mr-1" />
+                            <T>Approve</T>
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleDenyRequest(request.id, request.type)}
+                          >
+                            <XCircle className="w-4 h-4 mr-1" />
+                            <T>Deny</T>
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                
+                {allRequests.length > 10 && (
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground">
+                      <T>Showing 10 of</T> {allRequests.length} <T>total requests</T>
+                    </p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
