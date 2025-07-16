@@ -478,7 +478,7 @@ const translations: Record<string, Record<string, string>> = {
     'Tell us about your community and education needs': 'Cuéntanos sobre tu comunidad y necesidades educativas',
     'Contact Email': 'Correo de Contacto',
     'Submit Request': 'Enviar Solicitud',
-    'We\\'ll review your request and connect you with potential donors within 1-2 weeks.': 'Revisaremos tu solicitud y te conectaremos con donantes potenciales en 1-2 semanas.',
+    'We\'ll review your request and connect you with potential donors within 1-2 weeks.': 'Revisaremos tu solicitud y te conectaremos con donantes potenciales en 1-2 semanas.',
     
     // Our Goals Page
     'Our Fundraising Goals': 'Nuestros Objetivos de Recaudación',
