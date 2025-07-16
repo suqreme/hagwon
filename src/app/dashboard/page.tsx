@@ -287,16 +287,16 @@ export default function Dashboard() {
 
         {/* Grade Selection */}
         <div className="mb-8">
-          <h2 className="text-lg font-semibold text-foreground mb-4">Current Grade Level</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4"><T>Current Grade Level</T></h2>
           <select
             value={currentGrade}
             onChange={(e) => setCurrentGrade(e.target.value)}
             className="px-4 py-2 border border-input bg-background text-foreground focus:ring-ring focus:border-ring"
           >
-            <option value="kindergarten">Kindergarten</option>
-            <option value="grade_1">1st Grade</option>
-            <option value="grade_2">2nd Grade</option>
-            <option value="grade_3">3rd Grade</option>
+            <option value="kindergarten"><T>Kindergarten</T></option>
+            <option value="grade_1"><T>1st Grade</T></option>
+            <option value="grade_2"><T>2nd Grade</T></option>
+            <option value="grade_3"><T>3rd Grade</T></option>
           </select>
         </div>
 
@@ -304,20 +304,20 @@ export default function Dashboard() {
         {lastLesson && (
           <Card className="bg-gradient-to-r from-primary to-purple-600 text-primary-foreground mb-8">
             <CardContent className="p-6">
-              <h2 className="text-xl font-bold mb-2">Continue Learning</h2>
+              <h2 className="text-xl font-bold mb-2"><T>Continue Learning</T></h2>
               <p className="mb-4">
-                Resume your lesson: <span className="font-semibold">{lastLesson.subtopic.replace(/_/g, ' ')}</span>
+                <T>Resume your lesson</T>: <span className="font-semibold">{lastLesson.subtopic.replace(/_/g, ' ')}</span>
               </p>
               <div className="flex space-x-4">
                 <Button
                   variant="secondary"
                   onClick={() => startLesson(lastLesson.topic, lastLesson.subtopic)}
                 >
-                  {lastLesson.completed ? 'Review Lesson' : 'Continue Lesson'}
+                  <T>{lastLesson.completed ? 'Review Lesson' : 'Continue Lesson'}</T>
                 </Button>
                 {lastLesson.completed && (
                   <Badge variant="secondary" className="bg-green-500 text-white">
-                    ✅ Completed
+                    ✅ <T>Completed</T>
                   </Badge>
                 )}
               </div>
@@ -327,7 +327,7 @@ export default function Dashboard() {
 
         {/* Learning Path */}
         <div className="space-y-6">
-          <h2 className="text-lg font-semibold text-foreground">Your Learning Path</h2>
+          <h2 className="text-lg font-semibold text-foreground"><T>Your Learning Path</T></h2>
           
           {topics.map((topic) => (
             <Card key={topic.id}>
@@ -352,7 +352,7 @@ export default function Dashboard() {
                           <h4 className="font-medium text-foreground">{subtopic.name}</h4>
                           {subtopic.completed && (
                             <Badge variant="secondary" className="bg-green-500 text-white">
-                              ✅ Complete
+                              ✅ <T>Complete</T>
                             </Badge>
                           )}
                         </div>
@@ -363,11 +363,11 @@ export default function Dashboard() {
                             className="w-full"
                             variant={subtopic.completed ? "secondary" : "default"}
                           >
-                            {subtopic.completed ? 'Review Lesson' : 'Start Lesson'}
+                            <T>{subtopic.completed ? 'Review Lesson' : 'Start Lesson'}</T>
                           </Button>
                         ) : (
                           <div className="text-muted-foreground text-sm">
-                            🔒 Complete previous lessons to unlock
+                            🔒 <T>Complete previous lessons to unlock</T>
                           </div>
                         )}
                       </CardContent>
