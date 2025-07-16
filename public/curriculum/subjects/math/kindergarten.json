@@ -1,0 +1,126 @@
+{
+  "grade": "grade_1",
+  "subject": "math",
+  "title": "Grade 1 Mathematics",
+  "description": "Foundation math skills for first grade students",
+  "topics": {
+    "numbers_and_counting": {
+      "title": "Numbers and Counting",
+      "description": "Learn to count, recognize numbers, and understand quantity",
+      "order": 1,
+      "subtopics": {
+        "counting_to_10": {
+          "title": "Counting to 10",
+          "description": "Count objects from 1 to 10",
+          "order": 1,
+          "learning_objective": "Students will be able to count objects from 1 to 10 accurately",
+          "estimated_duration": "15-20 minutes",
+          "prerequisites": [],
+          "difficulty": "beginner"
+        },
+        "counting_to_20": {
+          "title": "Counting to 20", 
+          "description": "Count objects from 11 to 20",
+          "order": 2,
+          "learning_objective": "Students will be able to count objects from 11 to 20 accurately",
+          "estimated_duration": "15-20 minutes",
+          "prerequisites": ["counting_to_10"],
+          "difficulty": "beginner"
+        },
+        "number_recognition": {
+          "title": "Number Recognition",
+          "description": "Recognize and identify numbers 1-20",
+          "order": 3,
+          "learning_objective": "Students will be able to identify and name numbers 1-20",
+          "estimated_duration": "20-25 minutes",
+          "prerequisites": ["counting_to_20"],
+          "difficulty": "beginner"
+        }
+      }
+    },
+    "addition": {
+      "title": "Addition",
+      "description": "Learn to add numbers together",
+      "order": 2,
+      "subtopics": {
+        "basic_addition": {
+          "title": "Basic Addition",
+          "description": "Add two numbers that total 10 or less",
+          "order": 1,
+          "learning_objective": "Students will be able to add two single-digit numbers with sums up to 10",
+          "estimated_duration": "20-25 minutes",
+          "prerequisites": ["number_recognition"],
+          "difficulty": "beginner"
+        },
+        "addition_with_objects": {
+          "title": "Addition with Objects",
+          "description": "Use objects to help add numbers",
+          "order": 2,
+          "learning_objective": "Students will be able to use manipulatives to solve addition problems",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": ["basic_addition"],
+          "difficulty": "beginner"
+        },
+        "addition_word_problems": {
+          "title": "Addition Word Problems",
+          "description": "Solve simple addition word problems",
+          "order": 3,
+          "learning_objective": "Students will be able to solve simple addition word problems",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": ["addition_with_objects"],
+          "difficulty": "intermediate"
+        }
+      }
+    },
+    "subtraction": {
+      "title": "Subtraction",
+      "description": "Learn to subtract numbers",
+      "order": 3,
+      "subtopics": {
+        "basic_subtraction": {
+          "title": "Basic Subtraction",
+          "description": "Subtract small numbers from 10 or less",
+          "order": 1,
+          "learning_objective": "Students will be able to subtract single-digit numbers from numbers up to 10",
+          "estimated_duration": "20-25 minutes",
+          "prerequisites": ["basic_addition"],
+          "difficulty": "beginner"
+        },
+        "subtraction_with_objects": {
+          "title": "Subtraction with Objects",
+          "description": "Use objects to help subtract numbers",
+          "order": 2,
+          "learning_objective": "Students will be able to use manipulatives to solve subtraction problems",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": ["basic_subtraction"],
+          "difficulty": "beginner"
+        }
+      }
+    },
+    "shapes": {
+      "title": "Shapes",
+      "description": "Learn about basic shapes and their properties",
+      "order": 4,
+      "subtopics": {
+        "basic_shapes": {
+          "title": "Basic Shapes",
+          "description": "Identify circles, squares, triangles, and rectangles",
+          "order": 1,
+          "learning_objective": "Students will be able to identify and name basic geometric shapes",
+          "estimated_duration": "20-25 minutes",
+          "prerequisites": [],
+          "difficulty": "beginner"
+        },
+        "shape_properties": {
+          "title": "Shape Properties",
+          "description": "Learn about sides and corners of shapes",
+          "order": 2,
+          "learning_objective": "Students will be able to describe basic properties of shapes",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": ["basic_shapes"],
+          "difficulty": "intermediate"
+        }
+      }
+    }
+  }
+}

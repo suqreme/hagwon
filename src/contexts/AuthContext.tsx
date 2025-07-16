@@ -224,11 +224,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     if (!supabase) {
       setUser(null)
+      setSupabaseUser(null)
       return
     }
     
-    const { error } = await supabase.auth.signOut()
-    if (error) throw error
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) {
+        console.warn('Supabase logout failed, clearing local session:', error)
+        // Fallback: clear local session even if Supabase fails
+        setUser(null)
+        setSupabaseUser(null)
+        return
+      }
+    } catch (error) {
+      console.warn('Logout error, clearing local session:', error)
+      // Fallback: clear local session even if Supabase fails
+      setUser(null)
+      setSupabaseUser(null)
+    }
   }
 
   const createAnonymousUser = async () => {
