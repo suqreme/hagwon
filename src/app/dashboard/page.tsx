@@ -401,10 +401,10 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold">
-                    {subscription.features.dailyLessonLimit || '∞'}
+                    {subscription.features?.dailyLessonLimit || '∞'}
                   </div>
                   <div className="text-sm text-muted-foreground"><T>Daily Lessons</T></div>
-                  {subscription.features.dailyLessonLimit && (
+                  {subscription.features?.dailyLessonLimit && (
                     <div className="text-xs text-muted-foreground mt-1">
                       {subscriptionService.getRemainingLessons(user?.id || '')} <T>remaining today</T>
                     </div>
@@ -412,13 +412,13 @@ export default function Dashboard() {
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold">
-                    {subscription.features.analyticsAccess ? '✓' : '✗'}
+                    {subscription.features?.analyticsAccess ? '✓' : '✗'}
                   </div>
                   <div className="text-sm text-muted-foreground"><T>Advanced Analytics</T></div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold">
-                    {subscription.features.certificateGeneration ? '✓' : '✗'}
+                    {subscription.features?.certificateGeneration ? '✓' : '✗'}
                   </div>
                   <div className="text-sm text-muted-foreground"><T>Certificates</T></div>
                 </div>
