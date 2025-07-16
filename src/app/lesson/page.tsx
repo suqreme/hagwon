@@ -11,6 +11,7 @@ import QuizComponent from '@/components/lesson/QuizComponent'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { T } from '@/components/ui/auto-translate'
 
 // Subject-specific content generator
 function generateSubjectSpecificContent(subject: string, grade: string, topic: string, subtopic: string): string {
@@ -442,7 +443,7 @@ function LessonPageContent() {
         <Card className="w-96">
           <CardContent className="text-center py-8">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-4 text-muted-foreground">Loading...</p>
+            <p className="mt-4 text-muted-foreground"><T>Loading...</T></p>
           </CardContent>
         </Card>
       </div>
@@ -460,7 +461,7 @@ function LessonPageContent() {
           <CardContent className="text-center py-8">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
             <p className="mt-4 text-muted-foreground">
-              {currentStep === 'lesson' ? 'Generating your lesson...' : 'Creating your quiz...'}
+              {currentStep === 'lesson' ? <T>Generating your lesson...</T> : <T>Creating your quiz...</T>}
             </p>
           </CardContent>
         </Card>
@@ -475,7 +476,7 @@ function LessonPageContent() {
           <CardHeader>
             <div className="text-center">
               <div className="text-destructive text-6xl mb-4">⚠️</div>
-              <CardTitle className="text-2xl">Something went wrong</CardTitle>
+              <CardTitle className="text-2xl"><T>Something went wrong</T></CardTitle>
             </div>
           </CardHeader>
           <CardContent className="text-center space-y-4">
@@ -483,11 +484,11 @@ function LessonPageContent() {
             <div className="flex space-x-2 justify-center">
               {error.includes('Daily limit') && (
                 <Button onClick={() => router.push('/subscription')}>
-                  Upgrade Now
+<T>Upgrade Now</T>
                 </Button>
               )}
               <Button variant="outline" onClick={goToDashboard}>
-                Back to Dashboard
+<T>Back to Dashboard</T>
               </Button>
             </div>
           </CardContent>
@@ -509,18 +510,18 @@ function LessonPageContent() {
                 onClick={goToDashboard}
                 className="mb-2"
               >
-                ← Back to Dashboard
+<T>← Back to Dashboard</T>
               </Button>
               <h1 className="text-2xl font-bold text-foreground">
-                {subtopicInfo?.name || 'Lesson'}
+                {subtopicInfo?.name || <T>Lesson</T>}
               </h1>
               <p className="text-muted-foreground">
-                {subject === 'math' ? 'Mathematics' : 'English Language Arts'} • {grade.replace('_', ' ')}
+                {subject === 'math' ? <T>Mathematics</T> : <T>English Language Arts</T>} • {grade.replace('_', ' ')}
               </p>
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-sm text-muted-foreground">
-                Step {currentStep === 'lesson' ? '1' : currentStep === 'quiz' ? '2' : '3'} of 3
+                <T>Step</T> {currentStep === 'lesson' ? '1' : currentStep === 'quiz' ? '2' : '3'} <T>of</T> 3
               </div>
               <ThemeToggle />
             </div>
@@ -548,12 +549,12 @@ function LessonPageContent() {
           <Card>
             <CardContent className="text-center py-8 space-y-4">
               <div className="text-green-500 text-6xl mb-6">🎉</div>
-              <h2 className="text-3xl font-bold text-foreground">Lesson Complete!</h2>
+              <h2 className="text-3xl font-bold text-foreground"><T>Lesson Complete!</T></h2>
               <p className="text-muted-foreground">
-                Congratulations! You&apos;ve successfully completed the lesson on {subtopicInfo?.name}.
+                <T>Congratulations! You've successfully completed the lesson on</T> {subtopicInfo?.name}.
               </p>
               <Button onClick={goToDashboard} size="lg">
-                Continue Learning
+<T>Continue Learning</T>
               </Button>
             </CardContent>
           </Card>

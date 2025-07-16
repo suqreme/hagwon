@@ -100,10 +100,10 @@ export default function Home() {
               <div className="text-green-500 text-6xl mb-6">🎓</div>
               <CardTitle className="text-2xl mb-4"><T>Ready to Learn!</T></CardTitle>
               <p className="text-muted-foreground mb-4">
-                Based on your diagnostic test, we&apos;ve placed you at <strong className="text-foreground">{placementLevel}</strong> level.
+                <T>Based on your diagnostic test, we've placed you at</T> <strong className="text-foreground">{placementLevel}</strong> <T>level</T>.
               </p>
               <p className="text-muted-foreground mb-6">
-                You can always adjust this later as you progress through your lessons.
+                <T>You can always adjust this later as you progress through your lessons.</T>
               </p>
               <Button
                 onClick={() => {

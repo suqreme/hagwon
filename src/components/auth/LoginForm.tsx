@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CheckCircle, Mail, AlertCircle } from 'lucide-react'
+import { T } from '@/components/ui/auto-translate'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
@@ -87,7 +88,7 @@ export default function LoginForm() {
         <CardHeader>
           <CardTitle className="text-2xl text-center flex items-center justify-center space-x-2">
             <Mail className="w-6 h-6 text-blue-500" />
-            <span>Check Your Email</span>
+            <span><T>Check Your Email</T></span>
           </CardTitle>
         </CardHeader>
         <CardContent className="text-center space-y-4">
@@ -95,11 +96,11 @@ export default function LoginForm() {
             <CheckCircle className="w-16 h-16 mx-auto mb-4" />
           </div>
           <p className="text-foreground">
-            We've sent a confirmation link to:
+            <T>We've sent a confirmation link to:</T>
           </p>
           <p className="font-semibold text-primary">{email}</p>
           <p className="text-muted-foreground text-sm">
-            Click the link in your email to activate your account. You may need to check your spam folder.
+            <T>Click the link in your email to activate your account. You may need to check your spam folder.</T>
           </p>
           <div className="pt-4">
             <Button
@@ -112,7 +113,7 @@ export default function LoginForm() {
                 setCountry('')
               }}
             >
-              Back to Sign In
+<T>Back to Sign In</T>
             </Button>
           </div>
         </CardContent>
@@ -124,7 +125,7 @@ export default function LoginForm() {
     <Card className="max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl text-center">
-          {isSignUp ? 'Create Account' : 'Sign In'}
+          {isSignUp ? <T>Create Account</T> : <T>Sign In</T>}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -132,7 +133,7 @@ export default function LoginForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-foreground">
-            Email
+            <T>Email</T>
           </label>
           <input
             type="email"
@@ -146,7 +147,7 @@ export default function LoginForm() {
 
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-foreground">
-            Password
+            <T>Password</T>
           </label>
           <input
             type="password"
@@ -161,7 +162,7 @@ export default function LoginForm() {
         {isSignUp && (
           <div>
             <label htmlFor="country" className="block text-sm font-medium text-foreground">
-              Country (Optional)
+              <T>Country (Optional)</T>
             </label>
             <input
               type="text"
@@ -195,10 +196,10 @@ export default function LoginForm() {
           {loading ? (
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-              <span>{isSignUp ? 'Creating Account...' : 'Signing In...'}</span>
+              <span>{isSignUp ? <T>Creating Account...</T> : <T>Signing In...</T>}</span>
             </div>
           ) : (
-            isSignUp ? 'Create Account' : 'Sign In'
+            isSignUp ? <T>Create Account</T> : <T>Sign In</T>
           )}
         </Button>
       </form>
@@ -210,7 +211,7 @@ export default function LoginForm() {
           size="sm"
           onClick={() => setIsSignUp(!isSignUp)}
         >
-          {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+          {isSignUp ? <T>Already have an account? Sign in</T> : <T>Don't have an account? Sign up</T>}
         </Button>
       </div>
 
@@ -221,7 +222,7 @@ export default function LoginForm() {
           size="sm"
           disabled
         >
-          Continue as Guest (Coming Soon)
+<T>Continue as Guest (Coming Soon)</T>
         </Button>
       </div>
       </CardContent>

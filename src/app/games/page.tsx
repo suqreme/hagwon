@@ -11,6 +11,7 @@ import { UserMenu } from '@/components/ui/user-menu'
 import FlashcardGame from '@/components/games/FlashcardGame'
 import { gamificationService } from '@/services/gamificationService'
 import { Zap, Brain, Target, Star, Gamepad2, Trophy } from 'lucide-react'
+import { T } from '@/components/ui/auto-translate'
 
 interface Game {
   id: string
@@ -122,7 +123,7 @@ export default function GamesPage() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Loading games...</p>
+          <p className="mt-4 text-muted-foreground"><T>Loading games...</T></p>
         </div>
       </div>
     )
@@ -160,15 +161,15 @@ export default function GamesPage() {
                 onClick={() => router.push('/dashboard')}
                 className="mb-2"
               >
-                ← Back to Dashboard
+<T>← Back to Dashboard</T>
               </Button>
-              <h1 className="text-2xl font-bold text-foreground">Learning Games</h1>
-              <p className="text-muted-foreground">Have fun while learning with interactive mini-games</p>
+              <h1 className="text-2xl font-bold text-foreground"><T>Learning Games</T></h1>
+              <p className="text-muted-foreground"><T>Have fun while learning with interactive mini-games</T></p>
             </div>
             <div className="flex items-center space-x-4">
               <Button onClick={() => router.push('/achievements')}>
                 <Trophy className="w-4 h-4 mr-2" />
-                View Achievements
+<T>View Achievements</T>
               </Button>
               <ThemeToggle />
               <UserMenu />
@@ -182,7 +183,7 @@ export default function GamesPage() {
         
         {/* Game Selection */}
         <div className="mb-8">
-          <h2 className="text-lg font-semibold text-foreground mb-4">Choose Your Game</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4"><T>Choose Your Game</T></h2>
           
           {/* Subject Filter */}
           <div className="flex space-x-4 mb-6">
@@ -190,13 +191,13 @@ export default function GamesPage() {
               variant={selectedSubject === 'math' ? 'default' : 'outline'}
               onClick={() => setSelectedSubject('math')}
             >
-              Math
+<T>Math</T>
             </Button>
             <Button 
               variant={selectedSubject === 'english' ? 'default' : 'outline'}
               onClick={() => setSelectedSubject('english')}
             >
-              English
+<T>English</T>
             </Button>
           </div>
           
@@ -207,21 +208,21 @@ export default function GamesPage() {
               size="sm"
               onClick={() => setSelectedDifficulty('easy')}
             >
-              Easy
+<T>Easy</T>
             </Button>
             <Button 
               variant={selectedDifficulty === 'medium' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setSelectedDifficulty('medium')}
             >
-              Medium
+<T>Medium</T>
             </Button>
             <Button 
               variant={selectedDifficulty === 'hard' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setSelectedDifficulty('hard')}
             >
-              Hard
+<T>Hard</T>
             </Button>
           </div>
         </div>
@@ -238,7 +239,7 @@ export default function GamesPage() {
                     <div className="text-primary">
                       {game.icon}
                     </div>
-                    <CardTitle className="text-lg">{game.name}</CardTitle>
+                    <CardTitle className="text-lg"><T>{game.name}</T></CardTitle>
                   </div>
                   <Badge 
                     variant="outline" 
@@ -250,15 +251,15 @@ export default function GamesPage() {
               </CardHeader>
               
               <CardContent className="space-y-4">
-                <p className="text-sm text-muted-foreground">{game.description}</p>
+                <p className="text-sm text-muted-foreground"><T>{game.description}</T></p>
                 
                 <div className="flex justify-between text-sm">
                   <div>
-                    <span className="text-muted-foreground">Time: </span>
+                    <span className="text-muted-foreground"><T>Time</T>: </span>
                     <span className="font-medium">{game.estimatedTime}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Reward: </span>
+                    <span className="text-muted-foreground"><T>Reward</T>: </span>
                     <span className="font-medium text-primary">+{game.xpReward} XP</span>
                   </div>
                 </div>
@@ -269,7 +270,7 @@ export default function GamesPage() {
                   disabled={game.id !== 'flashcards'} // Only flashcards implemented for now
                 >
                   <Gamepad2 className="w-4 h-4 mr-2" />
-                  {game.id === 'flashcards' ? 'Start Game' : 'Coming Soon'}
+                  {game.id === 'flashcards' ? <T>Start Game</T> : <T>Coming Soon</T>}
                 </Button>
               </CardContent>
             </Card>
@@ -281,27 +282,27 @@ export default function GamesPage() {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Star className="w-5 h-5" />
-              <span>How XP Works</span>
+              <span><T>How XP Works</T></span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div>
-                <h4 className="font-semibold mb-2">Earn XP</h4>
+                <h4 className="font-semibold mb-2"><T>Earn XP</T></h4>
                 <p className="text-muted-foreground">
-                  Complete games and answer questions correctly to earn experience points
+                  <T>Complete games and answer questions correctly to earn experience points</T>
                 </p>
               </div>
               <div>
-                <h4 className="font-semibold mb-2">Level Up</h4>
+                <h4 className="font-semibold mb-2"><T>Level Up</T></h4>
                 <p className="text-muted-foreground">
-                  Accumulate XP to increase your level and unlock new badges
+                  <T>Accumulate XP to increase your level and unlock new badges</T>
                 </p>
               </div>
               <div>
-                <h4 className="font-semibold mb-2">Unlock Badges</h4>
+                <h4 className="font-semibold mb-2"><T>Unlock Badges</T></h4>
                 <p className="text-muted-foreground">
-                  Achieve milestones to earn unique badges and special recognition
+                  <T>Achieve milestones to earn unique badges and special recognition</T>
                 </p>
               </div>
             </div>

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { User, LogOut, Settings, Crown, GraduationCap } from 'lucide-react'
+import { T } from '@/components/ui/auto-translate'
 
 export function UserMenu() {
   const { user, signOut } = useAuth()
@@ -73,7 +74,7 @@ export function UserMenu() {
                       {user.email?.split('@')[0] || 'User'}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {isAdmin ? 'Administrator' : isClassroomUser ? 'Classroom Student' : 'Student'}
+                      {isAdmin ? <T>Administrator</T> : isClassroomUser ? <T>Classroom Student</T> : <T>Student</T>}
                     </p>
                   </div>
                 </div>
@@ -90,7 +91,7 @@ export function UserMenu() {
                     }}
                   >
                     <GraduationCap className="w-4 h-4 mr-2" />
-                    Dashboard
+<T>Dashboard</T>
                   </Button>
 
                   <Button
@@ -103,7 +104,7 @@ export function UserMenu() {
                     }}
                   >
                     <Settings className="w-4 h-4 mr-2" />
-                    Achievements
+<T>Achievements</T>
                   </Button>
 
                   {isAdmin && (
@@ -117,7 +118,7 @@ export function UserMenu() {
                       }}
                     >
                       <Crown className="w-4 h-4 mr-2" />
-                      Admin Panel
+<T>Admin Panel</T>
                     </Button>
                   )}
 
@@ -133,7 +134,7 @@ export function UserMenu() {
                       }}
                     >
                       <User className="w-4 h-4 mr-2" />
-                      Back to Classroom
+<T>Back to Classroom</T>
                     </Button>
                   )}
 
@@ -159,7 +160,7 @@ export function UserMenu() {
                       }}
                     >
                       <Settings className="w-4 h-4 mr-2" />
-                      Reset Demo
+<T>Reset Demo</T>
                     </Button>
                   )}
                 </div>
@@ -173,7 +174,7 @@ export function UserMenu() {
                     onClick={handleLogout}
                   >
                     <LogOut className="w-4 h-4 mr-2" />
-                    Logout
+<T>Logout</T>
                   </Button>
                 </div>
               </div>

@@ -11,6 +11,7 @@ import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { UserMenu } from '@/components/ui/user-menu'
 import { gamificationService } from '@/services/gamificationService'
 import { Trophy, Star, Zap, Target, Award, TrendingUp } from 'lucide-react'
+import { T } from '@/components/ui/auto-translate'
 
 export default function AchievementsPage() {
   const { user, loading: authLoading } = useAuth()
@@ -76,7 +77,7 @@ export default function AchievementsPage() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Loading achievements...</p>
+          <p className="mt-4 text-muted-foreground"><T>Loading achievements...</T></p>
         </div>
       </div>
     )
@@ -97,10 +98,10 @@ export default function AchievementsPage() {
                 onClick={() => router.push('/dashboard')}
                 className="mb-2"
               >
-                ← Back to Dashboard
+<T>← Back to Dashboard</T>
               </Button>
-              <h1 className="text-2xl font-bold text-foreground">Achievements & Badges</h1>
-              <p className="text-muted-foreground">Track your learning progress and earn rewards</p>
+              <h1 className="text-2xl font-bold text-foreground"><T>Achievements & Badges</T></h1>
+              <p className="text-muted-foreground"><T>Track your learning progress and earn rewards</T></p>
             </div>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
@@ -123,7 +124,7 @@ export default function AchievementsPage() {
                     <Trophy className="w-8 h-8 text-primary-foreground" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold">Level {userLevel.level}</h2>
+                    <h2 className="text-2xl font-bold"><T>Level</T> {userLevel.level}</h2>
                     <p className="text-muted-foreground">
                       {userLevel.currentXP} / {userLevel.currentXP + userLevel.xpToNextLevel} XP
                     </p>
@@ -131,13 +132,13 @@ export default function AchievementsPage() {
                 </div>
                 <div className="text-right">
                   <p className="text-3xl font-bold text-primary">{userLevel.totalXP}</p>
-                  <p className="text-sm text-muted-foreground">Total XP</p>
+                  <p className="text-sm text-muted-foreground"><T>Total XP</T></p>
                 </div>
               </div>
               <div className="mt-4">
                 <div className="flex justify-between text-sm mb-1">
-                  <span>Progress to Level {userLevel.level + 1}</span>
-                  <span>{userLevel.xpToNextLevel} XP needed</span>
+                  <span><T>Progress to Level</T> {userLevel.level + 1}</span>
+                  <span>{userLevel.xpToNextLevel} <T>XP needed</T></span>
                 </div>
                 <Progress 
                   value={(userLevel.currentXP / (userLevel.currentXP + userLevel.xpToNextLevel)) * 100} 
@@ -155,28 +156,28 @@ export default function AchievementsPage() {
             onClick={() => setActiveTab('badges')}
           >
             <Award className="w-4 h-4 mr-2" />
-            Badges
+<T>Badges</T>
           </Button>
           <Button 
             variant={activeTab === 'achievements' ? 'default' : 'outline'}
             onClick={() => setActiveTab('achievements')}
           >
             <Star className="w-4 h-4 mr-2" />
-            Recent Achievements
+<T>Recent Achievements</T>
           </Button>
           <Button 
             variant={activeTab === 'stats' ? 'default' : 'outline'}
             onClick={() => setActiveTab('stats')}
           >
             <TrendingUp className="w-4 h-4 mr-2" />
-            Statistics
+<T>Statistics</T>
           </Button>
         </div>
 
         {/* Badges Tab */}
         {activeTab === 'badges' && (
           <div>
-            <h2 className="text-lg font-semibold text-foreground mb-4">Badge Collection</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4"><T>Badge Collection</T></h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {badges.map(({ badge, earned, progress }) => (
                 <Card key={badge.id} className={`transition-all hover:shadow-lg ${
@@ -202,13 +203,13 @@ export default function AchievementsPage() {
                       
                       {earned ? (
                         <Badge className="w-full bg-green-500 text-white">
-                          ✓ Earned
+<T>✓ Earned</T>
                         </Badge>
                       ) : (
                         <div className="space-y-2">
                           <Progress value={progress} className="h-2" />
                           <p className="text-xs text-muted-foreground">
-                            {Math.round(progress)}% complete
+                            {Math.round(progress)}% <T>complete</T>
                           </p>
                         </div>
                       )}
@@ -223,14 +224,14 @@ export default function AchievementsPage() {
         {/* Achievements Tab */}
         {activeTab === 'achievements' && (
           <div>
-            <h2 className="text-lg font-semibold text-foreground mb-4">Recent Achievements</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4"><T>Recent Achievements</T></h2>
             {recentAchievements.length === 0 ? (
               <Card>
                 <CardContent className="text-center py-12">
                   <Star className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-foreground mb-2">No achievements yet</h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-2"><T>No achievements yet</T></h3>
                   <p className="text-muted-foreground">
-                    Complete lessons and quizzes to start earning achievements!
+                    <T>Complete lessons and quizzes to start earning achievements!</T>
                   </p>
                 </CardContent>
               </Card>
@@ -271,13 +272,13 @@ export default function AchievementsPage() {
         {/* Statistics Tab */}
         {activeTab === 'stats' && (
           <div>
-            <h2 className="text-lg font-semibold text-foreground mb-4">Learning Statistics</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4"><T>Learning Statistics</T></h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <Card>
                 <CardContent className="p-6 text-center">
                   <Target className="w-8 h-8 text-primary mx-auto mb-2" />
                   <p className="text-3xl font-bold">{stats.lessonsCompleted || 0}</p>
-                  <p className="text-sm text-muted-foreground">Lessons Completed</p>
+                  <p className="text-sm text-muted-foreground"><T>Lessons Completed</T></p>
                 </CardContent>
               </Card>
               
@@ -285,7 +286,7 @@ export default function AchievementsPage() {
                 <CardContent className="p-6 text-center">
                   <Zap className="w-8 h-8 text-blue-500 mx-auto mb-2" />
                   <p className="text-3xl font-bold">{stats.quizzesPassed || 0}</p>
-                  <p className="text-sm text-muted-foreground">Quizzes Passed</p>
+                  <p className="text-sm text-muted-foreground"><T>Quizzes Passed</T></p>
                 </CardContent>
               </Card>
               
@@ -293,7 +294,7 @@ export default function AchievementsPage() {
                 <CardContent className="p-6 text-center">
                   <Star className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
                   <p className="text-3xl font-bold">{stats.perfectScores || 0}</p>
-                  <p className="text-sm text-muted-foreground">Perfect Scores</p>
+                  <p className="text-sm text-muted-foreground"><T>Perfect Scores</T></p>
                 </CardContent>
               </Card>
               
@@ -301,20 +302,20 @@ export default function AchievementsPage() {
                 <CardContent className="p-6 text-center">
                   <TrendingUp className="w-8 h-8 text-green-500 mx-auto mb-2" />
                   <p className="text-3xl font-bold">{stats.currentStreak || 0}</p>
-                  <p className="text-sm text-muted-foreground">Current Streak</p>
+                  <p className="text-sm text-muted-foreground"><T>Current Streak</T></p>
                 </CardContent>
               </Card>
             </div>
             
             <Card className="mt-6">
               <CardHeader>
-                <CardTitle>Achievement Progress</CardTitle>
+                <CardTitle><T>Achievement Progress</T></CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between text-sm mb-1">
-                      <span>Badges Earned</span>
+                      <span><T>Badges Earned</T></span>
                       <span>{badges.filter(b => b.earned).length} / {badges.length}</span>
                     </div>
                     <Progress value={(badges.filter(b => b.earned).length / badges.length) * 100} />
@@ -322,7 +323,7 @@ export default function AchievementsPage() {
                   
                   <div>
                     <div className="flex justify-between text-sm mb-1">
-                      <span>Total Achievements</span>
+                      <span><T>Total Achievements</T></span>
                       <span>{recentAchievements.length}</span>
                     </div>
                   </div>

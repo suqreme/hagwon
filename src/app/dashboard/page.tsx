@@ -209,13 +209,13 @@ export default function Dashboard() {
             <div>
               <h1 className="text-2xl font-bold text-foreground"><T>Hagwon Dashboard</T></h1>
               <p className="text-muted-foreground">
-                Welcome back, {user.email}! 
-                {userPlacement && <span className="ml-2 text-primary">• Placed at {userPlacement}</span>}
+                <T>Welcome back</T>, {user.email}! 
+                {userPlacement && <span className="ml-2 text-primary">• <T>Placed at</T> {userPlacement}</span>}
               </p>
             </div>
             <div className="flex items-center space-x-4">
               <Badge variant="secondary">
-                Level: {currentGrade.replace('_', ' ')}
+                <T>Level</T>: {currentGrade.replace('_', ' ')}
               </Badge>
               <Button 
                 variant="outline"
@@ -384,7 +384,7 @@ export default function Dashboard() {
           <Card className="mt-8">
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                <span>Your Plan</span>
+                <span><T>Your Plan</T></span>
                 <Badge variant={subscription.plan === 'free' ? 'secondary' : 'default'}>
                   {subscription.plan.charAt(0).toUpperCase() + subscription.plan.slice(1)}
                 </Badge>
@@ -396,10 +396,10 @@ export default function Dashboard() {
                   <div className="text-2xl font-bold">
                     {subscription.features.dailyLessonLimit || '∞'}
                   </div>
-                  <div className="text-sm text-muted-foreground">Daily Lessons</div>
+                  <div className="text-sm text-muted-foreground"><T>Daily Lessons</T></div>
                   {subscription.features.dailyLessonLimit && (
                     <div className="text-xs text-muted-foreground mt-1">
-                      {subscriptionService.getRemainingLessons(user?.id || '')} remaining today
+                      {subscriptionService.getRemainingLessons(user?.id || '')} <T>remaining today</T>
                     </div>
                   )}
                 </div>
@@ -407,20 +407,20 @@ export default function Dashboard() {
                   <div className="text-2xl font-bold">
                     {subscription.features.analyticsAccess ? '✓' : '✗'}
                   </div>
-                  <div className="text-sm text-muted-foreground">Advanced Analytics</div>
+                  <div className="text-sm text-muted-foreground"><T>Advanced Analytics</T></div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold">
                     {subscription.features.certificateGeneration ? '✓' : '✗'}
                   </div>
-                  <div className="text-sm text-muted-foreground">Certificates</div>
+                  <div className="text-sm text-muted-foreground"><T>Certificates</T></div>
                 </div>
               </div>
               
               {subscription.plan === 'free' && (
                 <div className="mt-4 text-center">
                   <Button onClick={() => router.push('/subscription')} size="sm">
-                    Upgrade for Unlimited Access
+<T>Upgrade for Unlimited Access</T>
                   </Button>
                 </div>
               )}
@@ -431,31 +431,31 @@ export default function Dashboard() {
         {/* Progress Overview */}
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>Your Progress</CardTitle>
+            <CardTitle><T>Your Progress</T></CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="text-center">
                 <div className="text-3xl font-bold text-primary">{userStats.lessonsCompleted}</div>
-                <div className="text-muted-foreground">Lessons Completed</div>
+                <div className="text-muted-foreground"><T>Lessons Completed</T></div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-600">{userStats.quizzesPassed}</div>
-                <div className="text-muted-foreground">Quizzes Passed</div>
+                <div className="text-muted-foreground"><T>Quizzes Passed</T></div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-600">{userStats.totalXP}</div>
-                <div className="text-muted-foreground">XP Earned</div>
+                <div className="text-muted-foreground"><T>XP Earned</T></div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-orange-600">{userStats.currentStreak}</div>
-                <div className="text-muted-foreground">Day Streak</div>
+                <div className="text-muted-foreground"><T>Day Streak</T></div>
               </div>
             </div>
             
             {userStats.lastLessonDate && (
               <div className="mt-4 text-center text-sm text-muted-foreground">
-                Last activity: {new Date(userStats.lastLessonDate).toLocaleDateString()}
+                <T>Last activity</T>: {new Date(userStats.lastLessonDate).toLocaleDateString()}
               </div>
             )}
           </CardContent>

@@ -25,6 +25,7 @@ import {
   LogOut,
   Settings
 } from 'lucide-react'
+import { T } from '@/components/ui/auto-translate'
 
 interface PlatformStats {
   totalUsers: number
@@ -119,9 +120,9 @@ export default function AdminDashboard() {
         <Card className="w-full max-w-md">
           <CardContent className="text-center py-8">
             <AlertCircle className="w-16 h-16 text-destructive mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-foreground mb-2">Access Denied</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-2"><T>Access Denied</T></h2>
             <p className="text-muted-foreground">
-              You need administrator privileges to access this page.
+              <T>You need administrator privileges to access this page.</T>
             </p>
           </CardContent>
         </Card>
@@ -134,7 +135,7 @@ export default function AdminDashboard() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading admin dashboard...</p>
+          <p className="text-muted-foreground"><T>Loading admin dashboard...</T></p>
         </div>
       </div>
     )
@@ -160,8 +161,8 @@ export default function AdminDashboard() {
               <div className="flex items-center space-x-2">
                 <Crown className="w-8 h-8 text-primary" />
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
-                  <p className="text-sm text-muted-foreground">Hagwon Platform Management</p>
+                  <h1 className="text-2xl font-bold text-foreground"><T>Admin Dashboard</T></h1>
+                  <p className="text-sm text-muted-foreground"><T>Hagwon Platform Management</T></p>
                 </div>
               </div>
             </div>
@@ -173,7 +174,7 @@ export default function AdminDashboard() {
                 onClick={() => router.push('/dashboard?view=student')}
               >
                 <Home className="w-4 h-4 mr-2" />
-                Student View
+<T>Student View</T>
               </Button>
               
               <Button
@@ -181,7 +182,7 @@ export default function AdminDashboard() {
                 size="sm"
                 onClick={loadAdminData}
               >
-                Refresh Data
+<T>Refresh Data</T>
               </Button>
               
               <ThemeToggle />
@@ -216,7 +217,7 @@ export default function AdminDashboard() {
                 <Users className="w-8 h-8 text-blue-500" />
                 <div>
                   <p className="text-2xl font-bold">{platformStats?.totalUsers || 0}</p>
-                  <p className="text-sm text-muted-foreground">Total Users</p>
+                  <p className="text-sm text-muted-foreground"><T>Total Users</T></p>
                 </div>
               </div>
             </CardContent>
@@ -228,7 +229,7 @@ export default function AdminDashboard() {
                 <TrendingUp className="w-8 h-8 text-green-500" />
                 <div>
                   <p className="text-2xl font-bold">{platformStats?.activeUsers || 0}</p>
-                  <p className="text-sm text-muted-foreground">Active Users</p>
+                  <p className="text-sm text-muted-foreground"><T>Active Users</T></p>
                 </div>
               </div>
             </CardContent>
@@ -240,7 +241,7 @@ export default function AdminDashboard() {
                 <BookOpen className="w-8 h-8 text-purple-500" />
                 <div>
                   <p className="text-2xl font-bold">{platformStats?.totalLessonsCompleted || 0}</p>
-                  <p className="text-sm text-muted-foreground">Lessons Completed</p>
+                  <p className="text-sm text-muted-foreground"><T>Lessons Completed</T></p>
                 </div>
               </div>
             </CardContent>
@@ -252,7 +253,7 @@ export default function AdminDashboard() {
                 <DollarSign className="w-8 h-8 text-green-600" />
                 <div>
                   <p className="text-2xl font-bold">${subscriptionStats?.monthlyRevenue || 0}</p>
-                  <p className="text-sm text-muted-foreground">Monthly Revenue</p>
+                  <p className="text-sm text-muted-foreground"><T>Monthly Revenue</T></p>
                 </div>
               </div>
             </CardContent>
@@ -264,26 +265,26 @@ export default function AdminDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Crown className="w-5 h-5" />
-              <span>Subscription Overview</span>
+              <span><T>Subscription Overview</T></span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="text-center">
                 <p className="text-3xl font-bold text-gray-500">{subscriptionStats?.freeUsers || 0}</p>
-                <p className="text-sm text-muted-foreground">Free Users</p>
+                <p className="text-sm text-muted-foreground"><T>Free Users</T></p>
               </div>
               <div className="text-center">
                 <p className="text-3xl font-bold text-blue-500">{subscriptionStats?.supporterUsers || 0}</p>
-                <p className="text-sm text-muted-foreground">Supporters ($5/mo)</p>
+                <p className="text-sm text-muted-foreground"><T>Supporters ($5/mo)</T></p>
               </div>
               <div className="text-center">
                 <p className="text-3xl font-bold text-purple-500">{subscriptionStats?.sponsorUsers || 0}</p>
-                <p className="text-sm text-muted-foreground">Sponsors ($25/mo)</p>
+                <p className="text-sm text-muted-foreground"><T>Sponsors ($25/mo)</T></p>
               </div>
               <div className="text-center">
                 <p className="text-3xl font-bold text-green-500">{subscriptionStats?.hardshipUsers || 0}</p>
-                <p className="text-sm text-muted-foreground">Hardship Approved</p>
+                <p className="text-sm text-muted-foreground"><T>Hardship Approved</T></p>
               </div>
             </div>
           </CardContent>
@@ -295,7 +296,7 @@ export default function AdminDashboard() {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Heart className="w-5 h-5 text-red-500" />
-                <span>Pending Hardship Requests</span>
+                <span><T>Pending Hardship Requests</T></span>
                 <Badge variant="destructive">{hardshipRequests.length}</Badge>
               </CardTitle>
             </CardHeader>
@@ -321,7 +322,7 @@ export default function AdminDashboard() {
                           className="bg-green-600 hover:bg-green-700"
                         >
                           <CheckCircle className="w-4 h-4 mr-1" />
-                          Approve
+<T>Approve</T>
                         </Button>
                         <Button 
                           size="sm" 
@@ -329,7 +330,7 @@ export default function AdminDashboard() {
                           onClick={() => handleDenyHardship(request.user_id)}
                         >
                           <XCircle className="w-4 h-4 mr-1" />
-                          Deny
+<T>Deny</T>
                         </Button>
                       </div>
                     </div>
@@ -345,7 +346,7 @@ export default function AdminDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Users className="w-5 h-5" />
-              <span>Recent Users</span>
+              <span><T>Recent Users</T></span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -364,17 +365,17 @@ export default function AdminDashboard() {
                       </Badge>
                       {user.hardship_approved && (
                         <Badge variant="default" className="bg-green-500">
-                          Hardship Approved
+  <T>Hardship Approved</T>
                         </Badge>
                       )}
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">
-                      {user.lessons_completed} lessons completed
+                      {user.lessons_completed} <T>lessons completed</T>
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Joined {new Date(user.created_at).toLocaleDateString()}
+                      <T>Joined</T> {new Date(user.created_at).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -388,7 +389,7 @@ export default function AdminDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Globe className="w-5 h-5" />
-              <span>Top Countries</span>
+              <span><T>Top Countries</T></span>
             </CardTitle>
           </CardHeader>
           <CardContent>
