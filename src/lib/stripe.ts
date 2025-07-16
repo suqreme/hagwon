@@ -36,7 +36,7 @@ export const SUBSCRIPTION_PLANS = {
   supporter: {
     id: 'supporter',
     name: 'Supporter',
-    price: 5,
+    price: 10,
     interval: 'month',
     description: 'Support global education while learning',
     features: [
@@ -52,7 +52,7 @@ export const SUBSCRIPTION_PLANS = {
   sponsor: {
     id: 'sponsor',
     name: 'Education Sponsor',
-    price: 25,
+    price: 30,
     interval: 'month',
     description: 'Sponsor education for underserved communities',
     features: [

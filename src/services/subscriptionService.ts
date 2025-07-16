@@ -286,11 +286,11 @@ class SubscriptionService {
             break
           case 'supporter':
             stats.supporterUsers++
-            stats.monthlyRevenue += 5
+            stats.monthlyRevenue += 10
             break
           case 'sponsor':
             stats.sponsorUsers++
-            stats.monthlyRevenue += 25
+            stats.monthlyRevenue += 30
             break
           case 'hardship':
             stats.hardshipUsers++

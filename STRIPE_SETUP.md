@@ -22,11 +22,11 @@ This guide walks you through setting up Stripe for subscription payments in your
 1. **Go to Stripe Dashboard → Products**
 2. **Create "Supporter" product**:
    - Name: "Supporter Plan"
-   - Pricing: $5/month recurring
+   - Pricing: $10/month recurring
    - Copy the **Price ID** (starts with `price_`)
 3. **Create "Sponsor" product**:
    - Name: "Education Sponsor Plan" 
-   - Pricing: $25/month recurring
+   - Pricing: $30/month recurring
    - Copy the **Price ID** (starts with `price_`)
 
 ### 3. Configure Environment Variables
@@ -134,13 +134,13 @@ Or run the provided migration file:
    - Basic progress tracking
    - Community support
 
-2. **Supporter Plan** ($5/month)
+2. **Supporter Plan** ($10/month)
    - Unlimited lessons
    - Advanced analytics
    - Priority support
    - Certificates
 
-3. **Education Sponsor** ($25/month)
+3. **Education Sponsor** ($30/month)
    - Everything in Supporter
    - Sponsor scholarship students
    - Impact reports
