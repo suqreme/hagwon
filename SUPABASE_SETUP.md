@@ -101,8 +101,10 @@ After setup, test these features:
 4. **quiz_results** - Quiz scores & answers
 5. **user_gamification** - XP, badges, achievements
 6. **subscriptions** - Payment & hardship management
-7. **help_requests** - Community support requests
-8. **offline_content** - Downloaded lessons for offline use
+7. **hardship_requests** - Hardship application requests
+8. **community_requests** - Community help requests (NEW)
+9. **help_requests** - Equipment/funding requests
+10. **offline_content** - Downloaded lessons for offline use
 
 Your EduRoot platform now has enterprise-grade data management! 🌍
 

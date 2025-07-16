@@ -66,7 +66,7 @@ export default function LessonPage({ subject, grade, topic, subtopic }: LessonPa
       }
 
       // Start lesson tracking
-      const lessonId = progressService.startLesson(currentProfile.id, subject, grade, topic, subtopic);
+      const lessonId = await progressService.startLesson(currentProfile.id, subject, grade, topic, subtopic);
       setCurrentLessonId(lessonId);
       setLessonStartTime(Date.now());
 
@@ -151,11 +151,11 @@ Let's start with the basics and work our way up. Remember, learning takes time a
     `;
   };
 
-  const handleLessonComplete = () => {
+  const handleLessonComplete = async () => {
     if (!currentLessonId) return;
     
     const timeSpent = Math.floor((Date.now() - lessonStartTime) / 1000);
-    progressService.updateLessonProgress(currentLessonId, {
+    await progressService.updateLessonProgress(currentLessonId, {
       timeSpent,
       status: 'in_progress'
     });
@@ -239,13 +239,13 @@ Let's start with the basics and work our way up. Remember, learning takes time a
     return mathQuiz;
   };
 
-  const handleQuizComplete = (results: any) => {
+  const handleQuizComplete = async (results: any) => {
     if (!currentProfile || !currentLessonId) return;
 
     const timeSpent = Math.floor((Date.now() - lessonStartTime) / 1000);
     
     // Record quiz results
-    progressService.recordQuizResult(currentProfile.id, currentLessonId, {
+    await progressService.recordQuizResult(currentProfile.id, currentLessonId, {
       score: results.score,
       totalQuestions: results.totalQuestions,
       correctAnswers: results.correctAnswers,
@@ -254,7 +254,7 @@ Let's start with the basics and work our way up. Remember, learning takes time a
     });
 
     // Update lesson progress
-    progressService.updateLessonProgress(currentLessonId, {
+    await progressService.updateLessonProgress(currentLessonId, {
       timeSpent,
       status: results.passed ? 'completed' : 'in_progress',
       score: results.score

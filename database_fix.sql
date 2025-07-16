@@ -1,16 +1,9 @@
--- EMERGENCY DATABASE FIX
--- Run this in Supabase SQL Editor to fix all database issues
+-- DATABASE FIX FOR TRIGGER CONFLICTS
+-- Run this in Supabase SQL Editor to fix trigger conflicts
 
--- Step 1: Drop all existing tables to start fresh
-DROP TABLE IF EXISTS public.offline_content CASCADE;
-DROP TABLE IF EXISTS public.help_requests CASCADE;
-DROP TABLE IF EXISTS public.hardship_requests CASCADE;
-DROP TABLE IF EXISTS public.user_gamification CASCADE;
-DROP TABLE IF EXISTS public.quiz_results CASCADE;
-DROP TABLE IF EXISTS public.lessons CASCADE;
-DROP TABLE IF EXISTS public.user_progress CASCADE;
-DROP TABLE IF EXISTS public.subscriptions CASCADE;
-DROP TABLE IF EXISTS public.user_profiles CASCADE;
+-- Step 1: Drop existing trigger that's causing conflicts
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+DROP FUNCTION IF EXISTS public.handle_new_user() CASCADE;
 
 -- Step 2: Recreate user_profiles table with proper structure
 CREATE TABLE public.user_profiles (
@@ -69,15 +62,51 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 BEGIN
     INSERT INTO public.user_profiles (id, email, role, subscription_plan)
-    VALUES (new.id, new.email, 'student', 'free');
+    VALUES (new.id, new.email, 'student', 'free')
+    ON CONFLICT (id) DO NOTHING;
     RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-CREATE OR REPLACE TRIGGER on_auth_user_created
+CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
-    FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- Step 8: Verify everything works
+-- Step 8: Create missing community_requests table
+CREATE TABLE IF NOT EXISTS public.community_requests (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES public.user_profiles(id) ON DELETE CASCADE,
+    user_email TEXT NOT NULL,
+    user_name TEXT,
+    request_type TEXT NOT NULL CHECK (request_type IN ('hardship_application', 'language_request', 'help_request')),
+    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'denied')),
+    hardship_reason TEXT,
+    country TEXT,
+    language_requested TEXT,
+    community_name TEXT,
+    location TEXT,
+    description TEXT,
+    contact_email TEXT,
+    reviewed_by UUID REFERENCES public.user_profiles(id),
+    reviewed_at TIMESTAMP WITH TIME ZONE,
+    admin_notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+-- Step 9: Enable RLS on community_requests
+ALTER TABLE public.community_requests ENABLE ROW LEVEL SECURITY;
+
+-- Step 10: Create RLS policy for community_requests
+CREATE POLICY "Allow all operations for authenticated users" ON public.community_requests
+    FOR ALL USING (auth.uid() IS NOT NULL);
+
+-- Step 11: Verify everything works
 SELECT 'user_profiles created' as status, count(*) as count FROM public.user_profiles;
 SELECT 'admin user exists' as status, email, role FROM public.user_profiles WHERE role = 'admin';
+SELECT 'community_requests table exists' as status, 
+       CASE WHEN EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'community_requests') 
+            THEN 'YES' ELSE 'NO' END as exists;
+
+-- Success message
+SELECT 'Database fix completed successfully! The trigger conflict has been resolved.' as message;

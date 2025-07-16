@@ -12,6 +12,7 @@ import FlashcardGame from '@/components/games/FlashcardGame'
 import { gamificationService } from '@/services/gamificationService'
 import { Zap, Brain, Target, Star, Gamepad2, Trophy } from 'lucide-react'
 import { T } from '@/components/ui/auto-translate'
+import { showSuccess, showError } from '@/components/ui/notification'
 
 interface Game {
   id: string
@@ -74,35 +75,43 @@ export default function GamesPage() {
   const [selectedSubject, setSelectedSubject] = useState<string>('math')
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('easy')
 
-  const handleGameComplete = (gameId: string, score: number, correctAnswers: number, totalQuestions: number) => {
+  const handleGameComplete = async (gameId: string, score: number, correctAnswers: number, totalQuestions: number) => {
     if (!user) return
 
-    // Award XP based on performance
-    const game = games.find(g => g.id === gameId)
-    if (!game) return
+    try {
+      // Award XP based on performance
+      const game = games.find(g => g.id === gameId)
+      if (!game) return
 
-    const baseXP = game.xpReward
-    const performanceMultiplier = correctAnswers / totalQuestions
-    const xpGained = Math.round(baseXP * performanceMultiplier)
+      const baseXP = game.xpReward
+      const performanceMultiplier = correctAnswers / totalQuestions
+      const xpGained = Math.round(baseXP * performanceMultiplier)
 
-    // Award XP through gamification service
-    const result = gamificationService.awardXP(user.id, {
-      type: 'review_completed',
-      xpGained,
-      details: `${game.name}: ${correctAnswers}/${totalQuestions} correct`
-    })
+      // Award XP through gamification service
+      const result = await gamificationService.awardXP(user.id, {
+        type: 'review_completed',
+        xpGained,
+        details: `${game.name}: ${correctAnswers}/${totalQuestions} correct`
+      })
 
-    // Update gamification stats
-    gamificationService.updateStats(user.id, {
-      lessonsCompleted: 1 // Games count as review lessons
-    })
+      // Update gamification stats
+      await gamificationService.updateStats(user.id, {
+        lessonsCompleted: 1 // Games count as review lessons
+      })
 
-    // Show achievements if any
-    if (result.newAchievements.length > 0) {
-      alert(`🎉 New achievements unlocked! You earned ${xpGained} XP!`)
+      // Show achievements if any
+      if (result.newAchievements.length > 0) {
+        showSuccess('New achievements unlocked! 🎉', `You earned ${xpGained} XP and unlocked ${result.newAchievements.length} new achievement${result.newAchievements.length > 1 ? 's' : ''}!`)
+      } else {
+        showSuccess('Game completed!', `You earned ${xpGained} XP!`)
+      }
+
+      setSelectedGame(null)
+    } catch (error) {
+      console.error('Error handling game completion:', error)
+      showError('Error processing game results', 'Your progress may not have been saved. Please try again.')
+      setSelectedGame(null)
     }
-
-    setSelectedGame(null)
   }
 
   const handleStartGame = (gameId: string) => {

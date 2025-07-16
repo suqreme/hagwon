@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { T } from '@/components/ui/auto-translate'
 import { User, Mail, Globe, Calendar, BookOpen, Trophy, Settings, ArrowLeft } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { showSuccess, showError } from '@/components/ui/notification'
 
 interface UserProfile {
   firstName: string
@@ -51,10 +53,39 @@ export default function ProfilePage() {
     }
   }, [user, loading, router])
 
-  const loadUserProfile = () => {
+  const loadUserProfile = async () => {
     if (!user) return
     
-    // Load profile from localStorage
+    // Try to load from Supabase first
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('user_profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single()
+        
+        if (data && !error) {
+          setProfile({
+            firstName: data.first_name || '',
+            lastName: data.last_name || '',
+            country: data.country || '',
+            dateOfBirth: data.date_of_birth || '',
+            preferredLanguage: data.preferred_language || 'en',
+            learningGoals: data.learning_goals || '',
+            educationLevel: data.education_level || '',
+            aboutMe: data.about_me || '',
+            timezone: data.timezone || '',
+            phoneNumber: data.phone_number || ''
+          })
+          return
+        }
+      } catch (error) {
+        console.error('Error loading profile from Supabase:', error)
+      }
+    }
+    
+    // Fallback to localStorage
     const savedProfile = localStorage.getItem(`profile_${user.id}`)
     if (savedProfile) {
       const parsedProfile = JSON.parse(savedProfile)
@@ -75,14 +106,41 @@ export default function ProfilePage() {
     
     setSaving(true)
     try {
-      // Save to localStorage
+      // Try to save to Supabase first
+      if (supabase) {
+        const { error } = await supabase
+          .from('user_profiles')
+          .upsert({
+            id: user.id,
+            email: user.email,
+            first_name: profile.firstName,
+            last_name: profile.lastName,
+            country: profile.country,
+            date_of_birth: profile.dateOfBirth || null,
+            preferred_language: profile.preferredLanguage,
+            learning_goals: profile.learningGoals,
+            education_level: profile.educationLevel,
+            about_me: profile.aboutMe,
+            timezone: profile.timezone,
+            phone_number: profile.phoneNumber,
+            role: 'student',
+            subscription_plan: 'free'
+          })
+        
+        if (error) {
+          console.error('Supabase upsert error:', error)
+          throw error
+        }
+      }
+      
+      // Also save to localStorage as fallback
       localStorage.setItem(`profile_${user.id}`, JSON.stringify(profile))
       
       setEditing(false)
-      alert('Profile updated successfully!')
+      showSuccess('Profile updated successfully!', 'Your profile information has been saved.')
     } catch (error) {
       console.error('Error saving profile:', error)
-      alert('Failed to save profile. Please try again.')
+      showError('Failed to save profile', 'Please try again. If the problem persists, contact support.')
     } finally {
       setSaving(false)
     }

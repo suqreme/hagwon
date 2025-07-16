@@ -1,4 +1,5 @@
 import { StudentProfile } from './profileService';
+import { supabase } from '@/lib/supabase';
 
 export interface LessonProgress {
   id: string;
@@ -87,15 +88,9 @@ class ProgressService {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
   }
 
-  startLesson(profileId: string, subject: string, grade: string, topic: string, subtopic: string): string {
-    const data = this.getStorageData();
+  async startLesson(profileId: string, subject: string, grade: string, topic: string, subtopic: string): Promise<string> {
     const lessonId = this.generateId();
     
-    const progressKey = `${profileId}_progress`;
-    if (!data[progressKey]) {
-      data[progressKey] = {};
-    }
-
     const lessonProgress: LessonProgress = {
       id: lessonId,
       profileId,
@@ -110,46 +105,98 @@ class ProgressService {
       lastAccessedAt: new Date().toISOString()
     };
 
+    // Try to save to Supabase first
+    if (supabase) {
+      try {
+        const { error } = await supabase
+          .from('user_progress')
+          .insert({
+            user_id: profileId,
+            subject,
+            grade_level: grade,
+            topic,
+            subtopic,
+            status: 'in_progress',
+            attempts: 1
+          });
+        
+        if (error) {
+          console.error('Error saving to Supabase:', error);
+        }
+      } catch (error) {
+        console.error('Supabase connection error:', error);
+      }
+    }
+
+    // Also save to localStorage as fallback
+    const data = this.getStorageData();
+    const progressKey = `${profileId}_progress`;
+    if (!data[progressKey]) {
+      data[progressKey] = {};
+    }
     data[progressKey][lessonId] = lessonProgress;
     this.setStorageData(data);
     
     return lessonId;
   }
 
-  updateLessonProgress(lessonId: string, updates: Partial<LessonProgress>): void {
+  async updateLessonProgress(lessonId: string, updates: Partial<LessonProgress>): Promise<void> {
     const data = this.getStorageData();
     
-    // Find lesson in all profiles
+    // Find lesson in all profiles and update in Supabase
     for (const key in data) {
       if (key.endsWith('_progress') && data[key][lessonId]) {
-        data[key][lessonId] = {
-          ...data[key][lessonId],
+        const lesson = data[key][lessonId];
+        const updatedLesson = {
+          ...lesson,
           ...updates,
           lastAccessedAt: new Date().toISOString()
         };
+        
+        // Update in Supabase
+        if (supabase) {
+          try {
+            const { error } = await supabase
+              .from('user_progress')
+              .update({
+                status: updates.status || lesson.status,
+                score: updates.score || lesson.score,
+                attempts: updates.attempts || lesson.attempts,
+                completed_at: updates.status === 'completed' ? new Date().toISOString() : null
+              })
+              .eq('user_id', lesson.profileId)
+              .eq('subject', lesson.subject)
+              .eq('grade_level', lesson.grade)
+              .eq('topic', lesson.topic)
+              .eq('subtopic', lesson.subtopic);
+            
+            if (error) {
+              console.error('Error updating lesson progress in Supabase:', error);
+            }
+          } catch (error) {
+            console.error('Supabase connection error:', error);
+          }
+        }
+        
+        // Update localStorage
+        data[key][lessonId] = updatedLesson;
         this.setStorageData(data);
         return;
       }
     }
   }
 
-  completeLesson(lessonId: string, score?: number): void {
-    this.updateLessonProgress(lessonId, {
+  async completeLesson(lessonId: string, score?: number): Promise<void> {
+    await this.updateLessonProgress(lessonId, {
       status: 'completed',
       score,
       completedAt: new Date().toISOString()
     });
   }
 
-  recordQuizResult(profileId: string, lessonId: string, result: Omit<QuizResult, 'id' | 'profileId' | 'lessonId' | 'completedAt'>): void {
-    const data = this.getStorageData();
+  async recordQuizResult(profileId: string, lessonId: string, result: Omit<QuizResult, 'id' | 'profileId' | 'lessonId' | 'completedAt'>): Promise<void> {
     const quizId = this.generateId();
     
-    const quizKey = `${profileId}_quizzes`;
-    if (!data[quizKey]) {
-      data[quizKey] = {};
-    }
-
     const quizResult: QuizResult = {
       id: quizId,
       profileId,
@@ -158,17 +205,68 @@ class ProgressService {
       completedAt: new Date().toISOString()
     };
 
+    // Try to save to Supabase first
+    if (supabase) {
+      try {
+        const { error } = await supabase
+          .from('quiz_results')
+          .insert({
+            user_id: profileId,
+            lesson_id: lessonId,
+            score: result.score,
+            total_questions: result.totalQuestions,
+            answers: result.answers,
+            passed: result.score >= 70
+          });
+        
+        if (error) {
+          console.error('Error saving quiz result to Supabase:', error);
+        }
+      } catch (error) {
+        console.error('Supabase connection error:', error);
+      }
+    }
+
+    // Also save to localStorage as fallback
+    const data = this.getStorageData();
+    const quizKey = `${profileId}_quizzes`;
+    if (!data[quizKey]) {
+      data[quizKey] = {};
+    }
     data[quizKey][quizId] = quizResult;
     this.setStorageData(data);
 
     // Update lesson progress based on quiz result
     const passed = result.score >= 70; // 70% passing score
     if (passed) {
-      this.completeLesson(lessonId, result.score);
+      await this.completeLesson(lessonId, result.score);
     }
   }
 
-  getProgressStats(profileId: string): ProgressStats {
+  async getProgressStats(profileId: string): Promise<ProgressStats> {
+    // Try to load from Supabase first
+    if (supabase) {
+      try {
+        const [progressData, quizData] = await Promise.all([
+          supabase
+            .from('user_progress')
+            .select('*')
+            .eq('user_id', profileId),
+          supabase
+            .from('quiz_results')
+            .select('*')
+            .eq('user_id', profileId)
+        ]);
+        
+        if (progressData.data && quizData.data) {
+          return this.calculateStatsFromSupabase(progressData.data, quizData.data);
+        }
+      } catch (error) {
+        console.error('Error loading progress from Supabase:', error);
+      }
+    }
+    
+    // Fallback to localStorage calculation
     const data = this.getStorageData();
     const progressKey = `${profileId}_progress`;
     const quizKey = `${profileId}_quizzes`;
@@ -253,6 +351,53 @@ class ProgressService {
       totalTimeSpent,
       subjectProgress,
       lastActivity: lastActivity > 0 ? new Date(lastActivity).toISOString() : new Date().toISOString()
+    };
+  }
+
+  private calculateStatsFromSupabase(progressData: any[], quizData: any[]): ProgressStats {
+    const completedLessons = progressData.filter(p => p.status === 'completed');
+    const passedQuizzes = quizData.filter(q => q.passed);
+    
+    // Calculate subject progress
+    const subjectProgress: Record<string, any> = {};
+    completedLessons.forEach(lesson => {
+      const subject = lesson.subject;
+      if (!subjectProgress[subject]) {
+        subjectProgress[subject] = {
+          lessonsCompleted: 0,
+          quizzesPassed: 0,
+          averageScore: 0,
+          topicsCompleted: new Set()
+        };
+      }
+      
+      subjectProgress[subject].lessonsCompleted++;
+      subjectProgress[subject].topicsCompleted.add(lesson.topic);
+    });
+    
+    // Calculate streaks (simplified)
+    const currentStreak = Math.min(passedQuizzes.length, 5);
+    const longestStreak = passedQuizzes.length;
+    
+    return {
+      totalLessonsCompleted: completedLessons.length,
+      totalQuizzesPassed: passedQuizzes.length,
+      currentStreak,
+      longestStreak,
+      averageScore: passedQuizzes.length > 0 
+        ? passedQuizzes.reduce((sum: number, quiz: any) => sum + quiz.score, 0) / passedQuizzes.length
+        : 0,
+      totalTimeSpent: 0,
+      subjectProgress: Object.fromEntries(
+        Object.entries(subjectProgress).map(([key, value]: [string, any]) => [
+          key,
+          {
+            ...value,
+            topicsCompleted: Array.from(value.topicsCompleted)
+          }
+        ])
+      ),
+      lastActivity: new Date().toISOString()
     };
   }
 

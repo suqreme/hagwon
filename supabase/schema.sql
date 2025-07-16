@@ -6,10 +6,20 @@ CREATE TABLE IF NOT EXISTS public.user_profiles (
     id UUID REFERENCES auth.users ON DELETE CASCADE,
     email TEXT,
     full_name TEXT,
+    first_name TEXT,
+    last_name TEXT,
     avatar_url TEXT,
     role TEXT DEFAULT 'student' CHECK (role IN ('student', 'teacher', 'admin')),
     country TEXT,
+    date_of_birth DATE,
+    phone_number TEXT,
+    timezone TEXT,
+    preferred_language TEXT DEFAULT 'en',
+    education_level TEXT,
+    learning_goals TEXT,
+    about_me TEXT,
     placement_level TEXT,
+    onboarding_completed BOOLEAN DEFAULT FALSE,
     subscription_plan TEXT DEFAULT 'free' CHECK (subscription_plan IN ('free', 'basic', 'premium')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW()) NOT NULL,
@@ -112,6 +122,28 @@ CREATE TABLE IF NOT EXISTS public.hardship_requests (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW()) NOT NULL
 );
 
+-- Community requests (unified table for various request types)
+CREATE TABLE IF NOT EXISTS public.community_requests (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES public.user_profiles(id) ON DELETE CASCADE,
+    user_email TEXT NOT NULL,
+    user_name TEXT,
+    request_type TEXT NOT NULL CHECK (request_type IN ('hardship_application', 'language_request', 'help_request')),
+    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'denied')),
+    hardship_reason TEXT,
+    country TEXT,
+    language_requested TEXT,
+    community_name TEXT,
+    location TEXT,
+    description TEXT,
+    contact_email TEXT,
+    reviewed_by UUID REFERENCES public.user_profiles(id),
+    reviewed_at TIMESTAMP WITH TIME ZONE,
+    admin_notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW()) NOT NULL
+);
+
 -- Community help requests and donations
 CREATE TABLE IF NOT EXISTS public.help_requests (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -152,6 +184,7 @@ ALTER TABLE public.quiz_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_gamification ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.hardship_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.community_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.help_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.offline_content ENABLE ROW LEVEL SECURITY;
 
@@ -187,6 +220,10 @@ CREATE POLICY "Users can access own offline content" ON public.offline_content
 
 -- Hardship requests policies
 CREATE POLICY "Users can access own hardship requests" ON public.hardship_requests
+    FOR ALL USING (auth.uid() = user_id);
+
+-- Community requests policies
+CREATE POLICY "Users can access own community requests" ON public.community_requests
     FOR ALL USING (auth.uid() = user_id);
 
 -- Help requests are public for viewing, but users can only create their own
@@ -234,6 +271,14 @@ CREATE POLICY "Admins can access all subscriptions" ON public.subscriptions
     );
 
 CREATE POLICY "Admins can access all hardship requests" ON public.hardship_requests
+    FOR ALL USING (
+        (auth.uid() = user_id) OR 
+        (auth.uid() IN (
+            SELECT id FROM public.user_profiles WHERE role = 'admin'
+        ))
+    );
+
+CREATE POLICY "Admins can access all community requests" ON public.community_requests
     FOR ALL USING (
         (auth.uid() = user_id) OR 
         (auth.uid() IN (
@@ -291,6 +336,9 @@ CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.user_gamification
 CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.subscriptions
     FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
 
+CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.community_requests
+    FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
 CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.help_requests
     FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
 
@@ -302,6 +350,9 @@ CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON public.user_progress(use
 CREATE INDEX IF NOT EXISTS idx_user_progress_subject_topic ON public.user_progress(subject, topic);
 CREATE INDEX IF NOT EXISTS idx_lessons_user_subject ON public.lessons(user_id, subject);
 CREATE INDEX IF NOT EXISTS idx_quiz_results_user_id ON public.quiz_results(user_id);
+CREATE INDEX IF NOT EXISTS idx_community_requests_user_id ON public.community_requests(user_id);
+CREATE INDEX IF NOT EXISTS idx_community_requests_status ON public.community_requests(status);
+CREATE INDEX IF NOT EXISTS idx_community_requests_type ON public.community_requests(request_type);
 CREATE INDEX IF NOT EXISTS idx_help_requests_status ON public.help_requests(status);
 CREATE INDEX IF NOT EXISTS idx_help_requests_location ON public.help_requests(location);
 CREATE INDEX IF NOT EXISTS idx_hardship_requests_user_id ON public.hardship_requests(user_id);

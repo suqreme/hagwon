@@ -108,12 +108,12 @@ export default function Dashboard() {
     }
   }
 
-  const loadUserProgress = () => {
+  const loadUserProgress = async () => {
     if (!user) return
     
     try {
       // For now, use default profile (user.id) until multi-student is fully integrated
-      const stats = progressService.getProgressStats(user.id)
+      const stats = await progressService.getProgressStats(user.id)
       setUserStats({
         lessonsCompleted: stats.totalLessonsCompleted,
         quizzesPassed: stats.totalQuizzesPassed,

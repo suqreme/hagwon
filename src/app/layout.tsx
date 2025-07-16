@@ -5,6 +5,8 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { ProfileProvider } from '@/contexts/ProfileContext';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { ThemeInitializer } from '@/components/providers/theme-initializer';
+import { NotificationContainer } from '@/components/ui/notification';
+import { ConfirmationDialogProvider } from '@/components/ui/confirmation-dialog';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -124,7 +126,10 @@ export default function RootLayout({
           <ThemeInitializer />
           <AuthProvider>
             <ProfileProvider>
-              {children}
+              <ConfirmationDialogProvider>
+                {children}
+                <NotificationContainer />
+              </ConfirmationDialogProvider>
             </ProfileProvider>
           </AuthProvider>
         </ThemeProvider>

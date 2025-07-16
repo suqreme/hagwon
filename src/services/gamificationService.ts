@@ -1,3 +1,5 @@
+import { supabase } from '@/lib/supabase'
+
 interface Badge {
   id: string
   name: string
@@ -137,14 +139,45 @@ class GamificationService {
     }
   ]
 
-  getUserGamification(userId: string) {
+  async getUserGamification(userId: string) {
+    // Try to load from Supabase first
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('user_gamification')
+          .select('*')
+          .eq('user_id', userId)
+          .single()
+        
+        if (data && !error) {
+          return {
+            level: data.level,
+            totalXP: data.total_xp,
+            earnedBadges: data.earned_badges || [],
+            xpHistory: [],
+            achievements: data.achievements || [],
+            stats: data.stats || {
+              lessonsCompleted: 0,
+              quizzesPassed: 0,
+              perfectScores: 0,
+              currentStreak: 0,
+              longestStreak: 0
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading gamification data from Supabase:', error)
+      }
+    }
+
+    // Fallback to localStorage
     try {
       const stored = localStorage.getItem(`${this.storageKey}_${userId}`)
       if (stored) {
         return JSON.parse(stored)
       }
     } catch (error) {
-      console.error('Error loading gamification data:', error)
+      console.error('Error loading gamification data from localStorage:', error)
     }
 
     // Default gamification data
@@ -164,11 +197,35 @@ class GamificationService {
     }
   }
 
-  saveUserGamification(userId: string, data: any): void {
+  async saveUserGamification(userId: string, data: any): Promise<void> {
+    // Try to save to Supabase first
+    if (supabase) {
+      try {
+        const { error } = await supabase
+          .from('user_gamification')
+          .upsert({
+            user_id: userId,
+            level: data.level,
+            total_xp: data.totalXP,
+            earned_badges: data.earnedBadges,
+            achievements: data.achievements,
+            stats: data.stats
+          })
+        
+        if (error) {
+          console.error('Supabase save error:', error)
+          throw error
+        }
+      } catch (error) {
+        console.error('Error saving gamification data to Supabase:', error)
+      }
+    }
+
+    // Also save to localStorage as fallback
     try {
       localStorage.setItem(`${this.storageKey}_${userId}`, JSON.stringify(data))
     } catch (error) {
-      console.error('Error saving gamification data:', error)
+      console.error('Error saving gamification data to localStorage:', error)
     }
   }
 
@@ -193,8 +250,8 @@ class GamificationService {
     }
   }
 
-  awardXP(userId: string, event: Omit<XPEvent, 'timestamp'>): { newAchievements: Achievement[], levelUp: boolean } {
-    const data = this.getUserGamification(userId)
+  async awardXP(userId: string, event: Omit<XPEvent, 'timestamp'>): Promise<{ newAchievements: Achievement[], levelUp: boolean }> {
+    const data = await this.getUserGamification(userId)
     const oldLevel = this.calculateLevel(data.totalXP).level
     
     // Add XP
@@ -244,7 +301,7 @@ class GamificationService {
       newAchievements.push(levelAchievement)
     }
     
-    this.saveUserGamification(userId, data)
+    await this.saveUserGamification(userId, data)
     
     return { newAchievements, levelUp }
   }
@@ -298,10 +355,10 @@ class GamificationService {
     }
   }
 
-  updateStats(userId: string, stats: Partial<any>): void {
-    const data = this.getUserGamification(userId)
+  async updateStats(userId: string, stats: Partial<any>): Promise<void> {
+    const data = await this.getUserGamification(userId)
     data.stats = { ...data.stats, ...stats }
-    this.saveUserGamification(userId, data)
+    await this.saveUserGamification(userId, data)
   }
 
   getBadgeById(badgeId: string): Badge | undefined {
@@ -312,8 +369,8 @@ class GamificationService {
     return [...this.badges]
   }
 
-  getUserBadgeProgress(userId: string): Array<{badge: Badge, earned: boolean, progress: number}> {
-    const data = this.getUserGamification(userId)
+  async getUserBadgeProgress(userId: string): Promise<Array<{badge: Badge, earned: boolean, progress: number}>> {
+    const data = await this.getUserGamification(userId)
     const earnedBadgeIds = data.earnedBadges.map((ub: UserBadge) => ub.badgeId)
     
     return this.badges.map(badge => {
@@ -346,8 +403,8 @@ class GamificationService {
     })
   }
 
-  getRecentAchievements(userId: string, limit: number = 5): Achievement[] {
-    const data = this.getUserGamification(userId)
+  async getRecentAchievements(userId: string, limit: number = 5): Promise<Achievement[]> {
+    const data = await this.getUserGamification(userId)
     return data.achievements
       .sort((a: Achievement, b: Achievement) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
       .slice(0, limit)

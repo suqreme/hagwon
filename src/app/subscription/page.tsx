@@ -10,6 +10,7 @@ import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { Check, Heart, Users, Globe } from 'lucide-react'
 import { T } from '@/components/ui/auto-translate'
 import { supabase } from '@/lib/supabase'
+import { notifications } from '@/lib/notifications'
 
 interface SubscriptionPlan {
   id: string
@@ -93,11 +94,12 @@ export default function SubscriptionPage() {
       await new Promise(resolve => setTimeout(resolve, 2000))
       
       // For demo, just show success message
-      alert(`Successfully subscribed to ${plans.find(p => p.id === planId)?.name}!`)
+      const planName = plans.find(p => p.id === planId)?.name || 'plan'
+      notifications.success.subscriptionActivated(planName)
       
     } catch (error) {
       console.error('Subscription error:', error)
-      alert('Subscription failed. Please try again.')
+      notifications.error.submissionFailed()
     } finally {
       setLoading(null)
     }
@@ -109,7 +111,7 @@ export default function SubscriptionPage() {
 
   const submitHardshipApplication = async () => {
     if (!user || !hardshipReason.trim() || !hardshipCountry.trim()) {
-      alert('Please fill in all required fields')
+      notifications.error.validationError('all required fields')
       return
     }
 
@@ -165,14 +167,15 @@ export default function SubscriptionPage() {
       setShowHardshipForm(false)
       
       if (success) {
-        alert('Your hardship application has been submitted! We will review it within 2-3 business days and email you with the decision.')
+        notifications.success.requestSubmitted()
       } else {
-        alert('Your hardship application has been submitted locally! We will review it within 2-3 business days and email you with the decision.')
+        notifications.warning.dataNotSynced()
+        notifications.info.dataBackup()
       }
       
     } catch (error) {
       console.error('Error submitting hardship application:', error)
-      alert('Failed to submit application. Please try again.')
+      notifications.error.submissionFailed()
     } finally {
       setSubmittingHardship(false)
     }

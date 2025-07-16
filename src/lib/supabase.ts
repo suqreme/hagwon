@@ -36,10 +36,20 @@ export type Database = {
           id: string
           email: string | null
           full_name: string | null
+          first_name: string | null
+          last_name: string | null
           avatar_url: string | null
           role: 'student' | 'teacher' | 'admin'
           country: string | null
+          date_of_birth: string | null
+          phone_number: string | null
+          timezone: string | null
+          preferred_language: string
+          education_level: string | null
+          learning_goals: string | null
+          about_me: string | null
           placement_level: string | null
+          onboarding_completed: boolean
           subscription_plan: 'free' | 'basic' | 'premium'
           created_at: string
           updated_at: string
@@ -48,10 +58,20 @@ export type Database = {
           id: string
           email?: string | null
           full_name?: string | null
+          first_name?: string | null
+          last_name?: string | null
           avatar_url?: string | null
           role?: 'student' | 'teacher' | 'admin'
           country?: string | null
+          date_of_birth?: string | null
+          phone_number?: string | null
+          timezone?: string | null
+          preferred_language?: string
+          education_level?: string | null
+          learning_goals?: string | null
+          about_me?: string | null
           placement_level?: string | null
+          onboarding_completed?: boolean
           subscription_plan?: 'free' | 'basic' | 'premium'
           created_at?: string
           updated_at?: string
@@ -60,10 +80,20 @@ export type Database = {
           id?: string
           email?: string | null
           full_name?: string | null
+          first_name?: string | null
+          last_name?: string | null
           avatar_url?: string | null
           role?: 'student' | 'teacher' | 'admin'
           country?: string | null
+          date_of_birth?: string | null
+          phone_number?: string | null
+          timezone?: string | null
+          preferred_language?: string
+          education_level?: string | null
+          learning_goals?: string | null
+          about_me?: string | null
           placement_level?: string | null
+          onboarding_completed?: boolean
           subscription_plan?: 'free' | 'basic' | 'premium'
           created_at?: string
           updated_at?: string

@@ -32,14 +32,37 @@ interface HardshipRequest {
 class SubscriptionService {
   private storageKey = 'user_subscription'
 
-  getUserSubscription(userId: string): SubscriptionStatus {
+  async getUserSubscription(userId: string): Promise<SubscriptionStatus> {
+    // Try to load from Supabase first
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('user_id', userId)
+          .single()
+        
+        if (data && !error) {
+          return {
+            plan: data.plan,
+            status: data.status,
+            expiresAt: data.current_period_end,
+            features: this.getPlanFeatures(data.plan)
+          }
+        }
+      } catch (error) {
+        console.error('Error loading subscription from Supabase:', error)
+      }
+    }
+
+    // Fallback to localStorage
     try {
       const stored = localStorage.getItem(`${this.storageKey}_${userId}`)
       if (stored) {
         return JSON.parse(stored)
       }
     } catch (error) {
-      console.error('Error loading subscription:', error)
+      console.error('Error loading subscription from localStorage:', error)
     }
 
     // Default free plan
@@ -57,15 +80,38 @@ class SubscriptionService {
     }
   }
 
-  updateSubscription(userId: string, subscription: SubscriptionStatus): void {
+  async updateSubscription(userId: string, subscription: SubscriptionStatus): Promise<void> {
+    // Try to save to Supabase first
+    if (supabase) {
+      try {
+        const { error } = await supabase
+          .from('subscriptions')
+          .upsert({
+            user_id: userId,
+            plan: subscription.plan,
+            status: subscription.status,
+            current_period_end: subscription.expiresAt,
+            updated_at: new Date().toISOString()
+          })
+        
+        if (error) {
+          console.error('Supabase save error:', error)
+          throw error
+        }
+      } catch (error) {
+        console.error('Error saving subscription to Supabase:', error)
+      }
+    }
+
+    // Also save to localStorage as fallback
     try {
       localStorage.setItem(`${this.storageKey}_${userId}`, JSON.stringify(subscription))
     } catch (error) {
-      console.error('Error saving subscription:', error)
+      console.error('Error saving subscription to localStorage:', error)
     }
   }
 
-  subscribeToPlan(userId: string, planId: string): SubscriptionStatus {
+  async subscribeToPlan(userId: string, planId: string): Promise<SubscriptionStatus> {
     const planFeatures = this.getPlanFeatures(planId)
     const subscription: SubscriptionStatus = {
       plan: planId as any,
@@ -74,11 +120,11 @@ class SubscriptionService {
       features: planFeatures
     }
 
-    this.updateSubscription(userId, subscription)
+    await this.updateSubscription(userId, subscription)
     return subscription
   }
 
-  grantHardshipAccess(userId: string): SubscriptionStatus {
+  async grantHardshipAccess(userId: string): Promise<SubscriptionStatus> {
     const subscription: SubscriptionStatus = {
       plan: 'hardship',
       status: 'active',
@@ -92,12 +138,12 @@ class SubscriptionService {
       }
     }
 
-    this.updateSubscription(userId, subscription)
+    await this.updateSubscription(userId, subscription)
     return subscription
   }
 
-  checkLessonAccess(userId: string): { allowed: boolean; reason?: string } {
-    const subscription = this.getUserSubscription(userId)
+  async checkLessonAccess(userId: string): Promise<{ allowed: boolean; reason?: string }> {
+    const subscription = await this.getUserSubscription(userId)
     
     if (subscription.status !== 'active') {
       return { allowed: false, reason: 'Subscription not active' }
@@ -168,8 +214,8 @@ class SubscriptionService {
     return parseInt(localStorage.getItem(dailyKey) || '0')
   }
 
-  getRemainingLessons(userId: string): number | null {
-    const subscription = this.getUserSubscription(userId)
+  async getRemainingLessons(userId: string): Promise<number | null> {
+    const subscription = await this.getUserSubscription(userId)
     
     if (subscription.features.dailyLessonLimit === null) {
       return null // unlimited

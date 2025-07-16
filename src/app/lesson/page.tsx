@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { T } from '@/components/ui/auto-translate'
+import { notifications } from '@/lib/notifications'
 
 // Subject-specific content generator
 function generateSubjectSpecificContent(subject: string, grade: string, topic: string, subtopic: string): string {
@@ -260,6 +261,7 @@ function LessonPageContent() {
   const [error, setError] = useState('')
   const [subtopicInfo, setSubtopicInfo] = useState<any>(null)
   const [lessonStartTime, setLessonStartTime] = useState<Date | null>(null)
+  const [lessonId, setLessonId] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -337,7 +339,8 @@ function LessonPageContent() {
       
       // Track lesson start and record access
       if (user) {
-        progressService.startLesson(user.id, subject, grade, topic, subtopic)
+        const startedLessonId = await progressService.startLesson(user.id, subject, grade, topic, subtopic)
+        setLessonId(startedLessonId)
         subscriptionService.recordLessonAccess(user.id)
         setLessonStartTime(new Date())
       }
@@ -369,7 +372,8 @@ function LessonPageContent() {
       
       // Track lesson start even with fallback
       if (user) {
-        progressService.startLesson(user.id, subject, grade, topic, subtopic)
+        const startedLessonId = await progressService.startLesson(user.id, subject, grade, topic, subtopic)
+        setLessonId(startedLessonId)
         setLessonStartTime(new Date())
       }
     } finally {
@@ -412,7 +416,7 @@ function LessonPageContent() {
     }
   }
 
-  const handleQuizComplete = (passed: boolean, score: number) => {
+  const handleQuizComplete = async (passed: boolean, score: number) => {
     if (passed) {
       // Calculate time spent
       const timeSpent = lessonStartTime 
@@ -420,14 +424,15 @@ function LessonPageContent() {
         : 0
       
       // Mark lesson as completed
-      if (user) {
-        progressService.completeLesson(user.id, subject, grade, topic, subtopic, score, timeSpent)
+      if (user && lessonId) {
+        await progressService.completeLesson(lessonId, score)
       }
       
       setCurrentStep('complete')
+      notifications.success.lessonCompleted(score)
     } else {
       // Allow retry - stay on quiz
-      setError('You need to score higher to pass. Please try again!')
+      notifications.error.quizFailed(score)
     }
   }
 

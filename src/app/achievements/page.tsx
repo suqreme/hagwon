@@ -38,18 +38,22 @@ export default function AchievementsPage() {
     loadGamificationData()
   }, [user, router, mounted, authLoading])
 
-  const loadGamificationData = () => {
+  const loadGamificationData = async () => {
     if (!user) return
 
-    const gamificationData = gamificationService.getUserGamification(user.id)
-    const level = gamificationService.calculateLevel(gamificationData.totalXP)
-    const badgeProgress = gamificationService.getUserBadgeProgress(user.id)
-    const achievements = gamificationService.getRecentAchievements(user.id, 10)
+    try {
+      const gamificationData = await gamificationService.getUserGamification(user.id)
+      const level = gamificationService.calculateLevel(gamificationData.totalXP)
+      const badgeProgress = await gamificationService.getUserBadgeProgress(user.id)
+      const achievements = await gamificationService.getRecentAchievements(user.id, 10)
 
-    setUserLevel(level)
-    setBadges(badgeProgress)
-    setRecentAchievements(achievements)
-    setStats(gamificationData.stats)
+      setUserLevel(level)
+      setBadges(badgeProgress)
+      setRecentAchievements(achievements)
+      setStats(gamificationData.stats)
+    } catch (error) {
+      console.error('Error loading gamification data:', error)
+    }
   }
 
   const getRarityColor = (rarity: string) => {
