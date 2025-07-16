@@ -11,6 +11,14 @@ const supabaseAdmin = createClient(
 )
 
 export async function POST(request: NextRequest) {
+  // Check if Stripe is configured
+  if (!stripe) {
+    return NextResponse.json(
+      { error: 'Stripe not configured' },
+      { status: 500 }
+    )
+  }
+
   const body = await request.text()
   const signature = headers().get('stripe-signature')
 
@@ -21,13 +29,20 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    return NextResponse.json(
+      { error: 'Webhook secret not configured' },
+      { status: 500 }
+    )
+  }
+
   let event: Stripe.Event
 
   try {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      process.env.STRIPE_WEBHOOK_SECRET
     )
   } catch (error) {
     console.error('Webhook signature verification failed:', error)

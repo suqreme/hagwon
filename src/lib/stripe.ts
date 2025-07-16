@@ -1,10 +1,12 @@
 import Stripe from 'stripe'
 import { loadStripe } from '@stripe/stripe-js'
 
-// Server-side Stripe instance
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
-})
+// Server-side Stripe instance - only initialize if secret key is available
+export const stripe = process.env.STRIPE_SECRET_KEY 
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2024-06-20',
+    })
+  : null
 
 // Client-side Stripe instance
 export const getStripe = () => {
@@ -13,8 +15,8 @@ export const getStripe = () => {
 
 // Price IDs for each plan (you'll need to create these in Stripe Dashboard)
 export const STRIPE_PRICE_IDS = {
-  supporter: process.env.STRIPE_SUPPORTER_PRICE_ID!,
-  sponsor: process.env.STRIPE_SPONSOR_PRICE_ID!,
+  supporter: process.env.STRIPE_SUPPORTER_PRICE_ID || '',
+  sponsor: process.env.STRIPE_SPONSOR_PRICE_ID || '',
 } as const
 
 // Product configuration matching our subscription plans
