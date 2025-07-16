@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { UserMenu } from '@/components/ui/user-menu'
+import { T } from '@/components/ui/auto-translate'
 
 interface CurriculumTopic {
   id: string
@@ -189,7 +190,7 @@ export default function Dashboard() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading your learning dashboard...</p>
+          <p className="mt-4 text-gray-600"><T>Loading your learning dashboard...</T></p>
         </div>
       </div>
     )
@@ -206,7 +207,7 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Hagwon Dashboard</h1>
+              <h1 className="text-2xl font-bold text-foreground"><T>Hagwon Dashboard</T></h1>
               <p className="text-muted-foreground">
                 Welcome back, {user.email}! 
                 {userPlacement && <span className="ml-2 text-primary">• Placed at {userPlacement}</span>}
@@ -221,42 +222,42 @@ export default function Dashboard() {
                 size="sm"
                 onClick={() => router.push('/subscription')}
               >
-                Upgrade
+                <T>Upgrade</T>
               </Button>
               <Button 
                 variant="ghost"
                 size="sm"
                 onClick={() => router.push('/impact')}
               >
-                🗺️ Impact Map
+                🗺️ <T>Impact Map</T>
               </Button>
               <Button 
                 variant="ghost"
                 size="sm"
                 onClick={() => router.push('/our-goals')}
               >
-                🎯 Our Goals
+                🎯 <T>Our Goals</T>
               </Button>
               <Button 
                 variant="ghost"
                 size="sm"
                 onClick={() => router.push('/games')}
               >
-                Games
+                <T>Games</T>
               </Button>
               <Button 
                 variant="ghost"
                 size="sm"
                 onClick={() => router.push('/achievements')}
               >
-                Achievements
+                <T>Achievements</T>
               </Button>
               <Button 
                 variant="ghost"
                 size="sm"
                 onClick={() => router.push('/offline')}
               >
-                Offline Learning
+                <T>Offline Learning</T>
               </Button>
               <ThemeToggle />
               <UserMenu />
@@ -269,7 +270,7 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Subject Selection */}
         <div className="mb-8">
-          <h2 className="text-lg font-semibold text-foreground mb-4">Choose Your Subject</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4"><T>Choose Your Subject</T></h2>
           <div className="flex space-x-4">
             {subjects.map((subject) => (
               <Button
@@ -278,7 +279,7 @@ export default function Dashboard() {
                 onClick={() => setSelectedSubject(subject)}
                 className="px-6 py-3"
               >
-                {subject === 'math' ? 'Mathematics' : 'English Language Arts'}
+                <T>{subject === 'math' ? 'Mathematics' : 'English Language Arts'}</T>
               </Button>
             ))}
           </div>

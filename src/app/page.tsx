@@ -10,6 +10,7 @@ import DiagnosticTest from '@/components/auth/DiagnosticTest'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { T } from '@/components/ui/auto-translate'
 
 export default function Home() {
   const { user, loading } = useAuth()
@@ -54,7 +55,7 @@ export default function Home() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Loading...</p>
+          <p className="mt-4 text-muted-foreground"><T>Loading...</T></p>
         </div>
       </div>
     )
@@ -75,10 +76,10 @@ export default function Home() {
       <div className="max-w-4xl w-full">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Welcome to Hagwon
+            <T>Welcome to Hagwon</T>
           </h1>
           <p className="text-xl text-muted-foreground">
-            Let&apos;s find your perfect starting point
+            <T>Let's find your perfect starting point</T>
           </p>
         </div>
 
@@ -97,7 +98,7 @@ export default function Home() {
           <Card className="max-w-md mx-auto">
             <CardContent className="text-center py-8">
               <div className="text-green-500 text-6xl mb-6">🎓</div>
-              <CardTitle className="text-2xl mb-4">Ready to Learn!</CardTitle>
+              <CardTitle className="text-2xl mb-4"><T>Ready to Learn!</T></CardTitle>
               <p className="text-muted-foreground mb-4">
                 Based on your diagnostic test, we&apos;ve placed you at <strong className="text-foreground">{placementLevel}</strong> level.
               </p>
@@ -115,7 +116,7 @@ export default function Home() {
                 }}
                 className="w-full"
               >
-                Start Learning
+                <T>Start Learning</T>
               </Button>
             </CardContent>
           </Card>
