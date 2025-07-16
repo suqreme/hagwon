@@ -78,6 +78,55 @@ export const supportedLanguages: Language[] = [
     nativeName: 'Deutsch',
     flag: '🇩🇪',
     regions: ['DE', 'AT', 'CH', 'LI', 'LU']
+  },
+  {
+    code: 'ko',
+    name: 'Korean',
+    nativeName: '한국어',
+    flag: '🇰🇷',
+    regions: ['KR']
+  },
+  {
+    code: 'ja',
+    name: 'Japanese',
+    nativeName: '日本語',
+    flag: '🇯🇵',
+    regions: ['JP']
+  },
+  {
+    code: 'vi',
+    name: 'Vietnamese',
+    nativeName: 'Tiếng Việt',
+    flag: '🇻🇳',
+    regions: ['VN']
+  },
+  {
+    code: 'fil',
+    name: 'Filipino',
+    nativeName: 'Filipino',
+    flag: '🇵🇭',
+    regions: ['PH']
+  },
+  {
+    code: 'th',
+    name: 'Thai',
+    nativeName: 'ภาษาไทย',
+    flag: '🇹🇭',
+    regions: ['TH']
+  },
+  {
+    code: 'id',
+    name: 'Indonesian',
+    nativeName: 'Bahasa Indonesia',
+    flag: '🇮🇩',
+    regions: ['ID']
+  },
+  {
+    code: 'ms',
+    name: 'Malay',
+    nativeName: 'Bahasa Melayu',
+    flag: '🇲🇾',
+    regions: ['MY', 'SG', 'BN']
   }
 ]
 
