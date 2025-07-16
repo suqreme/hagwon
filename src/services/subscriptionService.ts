@@ -32,6 +32,21 @@ interface HardshipRequest {
 class SubscriptionService {
   private storageKey = 'user_subscription'
 
+  private getDefaultSubscription(): SubscriptionStatus {
+    return {
+      plan: 'free',
+      status: 'active',
+      features: {
+        dailyLessonLimit: 3,
+        analyticsAccess: false,
+        prioritySupport: false,
+        offlineDownloads: false,
+        certificateGeneration: false,
+        scholarshipFunding: false
+      }
+    }
+  }
+
   async getUserSubscription(userId: string): Promise<SubscriptionStatus> {
     // Try to load from Supabase first
     if (supabase) {
@@ -40,14 +55,27 @@ class SubscriptionService {
           .from('subscriptions')
           .select('*')
           .eq('user_id', userId)
-          .single()
+          .maybeSingle()
         
         if (data && !error) {
           return {
-            plan: data.plan,
-            status: data.status,
+            plan: data.plan || 'free',
+            status: data.status || 'active',
             expiresAt: data.current_period_end,
-            features: this.getPlanFeatures(data.plan)
+            features: this.getPlanFeatures(data.plan || 'free')
+          }
+        }
+        
+        // If no subscription found (not an error), create default free subscription
+        if (!data && !error) {
+          const defaultSubscription = this.getDefaultSubscription()
+          // Try to create the subscription record
+          try {
+            await this.updateSubscription(userId, defaultSubscription)
+            return defaultSubscription
+          } catch (createError) {
+            console.error('Error creating default subscription:', createError)
+            return defaultSubscription
           }
         }
       } catch (error) {
@@ -66,18 +94,7 @@ class SubscriptionService {
     }
 
     // Default free plan
-    return {
-      plan: 'free',
-      status: 'active',
-      features: {
-        dailyLessonLimit: 3,
-        analyticsAccess: false,
-        prioritySupport: false,
-        offlineDownloads: false,
-        certificateGeneration: false,
-        scholarshipFunding: false
-      }
-    }
+    return this.getDefaultSubscription()
   }
 
   async updateSubscription(userId: string, subscription: SubscriptionStatus): Promise<void> {

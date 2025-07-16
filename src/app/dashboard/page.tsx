@@ -393,7 +393,7 @@ export default function Dashboard() {
               <CardTitle className="flex items-center justify-between">
                 <span><T>Your Plan</T></span>
                 <Badge variant={subscription.plan === 'free' ? 'secondary' : 'default'}>
-                  {subscription.plan.charAt(0).toUpperCase() + subscription.plan.slice(1)}
+                  {subscription.plan ? subscription.plan.charAt(0).toUpperCase() + subscription.plan.slice(1) : 'Free'}
                 </Badge>
               </CardTitle>
             </CardHeader>
