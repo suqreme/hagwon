@@ -143,6 +143,8 @@ export default function LoginForm() {
           <input
             type="email"
             id="email"
+            name="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -157,6 +159,8 @@ export default function LoginForm() {
           <input
             type="password"
             id="password"
+            name="password"
+            autoComplete={isSignUp ? "new-password" : "current-password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -172,6 +176,8 @@ export default function LoginForm() {
             <input
               type="text"
               id="country"
+              name="country"
+              autoComplete="country-name"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
               className="mt-1 block w-full border border-input bg-background px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"

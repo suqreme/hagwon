@@ -2,11 +2,13 @@
   "name": "hagwon",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate": "node run_mcp_migration.js"
   },
   "dependencies": {
     "@radix-ui/react-progress": "^1.1.7",
