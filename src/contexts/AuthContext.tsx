@@ -28,6 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | null>(null)
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
+  const [authInProgress, setAuthInProgress] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -40,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const timeout = setTimeout(() => {
       console.warn('Auth loading timeout - forcing loading to false')
       setLoading(false)
-    }, 10000) // 10 seconds max
+    }, 5000) // 5 seconds max (reduced from 10)
 
     // Check for classroom student first
     const classroomStudent = localStorage.getItem('current_classroom_student')
@@ -105,16 +106,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [mounted])
 
   const fetchUserProfile = async (userId: string) => {
-    if (!supabase) return
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+
+    if (authInProgress) {
+      console.log('Auth already in progress, skipping profile fetch')
+      return
+    }
+
+    setAuthInProgress(true)
     
     try {
       console.log('Fetching user profile for ID:', userId)
       
-      const { data, error } = await supabase
+      // Add timeout to prevent hanging
+      const profilePromise = supabase
         .from('user_profiles')
         .select('*')
         .eq('id', userId)
         .single()
+
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 8000)
+      )
+
+      const { data, error } = await Promise.race([profilePromise, timeoutPromise]) as any
 
       if (error) {
         console.error('Database error:', error)
@@ -145,7 +163,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
           }
         } else {
-          throw error
+          console.error('Profile fetch failed, clearing user')
+          setUser(null)
         }
       } else {
         console.log('User profile found:', data)
@@ -153,9 +172,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error: any) {
       console.error('Failed to fetch user profile:', error)
+      if (error.message === 'Profile fetch timeout') {
+        console.error('Profile fetch timed out - this may indicate database connectivity issues')
+      }
       setUser(null)
     } finally {
+      console.log('Setting loading to false')
       setLoading(false)
+      setAuthInProgress(false)
     }
   }
 
@@ -177,12 +201,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     console.log('Calling supabase signInWithPassword...')
-    const { error } = await supabase.auth.signInWithPassword({
+    
+    // Add timeout to prevent hanging
+    const signInPromise = supabase.auth.signInWithPassword({
       email,
       password,
     })
+    
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Sign in timeout - please check your internet connection')), 10000)
+    )
+
+    const { error } = await Promise.race([signInPromise, timeoutPromise]) as any
+    
     console.log('signInWithPassword completed, error:', error)
-    if (error) throw error
+    if (error) {
+      if (error.message?.includes('timeout')) {
+        throw new Error('Login timed out. Please check your internet connection and try again.')
+      }
+      throw error
+    }
     console.log('signIn method completed successfully')
   }
 
