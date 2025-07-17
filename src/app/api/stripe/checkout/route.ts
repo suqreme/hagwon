@@ -13,8 +13,11 @@ const supabaseAdmin = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABA
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('Stripe checkout API called')
+    
     // Check if Stripe is configured
     if (!stripe) {
+      console.error('Stripe not configured - missing STRIPE_SECRET_KEY')
       return NextResponse.json(
         { error: 'Stripe not configured. Please add STRIPE_SECRET_KEY to environment variables.' },
         { status: 500 }
@@ -23,6 +26,7 @@ export async function POST(request: NextRequest) {
 
     // Check if Supabase is configured
     if (!supabaseAdmin) {
+      console.error('Supabase not configured - missing SUPABASE_SERVICE_ROLE_KEY')
       return NextResponse.json(
         { error: 'Supabase not configured. Please add SUPABASE_SERVICE_ROLE_KEY to environment variables.' },
         { status: 500 }
@@ -30,8 +34,10 @@ export async function POST(request: NextRequest) {
     }
 
     const { priceId, userId, planId } = await request.json()
+    console.log('Checkout request data:', { priceId, userId, planId })
 
     if (!priceId || !userId || !planId) {
+      console.error('Missing required parameters:', { priceId: !!priceId, userId: !!userId, planId: !!planId })
       return NextResponse.json(
         { error: 'Missing required parameters' },
         { status: 400 }
