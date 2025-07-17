@@ -172,7 +172,7 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
   if (isComplete) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary via-accent to-secondary flex items-center justify-center p-4">
-        <Card className="max-w-md w-full bg-background border border-primary shadow-[4px_4px_0px_0px] shadow-primary/20">
+        <Card className="max-w-md w-full bg-background border-4 border-primary shadow-[8px_8px_0px_0px] shadow-primary/60">
           <div className="p-8 text-center">
             <div className="text-6xl mb-4 animate-bounce">🎉</div>
             <h2 className="text-2xl font-bold text-foreground mb-4">
@@ -183,7 +183,7 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
             </p>
             <Button 
               onClick={handleComplete}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-6 shadow-[3px_3px_0px_0px] shadow-primary/30 transform hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_0px] transition-all duration-200"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-6 border-2 border-primary shadow-[4px_4px_0px_0px] shadow-primary/60 transform hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px] transition-all duration-200 font-mono"
             >
               🚀 <T>Continue to Quiz</T> <Sparkles className="ml-2 h-5 w-5" />
             </Button>
@@ -205,7 +205,7 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
                   onClick={onBack}
                   variant="outline"
                   size="sm"
-                  className="bg-secondary border border-primary text-foreground hover:bg-primary hover:text-primary-foreground shadow-[2px_2px_0px_0px] shadow-primary/30 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_0px] transition-all duration-200"
+                  className="bg-secondary border-2 border-primary text-foreground hover:bg-primary hover:text-primary-foreground shadow-[4px_4px_0px_0px] shadow-primary/60 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px] transition-all duration-200 font-mono font-bold"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   <T>Dashboard</T>
@@ -238,7 +238,7 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
                 <T>Back</T>
               </Button>
             )}
-            <Badge className="bg-primary text-primary-foreground px-4 py-2 text-sm font-medium shadow-[2px_2px_0px_0px] shadow-primary/30">
+            <Badge className="bg-primary text-primary-foreground px-4 py-2 text-sm font-bold border-2 border-primary shadow-[4px_4px_0px_0px] shadow-primary/60 font-mono">
               📚 <T>Section</T> {currentSection + 1} <T>of</T> {sections.length}
             </Badge>
           </div>
@@ -248,15 +248,15 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
             </div>
           </div>
         </div>
-        <Progress value={progress} className="h-3 bg-secondary border border-primary shadow-[2px_2px_0px_0px] shadow-primary/20" />
+        <Progress value={progress} className="h-4 bg-secondary border-2 border-primary shadow-[4px_4px_0px_0px] shadow-primary/60" />
       </div>
 
       {/* Main blackboard */}
       <div className="max-w-4xl mx-auto">
-        <Card className="bg-gradient-to-br from-card to-card/80 border border-primary shadow-[6px_6px_0px_0px] shadow-primary/30 min-h-[500px]">
+        <Card className="bg-card border-4 border-primary shadow-[8px_8px_0px_0px] shadow-primary/60 min-h-[500px]">
           <div className="relative p-8">
             {/* Neo-brutalist content frame */}
-            <div className="absolute inset-4 bg-background/90 border border-primary shadow-[3px_3px_0px_0px] shadow-primary/20"></div>
+            <div className="absolute inset-4 bg-background border-2 border-primary shadow-[4px_4px_0px_0px] shadow-primary/60"></div>
             
             {/* Gaming-inspired text content */}
             <div className="relative z-10">
