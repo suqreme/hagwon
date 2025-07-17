@@ -194,7 +194,7 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
+    <div className="min-h-screen bg-background">
       {/* Top Navigation Menu */}
       <div className="bg-card border-b border-primary shadow-[2px_2px_0px_0px] shadow-primary/20 sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-4 py-3">
@@ -212,7 +212,7 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
                 </Button>
               )}
               <div className="text-sm text-muted-foreground">
-                📖 <T>Lesson</T>: {lessonData.metadata.subtopic.replace(/_/g, ' ')}
+                📖 <T>Lesson</T>: <T>{lessonData.metadata.subtopic.replace(/_/g, ' ')}</T>
               </div>
             </div>
             <div className="text-sm text-muted-foreground">

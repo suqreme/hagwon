@@ -26,6 +26,122 @@ function getLanguageName(code: string): string {
   return languageMap[code] || 'English'
 }
 
+function createKoreanFallbackLesson(subject: string, topic: string, subtopic: string, grade_level: string, target_language: string) {
+  const cleanSubtopic = subtopic.replace(/_/g, ' ')
+  
+  if (subject === 'Mathematics' || subject === 'math') {
+    if (subtopic === 'counting_to_10') {
+      const lessonContent = `# 수업: 10까지 세기
+
+## 세기에 오신 것을 환영합니다!
+
+안녕하세요! 오늘은 1부터 10까지 세는 방법을 배워보겠습니다. 세기는 여러분이 배울 가장 중요한 수학 기술 중 하나입니다!
+
+## 세기란 무엇인가요?
+
+세기는 물건이 몇 개 있는지 알아보기 위해 순서대로 숫자를 말하는 것입니다.
+
+## 1부터 10까지의 숫자를 배워봅시다
+
+**1 (하나)** - 손가락 1개를 들어보세요
+**2 (둘)** - 손가락 2개를 들어보세요
+**3 (셋)** - 손가락 3개를 들어보세요
+**4 (넷)** - 손가락 4개를 들어보세요
+**5 (다섯)** - 손가락 5개를 들어보세요
+**6 (여섯)** - 손가락 6개를 들어보세요
+**7 (일곱)** - 손가락 7개를 들어보세요
+**8 (여덟)** - 손가락 8개를 들어보세요
+**9 (아홉)** - 손가락 9개를 들어보세요
+**10 (열)** - 손가락 10개를 들어보세요
+
+## 연습 활동
+
+### 활동 1: 장난감 세기
+주변에서 장난감이나 물건을 찾아서 세어보세요:
+- 장난감 자동차 1대
+- 장난감 자동차 2대
+- 장난감 자동차 3대
+- 10까지 계속 세어보세요!
+
+### 활동 2: 세면서 만지기
+각 물건을 만지면서 세어보세요:
+- 책 1권을 만지며 "하나"라고 말하세요
+- 책 2권을 만지며 "하나, 둘"이라고 말하세요
+- 계속해보세요!
+
+### 활동 3: 걸음 세기
+걸으면서 세어보세요:
+- 1걸음, 2걸음, 3걸음... 10까지!
+
+## 중요한 팁
+- 항상 1부터 시작하세요
+- 각 숫자를 명확하게 말하세요
+- 처음에는 천천히 세어보세요
+- 손가락을 사용해서 도움을 받으세요
+- 매일 연습하세요!
+
+## 함께 연습해봅시다
+이 물건들을 세어보세요:
+🍎 (사과 1개)
+🍎🍎 (사과 2개)
+🍎🍎🍎 (사과 3개)
+
+세실 수 있나요? 하나, 둘, 셋!
+
+## 기억하세요
+- 세기는 "몇 개인지" 알려줍니다
+- 연습하면 완벽해집니다
+- 정말 잘하고 있어요!
+
+세기를 배워서 정말 잘했어요! 다음에는 더 큰 숫자를 세는 방법을 배워보겠습니다!
+`
+      
+      return NextResponse.json({
+        lesson: lessonContent,
+        metadata: {
+          topic,
+          subtopic,
+          grade_level,
+          subject,
+          target_language,
+          generation_type: 'fallback' as const,
+          version: 1
+        }
+      })
+    }
+  }
+  
+  // Generic Korean fallback
+  const lessonContent = `# 수업: ${cleanSubtopic}
+
+이 수업에 오신 것을 환영합니다!
+
+## 학습 목표
+이 수업이 끝나면 ${cleanSubtopic}와 관련된 개념을 이해하고 적용할 수 있을 것입니다.
+
+## 수업 내용
+이것은 여러분의 속도에 맞춰 학습할 수 있는 대화형 수업입니다.
+
+## 왜 중요한가요?
+${cleanSubtopic}를 이해하는 것은 더 고급 개념의 기초가 되기 때문에 중요합니다.
+
+훌륭한 일을 하고 있습니다! 계속 연습하면 ${cleanSubtopic}를 마스터할 수 있을 것입니다.
+`
+  
+  return NextResponse.json({
+    lesson: lessonContent,
+    metadata: {
+      topic,
+      subtopic,
+      grade_level,
+      subject,
+      target_language,
+      generation_type: 'fallback' as const,
+      version: 1
+    }
+  })
+}
+
 function createSpanishFallbackLesson(subject: string, topic: string, subtopic: string, grade_level: string, target_language: string) {
   const cleanSubtopic = subtopic.replace(/_/g, ' ')
   
@@ -148,6 +264,10 @@ function createFallbackLesson(subject: string, topic: string, subtopic: string, 
   // Get translated content based on target language
   if (target_language === 'es') {
     return createSpanishFallbackLesson(subject, topic, subtopic, grade_level, target_language)
+  }
+  
+  if (target_language === 'ko') {
+    return createKoreanFallbackLesson(subject, topic, subtopic, grade_level, target_language)
   }
   
   let lessonContent = `# ${cleanSubtopic.charAt(0).toUpperCase() + cleanSubtopic.slice(1)} Lesson\n\n`

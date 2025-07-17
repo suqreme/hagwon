@@ -304,10 +304,10 @@ function LessonPageContent() {
                   <T>← Back to Dashboard</T>
                 </Button>
                 <h1 className="text-2xl font-bold text-foreground">
-                  {subtopicInfo?.name || <T>Lesson</T>}
+                  <T>{subtopicInfo?.name || 'Lesson'}</T>
                 </h1>
                 <p className="text-muted-foreground">
-                  {subject === 'math' ? <T>Mathematics</T> : <T>English Language Arts</T>} • {grade.replace('_', ' ')}
+                  {subject === 'math' ? <T>Mathematics</T> : <T>English Language Arts</T>} • <T>{grade.replace('_', ' ')}</T>
                 </p>
               </div>
               <div className="flex items-center space-x-4">
@@ -347,7 +347,7 @@ function LessonPageContent() {
                 <div className="text-green-500 text-6xl mb-6">🎉</div>
                 <h2 className="text-3xl font-bold text-foreground"><T>Lesson Complete!</T></h2>
                 <p className="text-muted-foreground">
-                  <T>Congratulations! You've successfully completed the lesson on</T> {subtopicInfo?.name}.
+                  <T>Congratulations! You've successfully completed the lesson on</T> <T>{subtopicInfo?.name}</T>.
                 </p>
                 <Button onClick={goToDashboard} size="lg">
                   <T>Continue Learning</T>
