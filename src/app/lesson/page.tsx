@@ -269,24 +269,28 @@ function LessonPageContent() {
   }, [])
 
   useEffect(() => {
-    if (!mounted || authLoading) return
+    const checkAccessAndLoad = async () => {
+      if (!mounted || authLoading) return
+      
+      if (!user) {
+        router.push('/')
+        return
+      }
+
+      // Check subscription access before loading lesson
+      const accessCheck = await subscriptionService.checkLessonAccess(user.id)
+      if (!accessCheck.allowed) {
+        setError(accessCheck.reason || 'Access denied')
+        setLoading(false)
+        return
+      }
+
+      if (subject && grade && topic && subtopic) {
+        loadLessonContent()
+      }
+    }
     
-    if (!user) {
-      router.push('/')
-      return
-    }
-
-    // Check subscription access before loading lesson
-    const accessCheck = subscriptionService.checkLessonAccess(user.id)
-    if (!accessCheck.allowed) {
-      setError(accessCheck.reason || 'Access denied')
-      setLoading(false)
-      return
-    }
-
-    if (subject && grade && topic && subtopic) {
-      loadLessonContent()
-    }
+    checkAccessAndLoad()
   }, [user, subject, grade, topic, subtopic, router, mounted, authLoading])
 
   const loadLessonContent = async () => {
