@@ -7,7 +7,7 @@ import { curriculumService } from '@/services/curriculumService'
 import { progressService } from '@/services/progressService'
 import { subscriptionService } from '@/services/subscriptionService'
 import LessonContent from '@/components/lesson/LessonContent'
-import GameLessonContent from '@/components/lesson/GameLessonContent'
+import HybridLessonContent from '@/components/lesson/HybridLessonContent'
 import QuizComponent from '@/components/lesson/QuizComponent'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -324,7 +324,7 @@ function LessonPageContent() {
 
       {/* Lesson takes full screen */}
       {currentStep === 'lesson' && lessonData && (
-        <GameLessonContent
+        <HybridLessonContent
           lessonData={lessonData}
           onComplete={generateQuiz}
           onBack={goToDashboard}
