@@ -2,11 +2,104 @@ import { NextRequest, NextResponse } from 'next/server'
 import { openai } from '@/lib/openai'
 
 function createFallbackQuiz(subject: string, topic: string, subtopic: string, grade_level: string) {
-  // Create a simple quiz based on the subject and topic
   const questions = []
   
-  if (subject === 'math') {
-    if (topic.includes('addition') || subtopic.includes('addition')) {
+  // Math quizzes
+  if (subject === 'Mathematics' || subject === 'math') {
+    if (subtopic === 'counting_to_10') {
+      questions.push({
+        id: 1,
+        question: "What number comes after 4?",
+        type: "multiple_choice",
+        options: ["3", "5", "6", "7"],
+        correct_answer: 1,
+        explanation: "5 comes after 4. When we count: 1, 2, 3, 4, 5!",
+        points: 1,
+        difficulty: grade_level
+      })
+      questions.push({
+        id: 2,
+        question: "Count the apples: 🍎🍎🍎. How many are there?",
+        type: "multiple_choice",
+        options: ["2", "3", "4", "5"],
+        correct_answer: 1,
+        explanation: "There are 3 apples. Count them: 1, 2, 3!",
+        points: 1,
+        difficulty: grade_level
+      })
+      questions.push({
+        id: 3,
+        question: "Which number is bigger: 7 or 3?",
+        type: "multiple_choice",
+        options: ["7", "3", "They are the same", "I don't know"],
+        correct_answer: 0,
+        explanation: "7 is bigger than 3. When we count up from 3: 3, 4, 5, 6, 7 - we see 7 comes later!",
+        points: 1,
+        difficulty: grade_level
+      })
+    } else if (subtopic === 'counting_to_20') {
+      questions.push({
+        id: 1,
+        question: "What number comes after 10?",
+        type: "multiple_choice",
+        options: ["9", "11", "12", "20"],
+        correct_answer: 1,
+        explanation: "11 comes after 10. When we count: 8, 9, 10, 11!",
+        points: 1,
+        difficulty: grade_level
+      })
+      questions.push({
+        id: 2,
+        question: "How many fingers and toes do you have in total?",
+        type: "multiple_choice",
+        options: ["10", "15", "20", "25"],
+        correct_answer: 2,
+        explanation: "You have 10 fingers and 10 toes, so 10 + 10 = 20 total!",
+        points: 1,
+        difficulty: grade_level
+      })
+      questions.push({
+        id: 3,
+        question: "What number comes before 16?",
+        type: "multiple_choice",
+        options: ["14", "15", "17", "18"],
+        correct_answer: 1,
+        explanation: "15 comes before 16. Count: 13, 14, 15, 16!",
+        points: 1,
+        difficulty: grade_level
+      })
+    } else if (subtopic === 'basic_addition') {
+      questions.push({
+        id: 1,
+        question: "What is 2 + 3?",
+        type: "multiple_choice",
+        options: ["4", "5", "6", "7"],
+        correct_answer: 1,
+        explanation: "2 + 3 = 5. Count: 1, 2 (pause) 3, 4, 5!",
+        points: 1,
+        difficulty: grade_level
+      })
+      questions.push({
+        id: 2,
+        question: "If you have 4 toys and get 2 more toys, how many toys do you have?",
+        type: "multiple_choice",
+        options: ["5", "6", "7", "8"],
+        correct_answer: 1,
+        explanation: "4 + 2 = 6 toys total. Addition means putting groups together!",
+        points: 1,
+        difficulty: grade_level
+      })
+      questions.push({
+        id: 3,
+        question: "What does the + sign mean?",
+        type: "multiple_choice",
+        options: ["Take away", "Put together", "Count backwards", "Stop"],
+        correct_answer: 1,
+        explanation: "The + sign means 'put together' or 'add'. It tells us to combine groups!",
+        points: 1,
+        difficulty: grade_level
+      })
+    } else if (topic.includes('addition') || subtopic.includes('addition')) {
       questions.push({
         id: 1,
         question: "What is 5 + 3?",
@@ -28,18 +121,31 @@ function createFallbackQuiz(subject: string, topic: string, subtopic: string, gr
         difficulty: grade_level
       })
     } else {
+      // Generic math quiz
       questions.push({
         id: 1,
-        question: `What did you learn about ${subtopic} in ${topic}?`,
+        question: `Which of these is an example of ${subtopic.replace(/_/g, ' ')}?`,
         type: "multiple_choice",
-        options: ["I understand it well", "I need more practice", "I'm confused", "I want to review"],
+        options: ["Using numbers to solve problems", "Drawing pictures", "Reading stories", "Playing games"],
         correct_answer: 0,
-        explanation: "Great! Understanding the concept is important.",
+        explanation: `Great! ${subtopic.replace(/_/g, ' ')} involves working with numbers and math concepts.`,
+        points: 1,
+        difficulty: grade_level
+      })
+      questions.push({
+        id: 2,
+        question: `What did you practice in this ${subtopic.replace(/_/g, ' ')} lesson?`,
+        type: "multiple_choice",
+        options: ["Important math skills", "Just reading", "Only drawing", "Nothing useful"],
+        correct_answer: 0,
+        explanation: `Excellent! You practiced important math skills related to ${subtopic.replace(/_/g, ' ')}.`,
         points: 1,
         difficulty: grade_level
       })
     }
-  } else if (subject === 'english') {
+  } 
+  // English quizzes
+  else if (subject === 'English Language Arts' || subject === 'english') {
     if (topic.includes('reading') || subtopic.includes('phonics')) {
       questions.push({
         id: 1,
@@ -51,26 +157,58 @@ function createFallbackQuiz(subject: string, topic: string, subtopic: string, gr
         points: 1,
         difficulty: grade_level
       })
+      questions.push({
+        id: 2,
+        question: "What do letters make when we put them together?",
+        type: "multiple_choice",
+        options: ["Numbers", "Words", "Pictures", "Colors"],
+        correct_answer: 1,
+        explanation: "Letters make words! When we put letters together, they spell words.",
+        points: 1,
+        difficulty: grade_level
+      })
     } else {
       questions.push({
         id: 1,
-        question: `What did you learn about ${subtopic}?`,
+        question: `What is the main purpose of learning ${subtopic.replace(/_/g, ' ')}?`,
         type: "multiple_choice",
-        options: ["I understand it", "I need practice", "I'm confused", "I want to review"],
+        options: ["To communicate better", "To do math", "To play games", "To draw pictures"],
         correct_answer: 0,
-        explanation: "Understanding the lesson is the first step to learning!",
+        explanation: `Learning ${subtopic.replace(/_/g, ' ')} helps you communicate and express yourself better!`,
+        points: 1,
+        difficulty: grade_level
+      })
+      questions.push({
+        id: 2,
+        question: `How can you practice ${subtopic.replace(/_/g, ' ')}?`,
+        type: "multiple_choice",
+        options: ["Reading and writing every day", "Only watching TV", "Just sleeping", "Avoiding books"],
+        correct_answer: 0,
+        explanation: "Reading and writing every day is the best way to improve your language skills!",
         points: 1,
         difficulty: grade_level
       })
     }
-  } else {
+  } 
+  // Generic subject quiz
+  else {
     questions.push({
       id: 1,
-      question: `How well do you understand ${subtopic}?`,
+      question: `What is the most important thing about learning ${subtopic.replace(/_/g, ' ')}?`,
       type: "multiple_choice",
-      options: ["Very well", "Pretty well", "Need more help", "Confused"],
+      options: ["Practice and understanding", "Memorizing everything", "Going fast", "Skipping steps"],
       correct_answer: 0,
-      explanation: "Great! Keep practicing to master the concept.",
+      explanation: "Practice and understanding are the most important parts of learning any subject!",
+      points: 1,
+      difficulty: grade_level
+    })
+    questions.push({
+      id: 2,
+      question: `How do you feel about learning ${subtopic.replace(/_/g, ' ')}?`,
+      type: "multiple_choice",
+      options: ["Excited to learn more!", "It's okay", "A bit challenging", "Need more help"],
+      correct_answer: 0,
+      explanation: "Great attitude! Being excited to learn helps you succeed in any subject.",
       points: 1,
       difficulty: grade_level
     })
