@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { UserMenu } from '@/components/ui/user-menu'
+import { LanguageSelector } from '@/components/ui/language-selector'
 import { T } from '@/components/ui/auto-translate'
 
 interface CurriculumTopic {
@@ -266,6 +267,7 @@ export default function Dashboard() {
               >
                 💝 <T>Community Help</T>
               </Button>
+              <LanguageSelector />
               <ThemeToggle />
               <UserMenu />
             </div>

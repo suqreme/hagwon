@@ -11,6 +11,7 @@ import QuizComponent from '@/components/lesson/QuizComponent'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { LanguageSelector } from '@/components/ui/language-selector'
 import { T } from '@/components/ui/auto-translate'
 import { notifications } from '@/lib/notifications'
 
@@ -311,6 +312,7 @@ function LessonPageContent() {
               <div className="text-sm text-muted-foreground">
                 <T>Step</T> {currentStep === 'lesson' ? '1' : currentStep === 'quiz' ? '2' : '3'} <T>of</T> 3
               </div>
+              <LanguageSelector />
               <ThemeToggle />
             </div>
           </div>
