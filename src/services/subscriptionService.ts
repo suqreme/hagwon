@@ -56,19 +56,21 @@ class SubscriptionService {
           .from('subscriptions')
           .select('*')
           .eq('user_id', userId)
-          .maybeSingle()
+          .order('created_at', { ascending: false })
+          .limit(1)
         
-        if (data && !error) {
+        if (data && data.length > 0 && !error) {
+          const subscription = data[0] // Get the most recent subscription
           return {
-            plan: data.plan || 'free',
-            status: data.status || 'active',
-            expiresAt: data.current_period_end,
-            features: this.getPlanFeatures(data.plan || 'free')
+            plan: subscription.plan || 'free',
+            status: subscription.status || 'active',
+            expiresAt: subscription.current_period_end,
+            features: this.getPlanFeatures(subscription.plan || 'free')
           }
         }
         
         // If no subscription found (not an error), create default free subscription
-        if (!data && !error) {
+        if ((!data || data.length === 0) && !error) {
           const defaultSubscription = this.getDefaultSubscription()
           // Try to create the subscription record
           try {
