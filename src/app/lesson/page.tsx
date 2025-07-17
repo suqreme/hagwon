@@ -7,6 +7,7 @@ import { curriculumService } from '@/services/curriculumService'
 import { progressService } from '@/services/progressService'
 import { subscriptionService } from '@/services/subscriptionService'
 import LessonContent from '@/components/lesson/LessonContent'
+import GameLessonContent from '@/components/lesson/GameLessonContent'
 import QuizComponent from '@/components/lesson/QuizComponent'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -287,69 +288,75 @@ function LessonPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-card shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={goToDashboard}
-                className="mb-2"
-              >
-<T>← Back to Dashboard</T>
-              </Button>
-              <h1 className="text-2xl font-bold text-foreground">
-                {subtopicInfo?.name || <T>Lesson</T>}
-              </h1>
-              <p className="text-muted-foreground">
-                {subject === 'math' ? <T>Mathematics</T> : <T>English Language Arts</T>} • {grade.replace('_', ' ')}
-              </p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-sm text-muted-foreground">
-                <T>Step</T> {currentStep === 'lesson' ? '1' : currentStep === 'quiz' ? '2' : '3'} <T>of</T> 3
+    <div className="min-h-screen">
+      {/* Show header for quiz and complete steps */}
+      {currentStep !== 'lesson' && (
+        <header className="bg-card shadow-sm border-b">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center py-4">
+              <div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={goToDashboard}
+                  className="mb-2"
+                >
+                  <T>← Back to Dashboard</T>
+                </Button>
+                <h1 className="text-2xl font-bold text-foreground">
+                  {subtopicInfo?.name || <T>Lesson</T>}
+                </h1>
+                <p className="text-muted-foreground">
+                  {subject === 'math' ? <T>Mathematics</T> : <T>English Language Arts</T>} • {grade.replace('_', ' ')}
+                </p>
               </div>
-              <LanguageSelector />
-              <ThemeToggle />
+              <div className="flex items-center space-x-4">
+                <div className="text-sm text-muted-foreground">
+                  <T>Step</T> {currentStep === 'lesson' ? '1' : currentStep === 'quiz' ? '2' : '3'} <T>of</T> 3
+                </div>
+                <LanguageSelector />
+                <ThemeToggle />
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
+      )}
 
-      {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {currentStep === 'lesson' && lessonData && (
-          <LessonContent
-            lessonData={lessonData}
-            onComplete={generateQuiz}
-          />
-        )}
+      {/* Lesson takes full screen */}
+      {currentStep === 'lesson' && lessonData && (
+        <GameLessonContent
+          lessonData={lessonData}
+          onComplete={generateQuiz}
+          onBack={goToDashboard}
+        />
+      )}
 
-        {currentStep === 'quiz' && quizData && (
-          <QuizComponent
-            quizData={quizData}
-            onComplete={handleQuizComplete}
-          />
-        )}
+      {/* Quiz and complete steps with container */}
+      {currentStep !== 'lesson' && (
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {currentStep === 'quiz' && quizData && (
+            <QuizComponent
+              quizData={quizData}
+              onComplete={handleQuizComplete}
+            />
+          )}
 
-        {currentStep === 'complete' && (
-          <Card>
-            <CardContent className="text-center py-8 space-y-4">
-              <div className="text-green-500 text-6xl mb-6">🎉</div>
-              <h2 className="text-3xl font-bold text-foreground"><T>Lesson Complete!</T></h2>
-              <p className="text-muted-foreground">
-                <T>Congratulations! You've successfully completed the lesson on</T> {subtopicInfo?.name}.
-              </p>
-              <Button onClick={goToDashboard} size="lg">
-<T>Continue Learning</T>
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-      </main>
+          {currentStep === 'complete' && (
+            <Card>
+              <CardContent className="text-center py-8 space-y-4">
+                <div className="text-green-500 text-6xl mb-6">🎉</div>
+                <h2 className="text-3xl font-bold text-foreground"><T>Lesson Complete!</T></h2>
+                <p className="text-muted-foreground">
+                  <T>Congratulations! You've successfully completed the lesson on</T> {subtopicInfo?.name}.
+                </p>
+                <Button onClick={goToDashboard} size="lg">
+                  <T>Continue Learning</T>
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+        </main>
+      )}
     </div>
   )
 }
