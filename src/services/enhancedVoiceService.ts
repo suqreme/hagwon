@@ -89,7 +89,7 @@ class EnhancedVoiceService {
     providers.push({
       name: 'elevenlabs',
       displayName: 'ElevenLabs (Premium)',
-      isAvailable: !!process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
+      isAvailable: true, // Always show as available, will check at runtime
       isOnline: true,
       supportedLanguages: ['en-US', 'en-GB', 'es-ES', 'fr-FR', 'de-DE', 'it-IT', 'pl-PL', 'pt-BR']
     })
@@ -159,8 +159,8 @@ class EnhancedVoiceService {
           }
         }
         
-        // Fallback to API key availability
-        return hasElevenLabsKey
+        // For now, allow all users to test ElevenLabs
+        return true
       }
       return false
     } catch (error) {

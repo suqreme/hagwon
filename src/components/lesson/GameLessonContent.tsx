@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { enhancedVoiceService } from '@/services/enhancedVoiceService'
 import { T } from '@/components/ui/auto-translate'
+import AITutorModal from './AITutorModal'
 import { Play, Pause, Volume2, VolumeX, MessageCircle, ChevronRight, ChevronLeft, Sparkles, ArrowLeft, RotateCcw, Settings, Crown } from 'lucide-react'
 
 interface LessonData {
@@ -335,29 +336,14 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
       </div>
       </div>
 
-      {/* Tutor Modal */}
-      {showTutorModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-background border border-primary shadow-[4px_4px_0px_0px] shadow-primary/40 p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-bold mb-4 text-foreground"><T>AI Tutor</T></h3>
-            <p className="text-muted-foreground mb-4">
-              <T>Need help with this lesson? Ask me anything!</T>
-            </p>
-            <div className="flex justify-end space-x-2">
-              <Button
-                onClick={() => setShowTutorModal(false)}
-                variant="outline"
-                className="bg-secondary border border-primary text-foreground hover:bg-primary hover:text-primary-foreground shadow-[2px_2px_0px_0px] shadow-primary/30 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_0px] transition-all duration-200"
-              >
-                <T>Close</T>
-              </Button>
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-[2px_2px_0px_0px] shadow-primary/30 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_0px] transition-all duration-200">
-                <T>Open Chat</T>
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* AI Tutor Modal */}
+      <AITutorModal
+        isOpen={showTutorModal}
+        onClose={() => setShowTutorModal(false)}
+        lessonTopic={lessonData.metadata.subtopic}
+        gradeLevel={lessonData.metadata.grade_level}
+        lessonContent={lessonData.lesson}
+      />
     </div>
   )
 }
