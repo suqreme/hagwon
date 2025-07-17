@@ -301,7 +301,7 @@ function LessonPageContent() {
 
     try {
       // Get subtopic info from curriculum
-      const subtopicData = await curriculumService.getSubtopic(subject, grade, topic, subtopic)
+      const subtopicData = await curriculumService.getSubtopicData(subject, grade, topic, subtopic)
       console.log('Subtopic data:', subtopicData)
       setSubtopicInfo(subtopicData)
 
