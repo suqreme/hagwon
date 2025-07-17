@@ -49,7 +49,7 @@ class SubscriptionService {
   }
 
   async getUserSubscription(userId: string): Promise<SubscriptionStatus> {
-    // Try to load from Supabase first
+    // Try to load from Supabase first, but handle missing tables gracefully
     if (supabase) {
       try {
         const { data, error } = await supabase
@@ -80,7 +80,8 @@ class SubscriptionService {
           }
         }
       } catch (error) {
-        console.error('Error loading subscription from Supabase:', error)
+        console.error('Error loading subscription from Supabase (table may not exist):', error)
+        // If table doesn't exist, fallback immediately to localStorage/default
       }
     }
 
@@ -88,14 +89,29 @@ class SubscriptionService {
     try {
       const stored = localStorage.getItem(`${this.storageKey}_${userId}`)
       if (stored) {
-        return JSON.parse(stored)
+        const storedSubscription = JSON.parse(stored)
+        // Ensure status is active for stored subscriptions
+        if (!storedSubscription.status) {
+          storedSubscription.status = 'active'
+        }
+        return storedSubscription
       }
     } catch (error) {
       console.error('Error loading subscription from localStorage:', error)
     }
 
-    // Default free plan
-    return this.getDefaultSubscription()
+    // Default free plan with active status
+    const defaultSub = this.getDefaultSubscription()
+    defaultSub.status = 'active' // Ensure it's active
+    
+    // Store the default subscription to localStorage
+    try {
+      localStorage.setItem(`${this.storageKey}_${userId}`, JSON.stringify(defaultSub))
+    } catch (error) {
+      console.error('Error storing default subscription to localStorage:', error)
+    }
+    
+    return defaultSub
   }
 
   async updateSubscription(userId: string, subscription: SubscriptionStatus): Promise<void> {
