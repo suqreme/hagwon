@@ -325,14 +325,103 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
             </Button>
             
             <Button
+              onClick={() => setShowVoiceSettings(!showVoiceSettings)}
+              className="bg-secondary border-2 border-primary text-foreground hover:bg-primary hover:text-primary-foreground shadow-[4px_4px_0px_0px] shadow-primary/60 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px] transition-all duration-200 font-mono font-bold"
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              ⚙️ <T>Voice</T>
+            </Button>
+            
+            <Button
               onClick={() => setShowTutorModal(true)}
-              className="bg-secondary border border-primary text-foreground hover:bg-primary hover:text-primary-foreground shadow-[2px_2px_0px_0px] shadow-primary/30 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_0px] transition-all duration-200"
+              className="bg-secondary border-2 border-primary text-foreground hover:bg-primary hover:text-primary-foreground shadow-[4px_4px_0px_0px] shadow-primary/60 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px] transition-all duration-200 font-mono font-bold"
             >
               <MessageCircle className="h-4 w-4 mr-2" />
               🤖 <T>AI Tutor</T>
             </Button>
           </div>
         </div>
+
+        {/* Voice Settings Panel */}
+        {showVoiceSettings && isVoiceSupported && (
+          <div className="max-w-4xl mx-auto mt-6">
+            <Card className="bg-card border-4 border-primary shadow-[8px_8px_0px_0px] shadow-primary/60">
+              <div className="p-6 space-y-6">
+                <div className="flex items-center space-x-3">
+                  <Volume2 className="w-6 h-6 text-primary" />
+                  <span className="text-lg font-bold font-mono">🎧 <T>Audio Assistant</T></span>
+                  <Badge variant="secondary" className="text-xs border-2 border-primary font-mono font-bold">
+                    👶 <T>For Non-Readers</T>
+                  </Badge>
+                  {voiceProvider === 'elevenlabs' && (
+                    <Badge variant="default" className="text-xs bg-gradient-to-r from-yellow-500 to-orange-500 border-2 border-primary font-mono font-bold">
+                      <Crown className="w-3 h-3 mr-1" />
+                      👑 <T>Premium</T>
+                    </Badge>
+                  )}
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-bold mb-3 block font-mono">⚙️ <T>Voice Provider</T></label>
+                    <Select value={voiceProvider} onValueChange={(value: 'web' | 'elevenlabs') => setVoiceProvider(value)}>
+                      <SelectTrigger className="w-full border-2 border-primary shadow-[4px_4px_0px_0px] shadow-primary/60 font-mono font-bold">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="border-2 border-primary shadow-[4px_4px_0px_0px] shadow-primary/60">
+                        <SelectItem value="web">
+                          <div className="flex items-center space-x-2 font-mono font-bold">
+                            <Volume2 className="w-4 h-4" />
+                            <span>🌐 <T>Browser Voice (Free)</T></span>
+                          </div>
+                        </SelectItem>
+                        {isElevenLabsAvailable && (
+                          <SelectItem value="elevenlabs">
+                            <div className="flex items-center space-x-2 font-mono font-bold">
+                              <Crown className="w-4 h-4 text-yellow-500" />
+                              <span>⭐ <T>ElevenLabs (Premium)</T></span>
+                            </div>
+                          </SelectItem>
+                        )}
+                      </SelectContent>
+                    </Select>
+                    {!isElevenLabsAvailable && (
+                      <p className="text-xs text-muted-foreground mt-2 font-mono">
+                        ⚠️ <T>Premium voices require ElevenLabs API key</T>
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-secondary/20 p-4 border-2 border-primary shadow-[2px_2px_0px_0px] shadow-primary/40">
+                      <label className="text-sm font-bold font-mono block mb-2">🎵 <T>Quality</T></label>
+                      <p className="text-xs text-muted-foreground font-mono">
+                        {voiceProvider === 'elevenlabs' ? '🚀 ' : '🔊 '}{voiceProvider === 'elevenlabs' ? <T>High-quality AI voices</T> : <T>Standard browser voices</T>}
+                      </p>
+                    </div>
+                    <div className="bg-secondary/20 p-4 border-2 border-primary shadow-[2px_2px_0px_0px] shadow-primary/40">
+                      <label className="text-sm font-bold font-mono block mb-2">🎭 <T>Age-Appropriate</T></label>
+                      <p className="text-xs text-muted-foreground font-mono">
+                        {lessonData.metadata.grade_level.includes('kindergarten') || lessonData.metadata.grade_level.includes('grade_1') ? '👶 ' : '👩‍🎓 '}{lessonData.metadata.grade_level.includes('kindergarten') || lessonData.metadata.grade_level.includes('grade_1') ? <T>Child-friendly voice</T> : <T>Adult voice</T>}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {!isVoiceSupported && (
+          <div className="max-w-4xl mx-auto mt-6">
+            <Card className="bg-destructive/10 border-4 border-destructive shadow-[8px_8px_0px_0px] shadow-destructive/60">
+              <div className="p-4 flex items-center space-x-3">
+                <VolumeX className="w-5 h-5 text-destructive" />
+                <span className="text-sm font-bold font-mono">❌ <T>Voice not supported in this browser</T></span>
+              </div>
+            </Card>
+          </div>
+        )}
       </div>
       </div>
 
