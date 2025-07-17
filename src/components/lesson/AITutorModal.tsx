@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { aiTutorService } from '@/services/aiTutorService'
 import { enhancedVoiceService } from '@/services/enhancedVoiceService'
+import { T } from '@/components/ui/auto-translate'
 import { 
   Mic, 
   MicOff, 
@@ -15,7 +16,8 @@ import {
   X, 
   Send,
   Brain,
-  Sparkles
+  Sparkles,
+  Zap
 } from 'lucide-react'
 
 interface AITutorModalProps {
@@ -48,6 +50,9 @@ export default function AITutorModal({
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(true)
   const [recognition, setRecognition] = useState<any>(null)
   const [hasStarted, setHasStarted] = useState(false)
+  const [interimTranscript, setInterimTranscript] = useState('')
+  const [finalTranscript, setFinalTranscript] = useState('')
+  const [isTranscribing, setIsTranscribing] = useState(false)
   
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -58,27 +63,50 @@ export default function AITutorModal({
       setHasStarted(true)
     }
 
-    // Initialize speech recognition
+    // Initialize speech recognition with live transcription
     if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
       const SpeechRecognition = (window as any).webkitSpeechRecognition
       const recognitionInstance = new SpeechRecognition()
       
-      recognitionInstance.continuous = false
-      recognitionInstance.interimResults = false
+      recognitionInstance.continuous = true
+      recognitionInstance.interimResults = true
       recognitionInstance.lang = 'en-US'
       
       recognitionInstance.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript
-        setInputText(transcript)
-        setIsListening(false)
+        let interimTranscript = ''
+        let finalTranscript = ''
+        
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript
+          } else {
+            interimTranscript += transcript
+          }
+        }
+        
+        setInterimTranscript(interimTranscript)
+        if (finalTranscript) {
+          setFinalTranscript(prev => prev + finalTranscript)
+          setInputText(prev => prev + finalTranscript)
+        }
+      }
+      
+      recognitionInstance.onstart = () => {
+        setIsTranscribing(true)
+        setInterimTranscript('')
+        setFinalTranscript('')
       }
       
       recognitionInstance.onerror = () => {
         setIsListening(false)
+        setIsTranscribing(false)
       }
       
       recognitionInstance.onend = () => {
         setIsListening(false)
+        setIsTranscribing(false)
+        setInterimTranscript('')
       }
       
       setRecognition(recognitionInstance)
@@ -158,6 +186,9 @@ export default function AITutorModal({
   const startListening = () => {
     if (recognition && !isListening) {
       setIsListening(true)
+      setIsTranscribing(true)
+      setInterimTranscript('')
+      setFinalTranscript('')
       recognition.start()
     }
   }
@@ -166,6 +197,8 @@ export default function AITutorModal({
     if (recognition && isListening) {
       recognition.stop()
       setIsListening(false)
+      setIsTranscribing(false)
+      setInterimTranscript('')
     }
   }
 
@@ -188,6 +221,13 @@ export default function AITutorModal({
     aiTutorService.endTutorSession()
     setMessages([])
     setHasStarted(false)
+    setInterimTranscript('')
+    setFinalTranscript('')
+    setIsTranscribing(false)
+    if (recognition && isListening) {
+      recognition.stop()
+      setIsListening(false)
+    }
     onClose()
   }
 
@@ -195,28 +235,29 @@ export default function AITutorModal({
 
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl h-[600px] flex flex-col">
+      <Card className="w-full max-w-2xl h-[600px] flex flex-col bg-card border border-primary shadow-[8px_8px_0px_0px] shadow-primary/40">
         <CardHeader className="flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent border border-primary shadow-[2px_2px_0px_0px] shadow-primary/30 flex items-center justify-center">
                 <Brain className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
                 <CardTitle className="flex items-center space-x-2">
-                  <span>AI Tutor</span>
+                  <span><T>AI Tutor</T></span>
                   <Sparkles className="w-4 h-4 text-yellow-500" />
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Learning about {lessonTopic} • {gradeLevel}
+                  <T>Learning about</T> {lessonTopic} • {gradeLevel}
                 </p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => setIsVoiceEnabled(!isVoiceEnabled)}
+                className="bg-secondary border border-primary text-foreground hover:bg-primary hover:text-primary-foreground shadow-[2px_2px_0px_0px] shadow-primary/30 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_0px] transition-all duration-200"
               >
                 {isVoiceEnabled ? (
                   <Volume2 className="w-4 h-4" />
@@ -224,7 +265,12 @@ export default function AITutorModal({
                   <VolumeX className="w-4 h-4" />
                 )}
               </Button>
-              <Button variant="ghost" size="sm" onClick={handleClose}>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleClose}
+                className="bg-secondary border border-primary text-foreground hover:bg-primary hover:text-primary-foreground shadow-[2px_2px_0px_0px] shadow-primary/30 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_0px] transition-all duration-200"
+              >
                 <X className="w-4 h-4" />
               </Button>
             </div>
@@ -240,7 +286,7 @@ export default function AITutorModal({
                 className={`flex ${message.role === 'student' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[80%] p-3 rounded-lg ${
+                  className={`max-w-[80%] p-3 border border-primary shadow-[2px_2px_0px_0px] shadow-primary/20 ${
                     message.role === 'student'
                       ? 'bg-primary text-primary-foreground'
                       : 'bg-muted'
@@ -252,7 +298,7 @@ export default function AITutorModal({
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="ml-2 p-1 h-6 w-6"
+                        className="ml-2 p-1 h-6 w-6 hover:bg-primary hover:text-primary-foreground"
                         onClick={() => playMessage(index)}
                       >
                         <Volume2 className="w-3 h-3" />
@@ -265,10 +311,10 @@ export default function AITutorModal({
             
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-muted p-3 rounded-lg">
+                <div className="bg-muted p-3 border border-primary shadow-[2px_2px_0px_0px] shadow-primary/20">
                   <div className="flex items-center space-x-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-                    <span className="text-sm text-muted-foreground">Tutor is thinking...</span>
+                    <span className="text-sm text-muted-foreground"><T>Tutor is thinking...</T></span>
                   </div>
                 </div>
               </div>
@@ -276,8 +322,8 @@ export default function AITutorModal({
             
             {isSpeaking && (
               <div className="flex justify-center">
-                <Badge variant="secondary" className="animate-pulse">
-                  🔊 Tutor is speaking...
+                <Badge variant="secondary" className="animate-pulse border border-primary shadow-[2px_2px_0px_0px] shadow-primary/20">
+                  🔊 <T>Tutor is speaking...</T>
                 </Badge>
               </div>
             )}
@@ -285,8 +331,28 @@ export default function AITutorModal({
             <div ref={messagesEndRef} />
           </div>
 
+          {/* Live Transcription Box */}
+          {(isTranscribing || interimTranscript || finalTranscript) && (
+            <div className="border-t border-primary p-4 bg-accent/10">
+              <div className="mb-2 flex items-center space-x-2">
+                <Zap className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium text-primary"><T>Live Transcription</T></span>
+                {isTranscribing && (
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                )}
+              </div>
+              <div className="bg-background border border-primary p-3 shadow-[2px_2px_0px_0px] shadow-primary/20 min-h-[50px] font-mono text-sm">
+                <span className="text-foreground">{finalTranscript}</span>
+                <span className="text-muted-foreground italic">{interimTranscript}</span>
+                {isTranscribing && !interimTranscript && (
+                  <span className="text-muted-foreground italic"><T>Listening... speak your question</T></span>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Input Area */}
-          <div className="border-t p-4">
+          <div className="border-t border-primary p-4">
             <div className="flex items-end space-x-2">
               <div className="flex-1">
                 <textarea
@@ -294,8 +360,8 @@ export default function AITutorModal({
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Ask your tutor anything about this lesson..."
-                  className="w-full px-3 py-2 border border-input bg-background text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+                  placeholder={`Ask your tutor anything about this lesson...`}
+                  className="w-full px-3 py-2 border border-primary bg-background text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary shadow-[2px_2px_0px_0px] shadow-primary/20"
                   rows={2}
                   disabled={isLoading}
                 />
@@ -308,6 +374,9 @@ export default function AITutorModal({
                     size="sm"
                     onClick={isListening ? stopListening : startListening}
                     disabled={isLoading}
+                    className={`border border-primary shadow-[2px_2px_0px_0px] shadow-primary/30 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_0px] transition-all duration-200 ${
+                      isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-secondary hover:bg-primary hover:text-primary-foreground'
+                    }`}
                   >
                     {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                   </Button>
@@ -317,16 +386,17 @@ export default function AITutorModal({
                   onClick={handleSendMessage}
                   disabled={!inputText.trim() || isLoading}
                   size="sm"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground border border-primary shadow-[2px_2px_0px_0px] shadow-primary/30 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_0px] transition-all duration-200"
                 >
                   <Send className="w-4 h-4" />
                 </Button>
               </div>
             </div>
             
-            {isListening && (
+            {isListening && !isTranscribing && (
               <div className="mt-2 flex items-center space-x-2 text-sm text-muted-foreground">
                 <div className="animate-pulse w-2 h-2 bg-red-500 rounded-full"></div>
-                <span>Listening... speak your question</span>
+                <span><T>Listening... speak your question</T></span>
               </div>
             )}
           </div>

@@ -178,13 +178,13 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
               <T>Lesson Complete!</T>
             </h2>
             <p className="text-muted-foreground mb-6">
-              <T>Excellent work! You have successfully completed the lesson.</T>
+              🎉 <T>Excellent work! You have successfully completed the lesson.</T> 🌟
             </p>
             <Button 
               onClick={handleComplete}
               className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-6 shadow-[3px_3px_0px_0px] shadow-primary/30 transform hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_0px] transition-all duration-200"
             >
-              <T>Continue to Quiz</T> <Sparkles className="ml-2 h-5 w-5" />
+              🚀 <T>Continue to Quiz</T> <Sparkles className="ml-2 h-5 w-5" />
             </Button>
           </div>
         </Card>
@@ -211,11 +211,11 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
                 </Button>
               )}
               <div className="text-sm text-muted-foreground">
-                <T>Lesson</T>: {lessonData.metadata.subtopic.replace(/_/g, ' ')}
+                📖 <T>Lesson</T>: {lessonData.metadata.subtopic.replace(/_/g, ' ')}
               </div>
             </div>
             <div className="text-sm text-muted-foreground">
-              <T>Progress</T>: {Math.round(progress)}%
+              🌟 <T>Progress</T>: {Math.round(progress)}%
             </div>
           </div>
         </div>
@@ -238,12 +238,12 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
               </Button>
             )}
             <Badge className="bg-primary text-primary-foreground px-4 py-2 text-sm font-medium shadow-[2px_2px_0px_0px] shadow-primary/30">
-              <T>Section</T> {currentSection + 1} <T>of</T> {sections.length}
+              📚 <T>Section</T> {currentSection + 1} <T>of</T> {sections.length}
             </Badge>
           </div>
           <div className="flex items-center space-x-4">
             <div className="text-foreground text-sm font-medium">
-              <T>Progress</T>: {Math.round(progress)}%
+              🎯 <T>Progress</T>: {Math.round(progress)}%
             </div>
           </div>
         </div>
@@ -270,7 +270,7 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
                   <pre className="whitespace-pre-wrap font-mono text-foreground">
                     {animatedText}
                     {!textAnimationComplete && (
-                      <span className="animate-pulse text-primary font-bold">|</span>
+                      <span className="animate-pulse text-primary font-bold">✍️</span>
                     )}
                   </pre>
                 </div>
@@ -290,7 +290,7 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
               className="bg-secondary border border-primary text-foreground hover:bg-primary hover:text-primary-foreground disabled:opacity-50 shadow-[2px_2px_0px_0px] shadow-primary/30 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_0px] transition-all duration-200 disabled:transform-none disabled:shadow-[3px_3px_0px_0px]"
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
-              <T>Previous</T>
+              ⬅️ <T>Previous</T>
             </Button>
             
             <Button
@@ -298,7 +298,7 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
               disabled={!textAnimationComplete}
               className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 py-2 shadow-[3px_3px_0px_0px] shadow-primary/30 transform hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_0px] transition-all duration-200 disabled:transform-none disabled:shadow-[4px_4px_0px_0px]"
             >
-              {currentSection === sections.length - 1 ? <T>Complete</T> : <T>Next</T>}
+              {currentSection === sections.length - 1 ? '✅ ' : '➡️ '}{currentSection === sections.length - 1 ? <T>Complete</T> : <T>Next</T>}
               <ChevronRight className="h-4 w-4 ml-2" />
             </Button>
           </div>
@@ -313,12 +313,12 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
               {isPlaying ? (
                 <>
                   <Pause className="h-4 w-4 mr-2" />
-                  <T>Pause</T>
+                  ⏸️ <T>Pause</T>
                 </>
               ) : (
                 <>
                   <Play className="h-4 w-4 mr-2" />
-                  <T>Listen</T>
+                  🔊 <T>Listen</T>
                 </>
               )}
             </Button>
@@ -328,7 +328,7 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
               className="bg-secondary border border-primary text-foreground hover:bg-primary hover:text-primary-foreground shadow-[2px_2px_0px_0px] shadow-primary/30 hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0px_0px] transition-all duration-200"
             >
               <MessageCircle className="h-4 w-4 mr-2" />
-              <T>AI Tutor</T>
+              🤖 <T>AI Tutor</T>
             </Button>
           </div>
         </div>
