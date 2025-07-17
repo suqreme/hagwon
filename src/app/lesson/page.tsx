@@ -113,7 +113,8 @@ function LessonPageContent() {
         topic: topic,
         subtopic: subtopic,
         learning_objective: subtopicData.learning_objective,
-        estimated_duration: subtopicData.estimated_duration
+        estimated_duration: subtopicData.estimated_duration,
+        target_language: user.preferred_language || 'en'
       }
       
       console.log('Lesson request:', lessonRequest)
@@ -178,7 +179,8 @@ function LessonPageContent() {
           topic: topic,
           subtopic: subtopic,
           learning_objective: subtopicInfo.learning_objective,
-          lesson_summary: lessonData.lesson.substring(0, 500) + '...'
+          lesson_summary: lessonData.lesson.substring(0, 500) + '...',
+          target_language: user.preferred_language || 'en'
         })
       })
 

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { openai } from '@/lib/openai'
+import { lessonCacheService } from '@/services/lessonCacheService'
 
-function createFallbackLesson(subject: string, topic: string, subtopic: string, grade_level: string) {
+function createFallbackLesson(subject: string, topic: string, subtopic: string, grade_level: string, target_language: string = 'en') {
   const cleanSubtopic = subtopic.replace(/_/g, ' ')
   const cleanTopic = topic.replace(/_/g, ' ')
   let lessonContent = `# ${cleanSubtopic.charAt(0).toUpperCase() + cleanSubtopic.slice(1)} Lesson\n\n`
@@ -299,15 +300,44 @@ Keep up the excellent work!
 
 export async function POST(request: NextRequest) {
   try {
-    const { grade_level, subject, topic, subtopic, learning_objective, estimated_duration } = await request.json()
+    const { grade_level, subject, topic, subtopic, learning_objective, estimated_duration, target_language } = await request.json()
     
-    console.log('Lesson generation request:', { grade_level, subject, topic, subtopic })
+    console.log('Lesson generation request:', { grade_level, subject, topic, subtopic, target_language })
     console.log('OpenAI API key available:', !!process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'placeholder-key')
     
-    // Check if OpenAI API key is available
+    // Step 1: Check cache first
+    const cachedLesson = await lessonCacheService.getCachedLesson(
+      subject,
+      grade_level,
+      topic,
+      subtopic,
+      target_language || 'en'
+    )
+    
+    if (cachedLesson) {
+      console.log('Using cached lesson')
+      return NextResponse.json(cachedLesson)
+    }
+    
+    // Step 2: Check if OpenAI API key is available
     if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'placeholder-key') {
       console.log('No OpenAI API key, using fallback lesson')
-      return createFallbackLesson(subject, topic, subtopic, grade_level)
+      const fallbackResult = createFallbackLesson(subject, topic, subtopic, grade_level, target_language || 'en')
+      
+      // Cache the fallback lesson
+      const fallbackData = await fallbackResult.json()
+      await lessonCacheService.cacheLesson(
+        subject,
+        grade_level,
+        topic,
+        subtopic,
+        target_language || 'en',
+        fallbackData.lesson,
+        fallbackData.metadata,
+        'fallback'
+      )
+      
+      return fallbackResult
     }
     
     try {
@@ -346,7 +376,7 @@ export async function POST(request: NextRequest) {
           },
           {
             role: "user", 
-            content: `Please teach me about ${subtopic} in ${subject} for ${grade_level} level. Focus on the learning objective: ${learning_objective}`
+            content: `Please teach me about ${subtopic} in ${subject} for ${grade_level} level. Focus on the learning objective: ${learning_objective}. ${target_language && target_language !== 'en' ? `Please respond in ${target_language} language.` : ''}`
           }
         ],
         temperature: 0.7,
@@ -354,18 +384,50 @@ export async function POST(request: NextRequest) {
 
       const lessonContent = completion.choices[0].message.content || 'No lesson generated'
 
-      return NextResponse.json({
+      const lessonData = {
         lesson: lessonContent,
         metadata: {
           topic,
           subtopic,
           grade_level,
-          subject
+          subject,
+          target_language: target_language || 'en',
+          generation_type: 'ai' as const,
+          version: 1
         }
-      })
+      }
+
+      // Cache the AI-generated lesson
+      await lessonCacheService.cacheLesson(
+        subject,
+        grade_level,
+        topic,
+        subtopic,
+        target_language || 'en',
+        lessonContent,
+        lessonData.metadata,
+        'ai'
+      )
+
+      return NextResponse.json(lessonData)
     } catch (openaiError) {
       console.error('OpenAI API error in lesson generation:', openaiError)
-      return createFallbackLesson(subject, topic, subtopic, grade_level)
+      const fallbackResult = createFallbackLesson(subject, topic, subtopic, grade_level, target_language || 'en')
+      
+      // Cache the fallback lesson
+      const fallbackData = await fallbackResult.json()
+      await lessonCacheService.cacheLesson(
+        subject,
+        grade_level,
+        topic,
+        subtopic,
+        target_language || 'en',
+        fallbackData.lesson,
+        fallbackData.metadata,
+        'fallback'
+      )
+      
+      return fallbackResult
     }
   } catch (error) {
     console.error('Error generating lesson:', error)

@@ -5,6 +5,7 @@ export interface User {
   country?: string
   isAnonymous: boolean
   subscription_status: 'free' | 'paid' | 'hardship'
+  preferred_language?: string
   created_at: string
 }
 

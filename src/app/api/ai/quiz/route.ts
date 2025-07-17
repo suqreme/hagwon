@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { openai } from '@/lib/openai'
+import { lessonCacheService } from '@/services/lessonCacheService'
 
-function createFallbackQuiz(subject: string, topic: string, subtopic: string, grade_level: string) {
+function createFallbackQuiz(subject: string, topic: string, subtopic: string, grade_level: string, target_language: string = 'en') {
   const questions = []
   
   // Math quizzes
@@ -226,20 +227,42 @@ function createFallbackQuiz(subject: string, topic: string, subtopic: string, gr
 
 export async function POST(request: NextRequest) {
   try {
-    const { grade_level, subject, topic, subtopic, learning_objective, lesson_summary } = await request.json()
+    const { grade_level, subject, topic, subtopic, learning_objective, lesson_summary, target_language } = await request.json()
     
-    console.log('Quiz generation request:', { grade_level, subject, topic, subtopic })
-    console.log('OpenAI API key available:', !!process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'placeholder-key')
-    console.log('Environment variables check:', {
-      hasKey: !!process.env.OPENAI_API_KEY,
-      keyLength: process.env.OPENAI_API_KEY?.length || 0,
-      isPlaceholder: process.env.OPENAI_API_KEY === 'placeholder-key'
-    })
+    console.log('Quiz generation request:', { grade_level, subject, topic, subtopic, target_language })
     
-    // Check if OpenAI API key is available
+    // Step 1: Check cache first
+    const cachedQuiz = await lessonCacheService.getCachedQuiz(
+      subject,
+      grade_level,
+      topic,
+      subtopic,
+      target_language || 'en'
+    )
+    
+    if (cachedQuiz) {
+      console.log('Using cached quiz')
+      return NextResponse.json(cachedQuiz)
+    }
+    
+    // Step 2: Check if OpenAI API key is available
     if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'placeholder-key') {
       console.log('No OpenAI API key, using fallback quiz')
-      return createFallbackQuiz(subject, topic, subtopic, grade_level)
+      const fallbackResult = createFallbackQuiz(subject, topic, subtopic, grade_level, target_language || 'en')
+      
+      // Cache the fallback quiz
+      const fallbackData = await fallbackResult.json()
+      await lessonCacheService.cacheQuiz(
+        subject,
+        grade_level,
+        topic,
+        subtopic,
+        target_language || 'en',
+        fallbackData,
+        'fallback'
+      )
+      
+      return fallbackResult
     }
     
     console.log('Using OpenAI for quiz generation')
@@ -280,7 +303,7 @@ export async function POST(request: NextRequest) {
           },
           {
             role: "user",
-            content: `Generate a quiz for the lesson on ${subtopic} in ${subject} for ${grade_level}. Focus on testing: ${learning_objective}. Return the response in valid JSON format.`
+            content: `Generate a quiz for the lesson on ${subtopic} in ${subject} for ${grade_level}. Focus on testing: ${learning_objective}. ${target_language && target_language !== 'en' ? `Please generate questions in ${target_language} language.` : ''} Return the response in valid JSON format.`
           }
         ],
         temperature: 0.5,
@@ -296,17 +319,60 @@ export async function POST(request: NextRequest) {
           questions: quizData.questions || [],
           total_points: quizData.total_points || quizData.questions?.length || 0,
           passing_score: quizData.passing_score || Math.ceil((quizData.questions?.length || 0) * 0.7),
-          time_estimate: quizData.time_estimate || '5-10 minutes'
+          time_estimate: quizData.time_estimate || '5-10 minutes',
+          metadata: {
+            generation_type: 'ai' as const,
+            version: 1
+          }
         }
+
+        // Cache the AI-generated quiz
+        await lessonCacheService.cacheQuiz(
+          subject,
+          grade_level,
+          topic,
+          subtopic,
+          target_language || 'en',
+          formattedQuiz,
+          'ai'
+        )
 
         return NextResponse.json(formattedQuiz)
       } catch (parseError) {
         console.error('Failed to parse quiz JSON:', parseError)
-        return createFallbackQuiz(subject, topic, subtopic, grade_level)
+        const fallbackResult = createFallbackQuiz(subject, topic, subtopic, grade_level, target_language || 'en')
+        
+        // Cache the fallback quiz
+        const fallbackData = await fallbackResult.json()
+        await lessonCacheService.cacheQuiz(
+          subject,
+          grade_level,
+          topic,
+          subtopic,
+          target_language || 'en',
+          fallbackData,
+          'fallback'
+        )
+        
+        return fallbackResult
       }
     } catch (openaiError) {
       console.error('OpenAI API error:', openaiError)
-      return createFallbackQuiz(subject, topic, subtopic, grade_level)
+      const fallbackResult = createFallbackQuiz(subject, topic, subtopic, grade_level, target_language || 'en')
+      
+      // Cache the fallback quiz
+      const fallbackData = await fallbackResult.json()
+      await lessonCacheService.cacheQuiz(
+        subject,
+        grade_level,
+        topic,
+        subtopic,
+        target_language || 'en',
+        fallbackData,
+        'fallback'
+      )
+      
+      return fallbackResult
     }
   } catch (error) {
     console.error('Error generating quiz:', error)
