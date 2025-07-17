@@ -9,6 +9,7 @@ import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { MapPin, Users, Heart, Globe, Camera, Mail, Phone } from 'lucide-react'
 import { T } from '@/components/ui/auto-translate'
 import { supabase } from '@/lib/supabase'
+import { notifications } from '@/lib/notifications'
 
 interface EducationCenter {
   id: string
@@ -167,7 +168,7 @@ export default function ImpactPage() {
 
   const submitCommunityRequest = async () => {
     if (!formData.communityName.trim() || !formData.location.trim() || !formData.description.trim() || !formData.contactEmail.trim()) {
-      alert('Please fill in all required fields')
+      notifications.error.validationError('all required fields')
       return
     }
 
@@ -231,14 +232,15 @@ export default function ImpactPage() {
       setShowRequestForm(false)
       
       if (success) {
-        alert('Your community support request has been submitted! We will review it and contact you within 1-2 weeks.')
+        notifications.success.requestSubmitted()
       } else {
-        alert('Your community support request has been submitted locally! We will review it and contact you within 1-2 weeks.')
+        notifications.warning.dataNotSynced()
+        notifications.info.dataBackup()
       }
       
     } catch (error) {
       console.error('Error submitting community request:', error)
-      alert('Failed to submit request. Please try again.')
+      notifications.error.submissionFailed()
     } finally {
       setSubmitting(false)
     }

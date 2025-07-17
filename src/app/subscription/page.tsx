@@ -66,7 +66,13 @@ export default function SubscriptionPage() {
       
     } catch (error) {
       console.error('Subscription error:', error)
-      notifications.error.submissionFailed()
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      if (errorMessage.includes('Stripe not configured')) {
+        notifications.error.networkError()
+        notifications.warning.betaFeature()
+      } else {
+        notifications.error.submissionFailed()
+      }
     } finally {
       setLoading(null)
     }
