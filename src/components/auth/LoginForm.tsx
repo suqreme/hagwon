@@ -46,10 +46,12 @@ export default function LoginForm() {
 
   // Handle successful login redirect
   useEffect(() => {
+    console.log('Login redirect effect:', { user: !!user, authLoading, userEmail: user?.email })
     if (user && !authLoading) {
       console.log('User logged in, redirecting to dashboard')
       // Add a small delay to ensure state is settled
       setTimeout(() => {
+        console.log('Executing redirect to dashboard')
         router.push('/dashboard')
       }, 100)
     }

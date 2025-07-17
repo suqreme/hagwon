@@ -156,15 +156,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             
             if (createError) {
               console.error('Failed to create user profile:', createError)
-              setUser(null)
+              // Even if profile creation fails, we can still set basic user info
+              setUser({
+                id: userData.user.id,
+                email: userData.user.email || '',
+                role: 'student',
+                subscription_plan: 'free',
+                subscription_status: 'free',
+                created_at: userData.user.created_at,
+                updated_at: userData.user.updated_at || userData.user.created_at
+              })
             } else {
               console.log('User profile created successfully:', newProfile)
               setUser(newProfile)
             }
           }
         } else {
-          console.error('Profile fetch failed, clearing user')
-          setUser(null)
+          console.error('Profile fetch failed with error:', error)
+          // Even if profile fetch fails, we can still set basic user info from Supabase auth
+          const { data: userData } = await supabase.auth.getUser()
+          if (userData.user) {
+            console.log('Setting fallback user data from Supabase auth')
+            setUser({
+              id: userData.user.id,
+              email: userData.user.email || '',
+              role: 'student',
+              subscription_plan: 'free',
+              subscription_status: 'free',
+              created_at: userData.user.created_at,
+              updated_at: userData.user.updated_at || userData.user.created_at
+            })
+          } else {
+            setUser(null)
+          }
         }
       } else {
         console.log('User profile found:', data)
