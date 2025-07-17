@@ -171,8 +171,8 @@ export default function GameLessonContent({ lessonData, onComplete, onBack }: Ga
 
   if (isComplete) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary via-accent to-secondary flex items-center justify-center p-4">
-        <Card className="max-w-md w-full bg-background border-4 border-primary shadow-[8px_8px_0px_0px] shadow-primary/60">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="max-w-md w-full bg-card border-4 border-primary shadow-[8px_8px_0px_0px] shadow-primary/60">
           <div className="p-8 text-center">
             <div className="text-6xl mb-4 animate-bounce">🎉</div>
             <h2 className="text-2xl font-bold text-foreground mb-4">
