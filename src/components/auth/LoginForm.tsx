@@ -13,12 +13,12 @@ export default function LoginForm() {
   const [password, setPassword] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
   const [country, setCountry] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [formLoading, setFormLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [showConfirmation, setShowConfirmation] = useState(false)
 
-  const { signIn, signUp, user } = useAuth()
+  const { signIn, signUp, user, loading: authLoading } = useAuth()
   const router = useRouter()
 
 
@@ -46,16 +46,19 @@ export default function LoginForm() {
 
   // Handle successful login redirect
   useEffect(() => {
-    if (user && !loading) {
-      console.log('User logged in, redirecting to home page')
-      router.push('/')
+    if (user && !authLoading) {
+      console.log('User logged in, redirecting to dashboard')
+      // Add a small delay to ensure state is settled
+      setTimeout(() => {
+        router.push('/dashboard')
+      }, 100)
     }
-  }, [user, loading, router])
+  }, [user, authLoading, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     console.log('LoginForm: handleSubmit called')
-    setLoading(true)
+    setFormLoading(true)
     setError('')
     setSuccess('')
 
@@ -77,7 +80,7 @@ export default function LoginForm() {
       setError(errorMessage)
     } finally {
       console.log('LoginForm: Setting loading to false')
-      setLoading(false)
+      setFormLoading(false)
     }
   }
 
@@ -190,10 +193,10 @@ export default function LoginForm() {
 
         <Button
           type="submit"
-          disabled={loading}
+          disabled={formLoading || authLoading}
           className="w-full"
         >
-          {loading ? (
+          {formLoading || authLoading ? (
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
               <span>{isSignUp ? <T>Creating Account...</T> : <T>Signing In...</T>}</span>
