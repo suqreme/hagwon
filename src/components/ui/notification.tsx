@@ -48,6 +48,17 @@ export const showWarning = (title: string, message?: string) => {
   return showNotification({ type: 'warning', title, message })
 }
 
+// Hook for components that need notification functions
+export const useNotification = () => {
+  return {
+    showNotification,
+    showSuccess,
+    showError,
+    showInfo,
+    showWarning
+  }
+}
+
 const NotificationItem = ({ notification, onClose }: { 
   notification: NotificationProps 
   onClose: () => void 
