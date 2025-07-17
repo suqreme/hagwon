@@ -26,9 +26,130 @@ function getLanguageName(code: string): string {
   return languageMap[code] || 'English'
 }
 
+function createSpanishFallbackLesson(subject: string, topic: string, subtopic: string, grade_level: string, target_language: string) {
+  const cleanSubtopic = subtopic.replace(/_/g, ' ')
+  
+  if (subject === 'Mathematics' || subject === 'math') {
+    if (subtopic === 'counting_to_10') {
+      const lessonContent = `# Lección: Contar hasta 10
+
+## ¡Bienvenidos a Contar!
+
+¡Hola! Hoy vamos a aprender a contar del 1 al 10. ¡Contar es una de las habilidades matemáticas más importantes que aprenderás!
+
+## ¿Qué es Contar?
+Contar significa decir números en orden para descubrir cuántas cosas hay.
+
+## Aprendamos los Números del 1 al 10
+
+**1 (Uno)** - Levanta 1 dedo
+**2 (Dos)** - Levanta 2 dedos  
+**3 (Tres)** - Levanta 3 dedos
+**4 (Cuatro)** - Levanta 4 dedos
+**5 (Cinco)** - Levanta 5 dedos
+**6 (Seis)** - Levanta 6 dedos
+**7 (Siete)** - Levanta 7 dedos
+**8 (Ocho)** - Levanta 8 dedos
+**9 (Nueve)** - Levanta 9 dedos
+**10 (Diez)** - Levanta 10 dedos
+
+## Actividades de Práctica
+
+### Actividad 1: Cuenta tus Juguetes
+Busca algunos juguetes u objetos. Cuenta:
+- 1 carrito de juguete
+- 2 carritos de juguete  
+- 3 carritos de juguete
+- ¡Sigue hasta 10!
+
+### Actividad 2: Cuenta y Toca
+Toca cada objeto mientras cuentas:
+- Toca 1 libro y di "Uno"
+- Toca 2 libros y di "Uno, Dos"
+- ¡Sigue así!
+
+### Actividad 3: Cuenta tus Pasos
+Da pasos mientras cuentas:
+- 1 paso, 2 pasos, 3 pasos... ¡hasta 10!
+
+## Consejos Importantes
+- Siempre empieza con 1
+- Di cada número claramente
+- Cuenta despacio al principio
+- Usa tus dedos para ayudarte
+- ¡Practica todos los días!
+
+## Practiquemos Juntos
+Cuenta estos objetos:
+🍎 (1 manzana)
+🍎🍎 (2 manzanas)  
+🍎🍎🍎 (3 manzanas)
+
+¿Puedes contarlas? ¡1, 2, 3!
+
+## Recuerda
+- Contar nos ayuda a saber "cuántos"
+- La práctica hace al maestro
+- ¡Lo estás haciendo genial!
+
+¡Buen trabajo aprendiendo a contar! ¡Próximamente aprenderemos a contar números aún más altos!
+`
+      
+      return NextResponse.json({
+        lesson: lessonContent,
+        metadata: {
+          topic,
+          subtopic,
+          grade_level,
+          subject,
+          target_language,
+          generation_type: 'fallback' as const,
+          version: 1
+        }
+      })
+    }
+  }
+  
+  // Generic Spanish fallback
+  const lessonContent = `# Lección: ${cleanSubtopic}
+
+¡Bienvenidos a esta lección sobre ${cleanSubtopic}!
+
+## Objetivo de Aprendizaje
+Al final de esta lección, deberías poder entender y aplicar conceptos relacionados con ${cleanSubtopic}.
+
+## Contenido de la Lección
+Esta es una lección interactiva que te guiará a través del material a tu propio ritmo.
+
+## ¿Por qué es Importante?
+Entender ${cleanSubtopic} es importante porque forma la base para conceptos más avanzados.
+
+¡Excelente trabajo! Sigue practicando y dominarás ${cleanSubtopic}.
+`
+  
+  return NextResponse.json({
+    lesson: lessonContent,
+    metadata: {
+      topic,
+      subtopic,
+      grade_level,
+      subject,
+      target_language,
+      generation_type: 'fallback' as const,
+      version: 1
+    }
+  })
+}
+
 function createFallbackLesson(subject: string, topic: string, subtopic: string, grade_level: string, target_language: string = 'en') {
   const cleanSubtopic = subtopic.replace(/_/g, ' ')
   const cleanTopic = topic.replace(/_/g, ' ')
+  
+  // Get translated content based on target language
+  if (target_language === 'es') {
+    return createSpanishFallbackLesson(subject, topic, subtopic, grade_level, target_language)
+  }
+  
   let lessonContent = `# ${cleanSubtopic.charAt(0).toUpperCase() + cleanSubtopic.slice(1)} Lesson\n\n`
   
   // Math lessons
