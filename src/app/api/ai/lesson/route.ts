@@ -2,6 +2,30 @@ import { NextRequest, NextResponse } from 'next/server'
 import { openai } from '@/lib/openai'
 // import { lessonCacheService } from '@/services/lessonCacheService' // Temporarily disabled for debugging
 
+// Language code to full name mapping for AI prompts
+function getLanguageName(code: string): string {
+  const languageMap: Record<string, string> = {
+    'en': 'English',
+    'es': 'Spanish',
+    'fr': 'French',
+    'ar': 'Arabic',
+    'hi': 'Hindi',
+    'pt': 'Portuguese',
+    'sw': 'Swahili',
+    'zh': 'Chinese',
+    'ru': 'Russian',
+    'de': 'German',
+    'ko': 'Korean',
+    'ja': 'Japanese',
+    'vi': 'Vietnamese',
+    'fil': 'Filipino',
+    'th': 'Thai',
+    'id': 'Indonesian',
+    'ms': 'Malay'
+  }
+  return languageMap[code] || 'English'
+}
+
 function createFallbackLesson(subject: string, topic: string, subtopic: string, grade_level: string, target_language: string = 'en') {
   const cleanSubtopic = subtopic.replace(/_/g, ' ')
   const cleanTopic = topic.replace(/_/g, ' ')
@@ -350,7 +374,7 @@ export async function POST(request: NextRequest) {
           },
           {
             role: "user", 
-            content: `Please teach me about ${subtopic} in ${subject} for ${grade_level} level. Focus on the learning objective: ${learning_objective}. ${target_language && target_language !== 'en' ? `Please respond in ${target_language} language.` : ''}`
+            content: `Please teach me about ${subtopic} in ${subject} for ${grade_level} level. Focus on the learning objective: ${learning_objective}. ${target_language && target_language !== 'en' ? `Please respond entirely in ${getLanguageName(target_language)} language.` : ''}`
           }
         ],
         temperature: 0.7,

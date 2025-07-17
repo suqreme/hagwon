@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId, lessonId, subject, topic, subtopic, answers, totalQuestions } = await request.json()
+    const { userId, lessonId, subject, topic, subtopic, answers, totalQuestions, grade_level } = await request.json()
 
     // Validate required fields
     if (!userId || !subject || !topic || !subtopic || !answers || !totalQuestions) {
@@ -49,19 +49,33 @@ export async function POST(request: NextRequest) {
         console.error('Error saving quiz result:', error)
       }
 
-      // Update user progress
+      // Update user progress with proper attempts increment
+      // First, get existing progress to increment attempts
+      const { data: existingProgress } = await supabase
+        .from('user_progress')
+        .select('attempts')
+        .eq('user_id', userId)
+        .eq('subject', subject)
+        .eq('grade_level', grade_level || 'grade_1')
+        .eq('topic', topic)
+        .eq('subtopic', subtopic)
+        .single()
+
+      const currentAttempts = existingProgress?.attempts || 0
+
       const { error: progressError } = await supabase
         .from('user_progress')
         .upsert({
           user_id: userId,
           subject,
-          grade_level: 'grade_1', // This should be passed from the request
+          grade_level: grade_level || 'grade_1',
           topic,
           subtopic,
           status: passed ? 'completed' : 'in_progress',
           score,
-          attempts: 1, // This should be incremented
-          completed_at: passed ? new Date().toISOString() : null
+          attempts: currentAttempts + 1,
+          completed_at: passed ? new Date().toISOString() : null,
+          updated_at: new Date().toISOString()
         })
 
       if (progressError) {
