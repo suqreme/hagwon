@@ -9,10 +9,13 @@ import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { UserMenu } from '@/components/ui/user-menu'
 import { T } from '@/components/ui/auto-translate'
 import { Heart, Users, Laptop, Wifi, Book, HelpCircle } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { useNotification } from '@/components/ui/notification'
 
 export default function CommunityHelpPage() {
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
+  const { showNotification } = useNotification()
   const [mounted, setMounted] = useState(false)
   const [showRequestForm, setShowRequestForm] = useState(false)
   const [requestType, setRequestType] = useState('')
@@ -58,7 +61,7 @@ export default function CommunityHelpPage() {
 
   const handleRequestSubmit = async () => {
     if (!requestType || !requestDetails.trim() || !location.trim() || !contactInfo.trim()) {
-      alert('Please fill in all required fields')
+      showNotification('Please fill in all required fields', 'error')
       return
     }
 
@@ -79,7 +82,34 @@ export default function CommunityHelpPage() {
         type: 'community_help_request'
       }
 
-      // Store in localStorage for admin to review
+      // Try to save to Supabase first
+      let savedToSupabase = false
+      if (supabase) {
+        try {
+          const { error } = await supabase
+            .from('help_requests')
+            .insert({
+              user_id: user?.id || null,
+              request_type: requestType,
+              description: requestDetails,
+              location: location,
+              contact_info: contactInfo,
+              status: 'pending',
+              created_at: new Date().toISOString()
+            })
+          
+          if (!error) {
+            savedToSupabase = true
+            console.log('Help request saved to Supabase successfully')
+          } else {
+            console.error('Failed to save to Supabase:', error)
+          }
+        } catch (error) {
+          console.error('Error saving to Supabase:', error)
+        }
+      }
+
+      // Always save to localStorage as backup
       const existingRequests = JSON.parse(localStorage.getItem('admin_requests') || '[]')
       existingRequests.push(helpRequest)
       localStorage.setItem('admin_requests', JSON.stringify(existingRequests))
@@ -91,11 +121,14 @@ export default function CommunityHelpPage() {
       setContactInfo('')
       setShowRequestForm(false)
       
-      alert('Your community help request has been submitted! We will review it and reach out if we can assist.')
+      showNotification(
+        'Your community help request has been submitted! We will review it and reach out if we can assist.',
+        'success'
+      )
       
     } catch (error) {
       console.error('Error submitting help request:', error)
-      alert('Failed to submit request. Please try again.')
+      showNotification('Failed to submit request. Please try again.', 'error')
     } finally {
       setSubmitting(false)
     }

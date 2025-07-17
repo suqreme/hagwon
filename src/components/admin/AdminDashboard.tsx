@@ -29,6 +29,7 @@ import {
   Settings
 } from 'lucide-react'
 import { T } from '@/components/ui/auto-translate'
+import { useNotification } from '@/components/ui/notification'
 
 interface PlatformStats {
   totalUsers: number
@@ -51,6 +52,7 @@ interface SubscriptionStats {
 export default function AdminDashboard() {
   const { user, isAdmin, signOut } = useAuth()
   const router = useRouter()
+  const { showNotification } = useNotification()
   const [platformStats, setPlatformStats] = useState<PlatformStats | null>(null)
   const [subscriptionStats, setSubscriptionStats] = useState<SubscriptionStats | null>(null)
   const [recentUsers, setRecentUsers] = useState<AdminUserView[]>([])
@@ -196,10 +198,10 @@ export default function AdminDashboard() {
         subscriptionService.grantHardshipAccess(request.user_id)
       }
       
-      alert(`Request ${requestType} approved successfully!`)
+      showNotification(`Request ${requestType} approved successfully!`, 'success')
     } catch (error) {
       console.error('Error approving request:', error)
-      alert('Failed to approve request')
+      showNotification('Failed to approve request', 'error')
     }
   }
 
@@ -237,10 +239,10 @@ export default function AdminDashboard() {
       localStorage.setItem('admin_requests', JSON.stringify(updatedRequests))
       setAllRequests(updatedRequests)
       
-      alert(`Request ${requestType} denied.`)
+      showNotification(`Request ${requestType} denied.`, 'info')
     } catch (error) {
       console.error('Error denying request:', error)
-      alert('Failed to deny request')
+      showNotification('Failed to deny request', 'error')
     }
   }
 
@@ -273,10 +275,10 @@ export default function AdminDashboard() {
       localStorage.setItem('admin_requests', JSON.stringify(updatedRequests))
       setAllRequests(updatedRequests)
       
-      alert(`Request deleted successfully.`)
+      showNotification(`Request deleted successfully.`, 'success')
     } catch (error) {
       console.error('Error deleting request:', error)
-      alert('Failed to delete request')
+      showNotification('Failed to delete request', 'error')
     }
   }
 
@@ -306,11 +308,11 @@ export default function AdminDashboard() {
       localStorage.setItem('admin_requests', JSON.stringify(updatedRequests))
       setAllRequests(updatedRequests)
       
-      alert(`User ${userEmail} and all associated data deleted successfully.`)
+      showNotification(`User ${userEmail} and all associated data deleted successfully.`, 'success')
       await loadAdminData() // Refresh data
     } catch (error) {
       console.error('Error deleting user:', error)
-      alert('Failed to delete user')
+      showNotification('Failed to delete user', 'error')
     }
   }
 
@@ -321,7 +323,7 @@ export default function AdminDashboard() {
     
     const confirmation = prompt('Type "DELETE ALL" to confirm permanent deletion of all data:')
     if (confirmation !== 'DELETE ALL') {
-      alert('Deletion cancelled - confirmation text did not match.')
+      showNotification('Deletion cancelled - confirmation text did not match.', 'warning')
       return
     }
 
@@ -342,11 +344,11 @@ export default function AdminDashboard() {
       setUsers([])
       setAllRequests([])
       
-      alert('All data has been permanently deleted.')
+      showNotification('All data has been permanently deleted.', 'success')
       await loadAdminData() // Refresh data
     } catch (error) {
       console.error('Error clearing all data:', error)
-      alert('Failed to clear all data')
+      showNotification('Failed to clear all data', 'error')
     }
   }
 

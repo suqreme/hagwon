@@ -1,0 +1,142 @@
+{
+  "grade": "grade_3",
+  "subject": "math",
+  "title": "Grade 3 Mathematics",
+  "description": "Intermediate math skills for third grade students",
+  "topics": {
+    "multiplication": {
+      "title": "Multiplication",
+      "description": "Learn to multiply numbers and understand multiplication concepts",
+      "order": 1,
+      "subtopics": {
+        "basic_multiplication": {
+          "title": "Basic Multiplication",
+          "description": "Understand multiplication as repeated addition",
+          "order": 1,
+          "learning_objective": "Students will be able to multiply single-digit numbers",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": [],
+          "difficulty": "intermediate"
+        },
+        "multiplication_tables": {
+          "title": "Multiplication Tables",
+          "description": "Learn multiplication tables 2-10",
+          "order": 2,
+          "learning_objective": "Students will memorize multiplication facts 2-10",
+          "estimated_duration": "30-35 minutes",
+          "prerequisites": ["basic_multiplication"],
+          "difficulty": "intermediate"
+        },
+        "multiplication_word_problems": {
+          "title": "Multiplication Word Problems",
+          "description": "Solve real-world multiplication problems",
+          "order": 3,
+          "learning_objective": "Students will solve multiplication word problems",
+          "estimated_duration": "30-35 minutes",
+          "prerequisites": ["multiplication_tables"],
+          "difficulty": "intermediate"
+        }
+      }
+    },
+    "division": {
+      "title": "Division",
+      "description": "Learn to divide numbers and understand division concepts",
+      "order": 2,
+      "subtopics": {
+        "basic_division": {
+          "title": "Basic Division",
+          "description": "Understand division as sharing equally",
+          "order": 1,
+          "learning_objective": "Students will be able to divide numbers with no remainders",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": ["basic_multiplication"],
+          "difficulty": "intermediate"
+        },
+        "division_with_remainders": {
+          "title": "Division with Remainders",
+          "description": "Learn about remainders in division",
+          "order": 2,
+          "learning_objective": "Students will understand and calculate remainders",
+          "estimated_duration": "30-35 minutes",
+          "prerequisites": ["basic_division"],
+          "difficulty": "intermediate"
+        }
+      }
+    },
+    "fractions": {
+      "title": "Fractions",
+      "description": "Introduction to fractions and parts of a whole",
+      "order": 3,
+      "subtopics": {
+        "understanding_fractions": {
+          "title": "Understanding Fractions",
+          "description": "Learn what fractions represent",
+          "order": 1,
+          "learning_objective": "Students will understand fractions as parts of a whole",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": [],
+          "difficulty": "intermediate"
+        },
+        "comparing_fractions": {
+          "title": "Comparing Fractions",
+          "description": "Compare fractions with same denominators",
+          "order": 2,
+          "learning_objective": "Students will compare simple fractions",
+          "estimated_duration": "30-35 minutes",
+          "prerequisites": ["understanding_fractions"],
+          "difficulty": "intermediate"
+        }
+      }
+    },
+    "measurement": {
+      "title": "Measurement",
+      "description": "Learn about measuring length, weight, and volume",
+      "order": 4,
+      "subtopics": {
+        "measuring_length": {
+          "title": "Measuring Length",
+          "description": "Use rulers and measuring tools",
+          "order": 1,
+          "learning_objective": "Students will measure objects using standard units",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": [],
+          "difficulty": "intermediate"
+        },
+        "measuring_weight": {
+          "title": "Measuring Weight",
+          "description": "Compare and measure weight of objects",
+          "order": 2,
+          "learning_objective": "Students will understand weight and use scales",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": ["measuring_length"],
+          "difficulty": "intermediate"
+        }
+      }
+    },
+    "geometry": {
+      "title": "Geometry",
+      "description": "Advanced shapes and geometric concepts",
+      "order": 5,
+      "subtopics": {
+        "3d_shapes": {
+          "title": "3D Shapes",
+          "description": "Learn about cubes, spheres, and cylinders",
+          "order": 1,
+          "learning_objective": "Students will identify and describe 3D shapes",
+          "estimated_duration": "25-30 minutes",
+          "prerequisites": [],
+          "difficulty": "intermediate"
+        },
+        "perimeter": {
+          "title": "Perimeter",
+          "description": "Calculate the perimeter of simple shapes",
+          "order": 2,
+          "learning_objective": "Students will calculate perimeter of rectangles",
+          "estimated_duration": "30-35 minutes",
+          "prerequisites": ["3d_shapes"],
+          "difficulty": "intermediate"
+        }
+      }
+    }
+  }
+}
