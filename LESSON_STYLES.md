@@ -2,17 +2,27 @@
 
 ## Available Lesson Components:
 
-### 1. **ThemeAwareHybridLessonContent** (CURRENT - ACTIVE)
-- **File**: `src/components/lesson/ThemeAwareHybridLessonContent.tsx`
+### 1. **ModernLessonContent** (CURRENT - ACTIVE)
+- **File**: `src/components/lesson/ModernLessonContent.tsx`
+- **Features**: 
+  - Clean, professional, sophisticated design
+  - Sidebar layout with organized controls
+  - Minimal visual noise, focus on content
+  - Uses theme colors subtly and appropriately
+  - Enterprise-grade UI/UX
+- **Status**: ✅ Currently in use
+
+### 2. **FixedThemeHybridLessonContent** (PREVIOUS - THEME AWARE)
+- **File**: `src/components/lesson/FixedThemeHybridLessonContent.tsx`
 - **Features**: 
   - Uses your chosen theme colors from dashboard
   - Combines holographic + comic + notebook elements
   - Speech bubble design with theme integration
   - Comic-style buttons with theme colors
-  - Matches the overall app design
-- **Status**: ✅ Currently in use
+  - Cartoonish/playful aesthetic
+- **Status**: 📦 Available backup
 
-### 2. **HybridLessonContent_Original** (SAVED FOR FEEDBACK)
+### 3. **HybridLessonContent_Original** (SAVED FOR FEEDBACK)
 - **File**: `src/components/lesson/HybridLessonContent_Original.tsx`
 - **Features**:
   - Original hybrid design with fixed colors
