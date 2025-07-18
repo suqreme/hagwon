@@ -1,27 +1,44 @@
 import { NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 
 export async function GET() {
   try {
-    const supabase = createServerClient()
+    // Use service role key for server-side operations
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
     
-    if (!supabase) {
+    if (!supabaseUrl || !supabaseKey) {
       return NextResponse.json({
         error: 'Supabase not configured',
-        message: 'Database connection not available'
+        message: 'Database connection not available',
+        debug: {
+          hasUrl: !!supabaseUrl,
+          hasKey: !!supabaseKey
+        }
       }, { status: 500 })
     }
     
+    const supabase = createClient(supabaseUrl, supabaseKey)
+    
     // Get cache statistics
+    console.log('🔍 Attempting to fetch cache data...')
+    
     const [lessonsResult, quizzesResult] = await Promise.all([
       supabase.from('cached_lessons').select('*'),
       supabase.from('cached_quizzes').select('*')
     ])
     
+    console.log('📊 Lessons result:', lessonsResult.error ? lessonsResult.error.message : `${lessonsResult.data?.length || 0} lessons`)
+    console.log('📊 Quizzes result:', quizzesResult.error ? quizzesResult.error.message : `${quizzesResult.data?.length || 0} quizzes`)
+    
     if (lessonsResult.error || quizzesResult.error) {
       return NextResponse.json({
         error: 'Failed to fetch cache data',
-        details: lessonsResult.error?.message || quizzesResult.error?.message
+        details: lessonsResult.error?.message || quizzesResult.error?.message,
+        debug: {
+          lessonsError: lessonsResult.error,
+          quizzesError: quizzesResult.error
+        }
       }, { status: 500 })
     }
     
