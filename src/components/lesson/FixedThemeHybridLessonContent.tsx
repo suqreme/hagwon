@@ -21,13 +21,13 @@ interface LessonData {
   }
 }
 
-interface ThemeAwareHybridLessonContentProps {
+interface FixedThemeHybridLessonContentProps {
   lessonData: LessonData
   onComplete: () => void
   onBack?: () => void
 }
 
-export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, onBack }: ThemeAwareHybridLessonContentProps) {
+export default function FixedThemeHybridLessonContent({ lessonData, onComplete, onBack }: FixedThemeHybridLessonContentProps) {
   const [currentSection, setCurrentSection] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -77,7 +77,7 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
         setTextAnimationComplete(true)
         clearInterval(timer)
       }
-    }, 25) // Slightly slower for readability
+    }, 25)
 
     return () => clearInterval(timer)
   }, [currentText])
@@ -181,15 +181,15 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
           
           <div className="p-8 text-center">
             <div className="text-6xl mb-4 animate-bounce">🏆</div>
-            <h2 className="text-3xl font-bold text-primary mb-4 font-sans">
+            <h2 className="text-3xl font-bold text-primary mb-4 font-mono">
               <T>MISSION COMPLETE!</T>
             </h2>
-            <p className="text-muted-foreground mb-6 text-lg">
+            <p className="text-muted-foreground mb-6 text-lg font-mono">
               🎉 <T>Awesome work, superstar! You've mastered this lesson like a true champion!</T> 🌟
             </p>
             <Button 
               onClick={handleComplete}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-8 border-4 border-primary shadow-[8px_8px_0px_0px] shadow-primary/60 transform hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[12px_12px_0px_0px] hover:shadow-primary/60 transition-all duration-200 font-sans text-lg"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-8 border-4 border-primary shadow-[8px_8px_0px_0px] shadow-primary/60 transform hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[12px_12px_0px_0px] hover:shadow-primary/60 transition-all duration-200 font-mono text-lg"
             >
               🚀 <T>CONTINUE ADVENTURE</T> <Sparkles className="ml-2 h-6 w-6" />
             </Button>
@@ -232,7 +232,7 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
                   onClick={onBack}
                   variant="outline"
                   size="sm"
-                  className="bg-secondary border-3 border-primary text-secondary-foreground hover:bg-primary hover:text-primary-foreground shadow-[4px_4px_0px_0px] shadow-primary/40 hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[6px_6px_0px_0px] hover:shadow-primary/40 transition-all duration-200 font-sans font-bold"
+                  className="bg-secondary border-3 border-primary text-secondary-foreground hover:bg-primary hover:text-primary-foreground shadow-[4px_4px_0px_0px] shadow-primary/40 hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[6px_6px_0px_0px] hover:shadow-primary/40 transition-all duration-200 font-mono font-bold"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   <T>My Dashboard</T>
@@ -254,7 +254,7 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
         {/* Progress section - Theme aware */}
         <div className="max-w-4xl mx-auto mb-6">
           <div className="flex items-center justify-between mb-4">
-            <Badge className="bg-card border-3 border-accent text-accent-foreground px-6 py-3 text-lg font-bold shadow-[6px_6px_0px_rgba(var(--accent-rgb),0.3)] font-mono">
+            <Badge className="bg-card border-3 border-accent text-accent-foreground px-6 py-3 text-lg font-bold shadow-[6px_6px_0px_0px] shadow-accent/30 font-mono">
               📚 <T>Section</T> {currentSection + 1} <T>of</T> {sections.length}
             </Badge>
             <div className="text-foreground text-lg font-mono font-bold">
@@ -263,7 +263,7 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
           </div>
           <Progress 
             value={progress} 
-            className="h-6 bg-muted border-3 border-primary shadow-[4px_4px_0px_rgba(var(--primary-rgb),0.3)]" 
+            className="h-6 bg-muted border-3 border-primary shadow-[4px_4px_0px_0px] shadow-primary/30" 
           />
         </div>
 
@@ -271,24 +271,10 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
         <div className="max-w-4xl mx-auto">
           <div className="relative">
             {/* Speech bubble design with theme colors */}
-            <Card className="bg-card/95 backdrop-blur-sm border-4 border-primary shadow-[12px_12px_0px_rgba(var(--primary-rgb),0.4)] min-h-[500px] relative">
-              {/* Comic book speech bubble tail using theme colors */}
-              <div 
-                className="absolute -bottom-8 left-20 w-0 h-0"
-                style={{
-                  borderLeft: '24px solid transparent',
-                  borderRight: '24px solid transparent',
-                  borderTop: '24px solid rgb(var(--card-rgb) / 0.95)'
-                }}
-              ></div>
-              <div 
-                className="absolute -bottom-12 left-[76px] w-0 h-0"
-                style={{
-                  borderLeft: '28px solid transparent',
-                  borderRight: '28px solid transparent',
-                  borderTop: '28px solid rgb(var(--primary-rgb))'
-                }}
-              ></div>
+            <Card className="bg-card/95 backdrop-blur-sm border-4 border-primary shadow-[12px_12px_0px_0px] shadow-primary/40 min-h-[500px] relative">
+              {/* Comic book speech bubble tail using proper CSS */}
+              <div className="absolute -bottom-8 left-20 w-0 h-0 border-l-[24px] border-l-transparent border-r-[24px] border-r-transparent border-t-[24px] border-t-card"></div>
+              <div className="absolute -bottom-12 left-[76px] w-0 h-0 border-l-[28px] border-l-transparent border-r-[28px] border-r-transparent border-t-[28px] border-t-primary"></div>
               
               {/* Theme-aware margin line */}
               <div className="absolute left-16 top-0 bottom-0 w-1 bg-accent/50"></div>
@@ -305,8 +291,8 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
                 {/* Content area */}
                 <div className="min-h-[400px] text-foreground leading-relaxed">
                   <div className="font-mono text-xl" style={{
-                    textShadow: '1px 1px 0px rgba(var(--primary-rgb), 0.2)',
-                    filter: 'drop-shadow(0px 0px 1px rgba(var(--accent-rgb), 0.3))'
+                    textShadow: '1px 1px 0px rgba(0, 0, 0, 0.1)',
+                    filter: 'drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.1))'
                   }}>
                     <pre className="whitespace-pre-wrap">
                       {animatedText}
@@ -331,7 +317,7 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
               <Button
                 onClick={handlePrevious}
                 disabled={currentSection === 0}
-                className="bg-secondary border-4 border-primary text-secondary-foreground hover:bg-primary hover:text-primary-foreground disabled:opacity-50 shadow-[6px_6px_0px_rgba(var(--primary-rgb),0.4)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_rgba(var(--primary-rgb),0.4)] transition-all duration-200 disabled:transform-none font-mono font-bold text-lg transform rotate-1"
+                className="bg-secondary border-4 border-primary text-secondary-foreground hover:bg-primary hover:text-primary-foreground disabled:opacity-50 shadow-[6px_6px_0px_0px] shadow-primary/40 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_0px] hover:shadow-primary/40 transition-all duration-200 disabled:transform-none font-mono font-bold text-lg transform rotate-1"
               >
                 <ChevronLeft className="h-5 w-5 mr-2" />
                 ⬅️ <T>BACK!</T>
@@ -340,7 +326,7 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
               <Button
                 onClick={handleNext}
                 disabled={!textAnimationComplete}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 py-3 border-4 border-primary shadow-[6px_6px_0px_rgba(var(--primary-rgb),0.6)] transform hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_rgba(var(--primary-rgb),0.6)] transition-all duration-200 disabled:transform-none disabled:shadow-[4px_4px_0px_rgba(var(--primary-rgb),0.4)] font-mono text-lg -rotate-1"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 py-3 border-4 border-primary shadow-[6px_6px_0px_0px] shadow-primary/60 transform hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_0px] hover:shadow-primary/60 transition-all duration-200 disabled:transform-none disabled:shadow-[4px_4px_0px_0px] disabled:shadow-primary/40 font-mono text-lg -rotate-1"
               >
                 {currentSection === sections.length - 1 ? '🎉 ' : '➡️ '}{currentSection === sections.length - 1 ? <T>FINISH!</T> : <T>NEXT!</T>}
                 <ChevronRight className="h-5 w-5 ml-2" />
@@ -351,7 +337,7 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
             <div className="flex items-center space-x-4">
               <Button
                 onClick={handlePlayPause}
-                className="bg-accent border-4 border-accent-foreground text-accent-foreground hover:bg-accent/90 shadow-[6px_6px_0px_rgba(var(--accent-rgb),0.4)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[8px_8px_0px_rgba(var(--accent-rgb),0.4)] transition-all duration-200 font-mono font-bold transform rotate-1"
+                className="bg-accent border-4 border-accent text-accent-foreground hover:bg-accent/90 shadow-[6px_6px_0px_0px] shadow-accent/40 hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[8px_8px_0px_0px] hover:shadow-accent/40 transition-all duration-200 font-mono font-bold transform rotate-1"
               >
                 {isPlaying ? (
                   <>
@@ -368,7 +354,7 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
               
               <Button
                 onClick={() => setShowVoiceSettings(!showVoiceSettings)}
-                className="bg-secondary border-4 border-secondary-foreground text-secondary-foreground hover:bg-secondary/90 shadow-[6px_6px_0px_rgba(var(--secondary-rgb),0.4)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[8px_8px_0px_rgba(var(--secondary-rgb),0.4)] transition-all duration-200 font-mono font-bold transform -rotate-1"
+                className="bg-secondary border-4 border-secondary text-secondary-foreground hover:bg-secondary/90 shadow-[6px_6px_0px_0px] shadow-secondary/40 hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[8px_8px_0px_0px] hover:shadow-secondary/40 transition-all duration-200 font-mono font-bold transform -rotate-1"
               >
                 <Settings className="h-4 w-4 mr-2" />
                 ⚙️ <T>VOICE!</T>
@@ -376,7 +362,7 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
               
               <Button
                 onClick={() => setShowTutorModal(true)}
-                className="bg-primary border-4 border-primary-foreground text-primary-foreground hover:bg-primary/90 shadow-[6px_6px_0px_rgba(var(--primary-rgb),0.4)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[8px_8px_0px_rgba(var(--primary-rgb),0.4)] transition-all duration-200 font-mono font-bold transform rotate-2"
+                className="bg-primary border-4 border-primary text-primary-foreground hover:bg-primary/90 shadow-[6px_6px_0px_0px] shadow-primary/40 hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[8px_8px_0px_0px] hover:shadow-primary/40 transition-all duration-200 font-mono font-bold transform rotate-2"
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
                 🤖 <T>HELP!</T>
@@ -387,7 +373,7 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
           {/* Voice Settings Panel - Theme-aware */}
           {showVoiceSettings && isVoiceSupported && (
             <div className="max-w-4xl mx-auto mt-8">
-              <Card className="bg-card/90 backdrop-blur-sm border-4 border-accent shadow-[8px_8px_0px_rgba(var(--accent-rgb),0.4)]">
+              <Card className="bg-card/90 backdrop-blur-sm border-4 border-accent shadow-[8px_8px_0px_0px] shadow-accent/40">
                 <div className="p-6 space-y-6">
                   <div className="flex items-center space-x-3">
                     <Volume2 className="w-6 h-6 text-accent" />
@@ -396,7 +382,7 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
                       👶 <T>Kid-Friendly Magic</T>
                     </Badge>
                     {voiceProvider === 'elevenlabs' && (
-                      <Badge className="text-xs bg-primary border-2 border-primary-foreground text-primary-foreground font-mono font-bold">
+                      <Badge className="text-xs bg-primary border-2 border-primary text-primary-foreground font-mono font-bold">
                         <Crown className="w-3 h-3 mr-1" />
                         👑 <T>PREMIUM!</T>
                       </Badge>
@@ -407,10 +393,10 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
                     <div>
                       <label className="text-sm font-bold mb-3 block font-mono text-accent">⚙️ <T>Choose Your Voice</T></label>
                       <Select value={voiceProvider} onValueChange={(value: 'web' | 'elevenlabs') => setVoiceProvider(value)}>
-                        <SelectTrigger className="w-full border-3 border-accent shadow-[4px_4px_0px_rgba(var(--accent-rgb),0.3)] font-mono font-bold bg-card">
+                        <SelectTrigger className="w-full border-3 border-accent shadow-[4px_4px_0px_0px] shadow-accent/30 font-mono font-bold bg-card">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent className="border-3 border-accent shadow-[4px_4px_0px_rgba(var(--accent-rgb),0.3)]">
+                        <SelectContent className="border-3 border-accent shadow-[4px_4px_0px_0px] shadow-accent/30">
                           <SelectItem value="web">
                             <div className="flex items-center space-x-2 font-mono font-bold">
                               <Volume2 className="w-4 h-4" />
@@ -430,13 +416,13 @@ export default function ThemeAwareHybridLessonContent({ lessonData, onComplete, 
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-secondary/20 p-4 border-3 border-secondary shadow-[3px_3px_0px_rgba(var(--secondary-rgb),0.3)]">
+                      <div className="bg-secondary/20 p-4 border-3 border-secondary shadow-[3px_3px_0px_0px] shadow-secondary/30">
                         <label className="text-sm font-bold font-mono block mb-2 text-secondary">🎵 <T>Sound Quality</T></label>
                         <p className="text-xs text-muted-foreground font-mono">
                           {voiceProvider === 'elevenlabs' ? '🚀 ' : '🔊 '}{voiceProvider === 'elevenlabs' ? <T>Super AI voices</T> : <T>Standard voices</T>}
                         </p>
                       </div>
-                      <div className="bg-accent/20 p-4 border-3 border-accent shadow-[3px_3px_0px_rgba(var(--accent-rgb),0.3)]">
+                      <div className="bg-accent/20 p-4 border-3 border-accent shadow-[3px_3px_0px_0px] shadow-accent/30">
                         <label className="text-sm font-bold font-mono block mb-2 text-accent">🎭 <T>Age Perfect</T></label>
                         <p className="text-xs text-muted-foreground font-mono">
                           {lessonData.metadata.grade_level.includes('kindergarten') || lessonData.metadata.grade_level.includes('grade_1') ? '👶 ' : '👩‍🎓 '}{lessonData.metadata.grade_level.includes('kindergarten') || lessonData.metadata.grade_level.includes('grade_1') ? <T>Kid voice</T> : <T>Grown-up voice</T>}
