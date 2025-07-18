@@ -1,5 +1,3 @@
-const { execSync } = require('child_process');
-
 // Test different lesson generation scenarios
 const testCases = [
   // Math lessons

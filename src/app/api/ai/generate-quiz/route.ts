@@ -6,8 +6,10 @@ const openai = new OpenAI({
 });
 
 export async function POST(request: NextRequest) {
+  let requestBody;
   try {
-    const { prompt, subject, grade, topic, subtopic } = await request.json();
+    requestBody = await request.json();
+    const { prompt, subject, grade, topic, subtopic } = requestBody;
 
     if (!prompt) {
       return NextResponse.json(
@@ -27,11 +29,25 @@ export async function POST(request: NextRequest) {
       messages: [
         {
           role: 'system',
-          content: 'You are an expert educational assessment creator. Generate age-appropriate quiz questions in valid JSON format. Always return proper JSON with no additional text or formatting.'
+          content: 'You are an expert educational assessment creator. Generate age-appropriate quiz questions in valid JSON format. Always return proper JSON with no additional text or formatting. The JSON must have a "questions" array with objects containing: id, question, type, options, correct_answer, explanation, points, and difficulty.'
         },
         {
           role: 'user',
-          content: prompt
+          content: `${prompt}\n\nPlease return the response in this exact JSON format:
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "Your question here",
+      "type": "multiple_choice",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "correct_answer": 0,
+      "explanation": "Why this answer is correct",
+      "points": 1,
+      "difficulty": "beginner"
+    }
+  ]
+}`
         }
       ],
       max_tokens: 1000,
@@ -50,12 +66,18 @@ export async function POST(request: NextRequest) {
       quiz = JSON.parse(content);
     } catch (parseError) {
       console.error('JSON parsing error:', parseError);
-      throw new Error('Invalid JSON response from AI');
+      console.error('AI response content:', content);
+      // Fall back to generating a fallback quiz
+      const fallbackQuiz = generateFallbackQuiz(subject, grade, topic, subtopic);
+      return NextResponse.json({ quiz: fallbackQuiz });
     }
 
     // Validate quiz structure
     if (!quiz.questions || !Array.isArray(quiz.questions)) {
-      throw new Error('Invalid quiz structure');
+      console.error('Invalid quiz structure from AI:', quiz);
+      // Fall back to generating a fallback quiz
+      const fallbackQuiz = generateFallbackQuiz(subject, grade, topic, subtopic);
+      return NextResponse.json({ quiz: fallbackQuiz });
     }
 
     return NextResponse.json({ quiz });
@@ -64,7 +86,7 @@ export async function POST(request: NextRequest) {
     console.error('AI quiz generation error:', error);
     
     // Return fallback quiz on error
-    const { subject, grade, topic, subtopic } = await request.json();
+    const { subject, grade, topic, subtopic } = requestBody || {};
     const fallbackQuiz = generateFallbackQuiz(subject, grade, topic, subtopic);
     
     return NextResponse.json({ quiz: fallbackQuiz });
