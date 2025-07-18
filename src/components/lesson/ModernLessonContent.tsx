@@ -82,6 +82,14 @@ export default function ModernLessonContent({ lessonData, onComplete, onBack }: 
     return () => clearInterval(timer)
   }, [currentText])
 
+  // Skip typing animation on click
+  const handleSkipTyping = () => {
+    if (!textAnimationComplete) {
+      setAnimatedText(currentText)
+      setTextAnimationComplete(true)
+    }
+  }
+
   // Initialize voice service
   useEffect(() => {
     setIsVoiceSupported(enhancedVoiceService.isSupported())
@@ -246,7 +254,11 @@ export default function ModernLessonContent({ lessonData, onComplete, onBack }: 
           {/* Main Lesson Content */}
           <div className="lg:col-span-3">
             <Card className="bg-card border border-border shadow-sm">
-              <div className="p-8 lg:p-12">
+              <div 
+                className={`p-8 lg:p-12 ${!textAnimationComplete ? 'cursor-pointer' : ''}`}
+                onClick={handleSkipTyping}
+                title={!textAnimationComplete ? 'Click to skip typing animation' : ''}
+              >
                 <div className="prose prose-lg max-w-none text-foreground">
                   <div className="font-mono leading-relaxed text-lg">
                     <pre className="whitespace-pre-wrap font-mono">
@@ -257,6 +269,11 @@ export default function ModernLessonContent({ lessonData, onComplete, onBack }: 
                     </pre>
                   </div>
                 </div>
+                {!textAnimationComplete && (
+                  <div className="mt-4 text-sm text-muted-foreground italic">
+                    💡 <T>Click anywhere to skip typing animation</T>
+                  </div>
+                )}
               </div>
             </Card>
 

@@ -76,6 +76,8 @@ export async function POST(request: NextRequest) {
           attempts: currentAttempts + 1,
           completed_at: passed ? new Date().toISOString() : null,
           updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id,subject,grade_level,topic,subtopic'
         })
 
       if (progressError) {
