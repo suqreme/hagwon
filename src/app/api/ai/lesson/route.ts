@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { openai } from '@/lib/openai'
-// import { lessonCacheService } from '@/services/lessonCacheService' // Temporarily disabled for debugging
+import { lessonCacheService } from '@/services/lessonCacheService'
 
 // Language code to full name mapping for AI prompts
 function getLanguageName(code: string): string {
@@ -570,13 +570,27 @@ export async function POST(request: NextRequest) {
     console.log('Lesson generation request:', { grade_level, subject, topic, subtopic, target_language })
     console.log('OpenAI API key available:', !!process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'placeholder-key')
     
-    // Temporarily skip caching for debugging
-    // TODO: Re-enable caching once import issue is resolved
+    // Check cache first
+    const cachedLesson = await lessonCacheService.getCachedLesson(subject, grade_level, topic, subtopic, target_language || 'en')
+    if (cachedLesson) {
+      console.log('🎯 Cache hit! Returning cached lesson:', `${subject}_${grade_level}_${topic}_${subtopic}_${target_language || 'en'}`)
+      return NextResponse.json(cachedLesson)
+    }
+    console.log('💾 Cache miss, generating new lesson...')
     
     // Check if OpenAI API key is available
     if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'placeholder-key') {
       console.log('No OpenAI API key, using fallback lesson')
-      return createFallbackLesson(subject, topic, subtopic, grade_level, target_language || 'en')
+      const fallbackResponse = createFallbackLesson(subject, topic, subtopic, grade_level, target_language || 'en')
+      const fallbackData = await fallbackResponse.json()
+      
+      // Cache the fallback lesson
+      await lessonCacheService.cacheLesson(
+        subject, grade_level, topic, subtopic, target_language || 'en',
+        fallbackData.lesson, fallbackData.metadata, 'fallback'
+      )
+      
+      return NextResponse.json(fallbackData)
     }
     
     try {
@@ -636,13 +650,25 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // TODO: Re-enable caching once import issue is resolved
-      // await lessonCacheService.cacheLesson(...)
+      // Cache the AI-generated lesson
+      await lessonCacheService.cacheLesson(
+        subject, grade_level, topic, subtopic, target_language || 'en',
+        lessonContent, lessonData.metadata, 'ai'
+      )
 
       return NextResponse.json(lessonData)
     } catch (openaiError) {
       console.error('OpenAI API error in lesson generation:', openaiError)
-      return createFallbackLesson(subject, topic, subtopic, grade_level, target_language || 'en')
+      const fallbackResponse = createFallbackLesson(subject, topic, subtopic, grade_level, target_language || 'en')
+      const fallbackData = await fallbackResponse.json()
+      
+      // Cache the fallback lesson
+      await lessonCacheService.cacheLesson(
+        subject, grade_level, topic, subtopic, target_language || 'en',
+        fallbackData.lesson, fallbackData.metadata, 'fallback'
+      )
+      
+      return NextResponse.json(fallbackData)
     }
   } catch (error) {
     console.error('Error generating lesson:', error)
