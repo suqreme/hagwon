@@ -1,11 +1,16 @@
 import { NextResponse } from 'next/server'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createServerClient } from '@/lib/supabase'
 
 export async function GET() {
   try {
-    const cookieStore = cookies()
-    const supabase = createServerComponentClient({ cookies: () => cookieStore })
+    const supabase = createServerClient()
+    
+    if (!supabase) {
+      return NextResponse.json({
+        error: 'Supabase not configured',
+        message: 'Database connection not available'
+      }, { status: 500 })
+    }
     
     // Get cache statistics
     const [lessonsResult, quizzesResult] = await Promise.all([
